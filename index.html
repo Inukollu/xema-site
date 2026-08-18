@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xema — the contact centre platform you run yourself</title>
+<meta name="description" content="Xema is a contact centre platform for operators who want their own: queues, agents, dialers and reporting on servers you control. Built on Asterisk, installed with one command.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<meta property="og:title" content="Xema — the contact centre platform you run yourself">
+<meta property="og:description" content="Queues, agents, dialers and reporting on servers you control. One command to install.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.xema.in/">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/"><picture><source srcset="assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="#what">Product</a>
+      <a href="#agents">For agents</a>
+      <a href="#scale">Scale</a>
+      <a href="docs/">Docs</a>
+      <a href="api/">API</a>
+      <a class="btn btn-primary" href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Contact centre software</p>
+    <h1>The contact centre platform you run yourself.</h1>
+    <p class="lede">
+      Queues, agents, dialers, recordings and reporting — on servers you control, with the call
+      flows your operation actually uses. No per-seat licence counting your agents, and no third
+      party between you and your calls.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#install">Install on a server</a>
+      <a class="btn btn-ghost" href="docs/">Read the docs</a>
+    </div>
+  </div>
+</section>
+
+<section class="tinted" id="what">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What it is</p>
+      <h2>A whole contact centre, from the trunk to the wallboard.</h2>
+      <p class="lede">
+        Xema is built on Asterisk and adds everything around it that a contact centre needs and
+        Asterisk does not have an opinion about — who a call should go to, what the agent sees, and
+        what you can say about it afterwards.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h11"/></svg>Queues that choose</h3>
+        <p>Callers are matched to agents on skills, not just on who is free. Wrap-up, pauses and
+        ring-no-answer are handled by the queue rather than by whoever remembers to.</p>
+      </div>
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v12H7l-3 3z"/></svg>Call flows</h3>
+        <p>IVR, prompts, business hours, dataset lookups and API calls, drawn as a flow and
+        rendered onto every node. No dialplan to hand-edit.</p>
+      </div>
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Outbound dialing</h3>
+        <p>Campaigns dial from your own datasets at a pace you set, and hand answered calls to the
+        same queues and the same agents as everything else.</p>
+      </div>
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V9m5 10V5m5 14v-7m5 7V8"/></svg>Live and historic</h3>
+        <p>Wallboards for the floor, and call records with recordings behind them. Answered,
+        abandoned, service level and an agent's day, kept as data rather than a screenshot.</p>
+      </div>
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5"/></svg>Your servers</h3>
+        <p>Installs on Ubuntu you already have — a cloud VM, a machine in your own rack, or a rack
+        of them. Your recordings and your customer data stay where you put them.</p>
+      </div>
+      <div class="card">
+        <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 11V8a5 5 0 0110 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg>Integrations</h3>
+        <p>A REST API over the parts worth automating, and connectors where they earn their keep —
+        CRM screen-pops, attendance, and datasets your flows read at call time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">For agents</p>
+      <h2>A phone in the browser, and nothing to install.</h2>
+      <p>
+        Agents sign in to a web page and take calls through it — WebRTC, so there is no softphone to
+        deploy, no handset to configure, and no desk they have to be sitting at.
+      </p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Hold, transfer, conference and hangup, from the same screen as the customer's record.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Breaks that a supervisor can see, with wrap-up time the queue enforces.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Dispositions, call history and missed calls, per agent.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Barge, whisper and coaching for whoever is running the floor.</li>
+      </ul>
+    </div>
+
+    <div class="shot" role="img" aria-label="The agent screen: a live call with hold and transfer controls, and the agent's day.">
+      <div class="shot-bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="shot-title">Agent — Priya S.</span></div>
+      <div class="shot-body">
+        <div class="agentbar">
+          <span class="pill pill-live"><i class="blip"></i>On call · 02:14</span>
+          <span class="pill pill-idle">Sales · queue</span>
+          <span class="pill pill-idle">+91 98••• ••234</span>
+        </div>
+        <div class="rows">
+          <div class="row"><b>Hold</b><span>F2</span><span>—</span></div>
+          <div class="row"><b>Transfer to queue</b><span>F3</span><span>—</span></div>
+          <div class="row"><b>Conference</b><span>F4</span><span>—</span></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>28</b><span>Handled</span></div>
+          <div class="stat"><b>4:12</b><span>Avg handle</span></div>
+          <div class="stat"><b>96%</b><span>Answered</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tinted">
+  <div class="wrap split flip">
+    <div>
+      <p class="eyebrow">For the floor</p>
+      <h2>What is happening, while it happens.</h2>
+      <p>
+        Wallboards built from the same event stream the queues run on, so the number on the screen
+        and the number in the report are the same number.
+      </p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Waiting, longest wait, answered and abandoned, per queue.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Who is ready, on a call, in wrap or on a break — and for how long.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Service level against a target you set per queue.</li>
+      </ul>
+    </div>
+
+    <div class="shot" role="img" aria-label="A wallboard: calls per hour, and the state of each queue.">
+      <div class="shot-bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="shot-title">Live view — Floor</span></div>
+      <div class="shot-body">
+        <div class="stats">
+          <div class="stat"><b>7</b><span>Waiting</span></div>
+          <div class="stat"><b>0:42</b><span>Longest</span></div>
+          <div class="stat"><b>31</b><span>Ready</span></div>
+          <div class="stat"><b>91%</b><span>SLA</span></div>
+        </div>
+        <div class="bars" aria-hidden="true">
+          <i style="height:38%"></i><i style="height:52%"></i><i style="height:44%"></i>
+          <i style="height:71%"></i><i style="height:88%"></i><i style="height:64%"></i>
+          <i style="height:79%"></i><i style="height:57%"></i><i style="height:41%"></i>
+          <i style="height:63%"></i><i style="height:96%"></i><i style="height:73%"></i>
+        </div>
+        <div class="rows">
+          <div class="row"><b>Sales</b><span>4 waiting</span><span class="pill pill-live"><i class="blip"></i>live</span></div>
+          <div class="row"><b>Support</b><span>3 waiting</span><span class="pill pill-live"><i class="blip"></i>live</span></div>
+          <div class="row"><b>Collections</b><span>0 waiting</span><span class="pill pill-wrap">wrap</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="scale">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Scale</p>
+      <h2>One server, or a room of them.</h2>
+      <p class="lede">
+        A single machine is the ordinary deployment and needs nothing special. When one is not
+        enough, servers join a <em>site</em> and share one database, one broker and one set of
+        agents — a caller who lands on one node reaches an agent registered on another.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>Roles, not installs</h3>
+        <p>You say what a server is for and it becomes that. Adding a queue engine to a machine is
+        a role, not an afternoon.</p>
+      </div>
+      <div class="card">
+        <h3>Nodes that heal</h3>
+        <p>Each node renders its own Asterisk configuration from the database. Nothing reaches
+        across to edit another machine's files, so a node that was down catches up by itself.</p>
+      </div>
+      <div class="card">
+        <h3>Sites that stand alone</h3>
+        <p>A site keeps working when the link to another is cut, and calls cross between them while
+        it is up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tinted" id="install">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Install</p>
+      <h2>One command on a fresh Ubuntu server.</h2>
+      <p class="lede">
+        It installs the software and stops there — what the server is <em>for</em> is a decision you
+        make afterwards, with the <code>xema</code> command. Ubuntu 24 and 22.
+      </p>
+    </div>
+
+    <div class="install">
+      <span class="dollar">$</span>
+      <code id="cmd">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash</code>
+      <button class="copy" type="button" data-copy="#cmd">Copy</button>
+    </div>
+
+    <p style="margin-top:1.4rem">
+      <a href="docs/installing.html">What it installs and what it does not</a> ·
+      <a href="docs/deployments.html">Deployment shapes</a> ·
+      <a href="docs/cluster.html">Building a site of several servers</a>
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="text-align:center">
+    <h2>Talk to us about your operation.</h2>
+    <p class="lede" style="margin-inline:auto">
+      Xema is built by TechSudoku in India, for contact centre operators. We are happy to help with
+      an evaluation.
+    </p>
+    <p style="margin-top:1.8rem">
+      <a class="btn btn-primary" href="mailto:support@xema.in">support@xema.in</a>
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="/"><picture><source srcset="assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="docs/">Docs</a>
+    <a href="api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (button) {
+  button.addEventListener('click', function () {
+    var text = document.querySelector(button.dataset.copy).textContent.trim();
+    navigator.clipboard.writeText(text).then(function () {
+      var was = button.textContent;
+      button.textContent = 'Copied';
+      setTimeout(function () { button.textContent = was; }, 1400);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

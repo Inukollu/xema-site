@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API — Xema</title>
+<meta name="description" content="A curated selection of the Xema HTTP APIs, with the exact curl for each.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+  .ep { border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: .7rem; background: var(--paper); overflow: hidden; }
+  .ep > summary { display: flex; gap: .75rem; align-items: center; padding: .85rem 1rem; cursor: pointer; list-style: none; }
+  .ep > summary::-webkit-details-marker { display: none; }
+  .ep[open] > summary { border-bottom: 1px solid var(--line); }
+  .verb { font: 600 .72rem/1 ui-monospace, monospace; letter-spacing: .06em; padding: .38rem .5rem; border-radius: 6px; color: #fff; flex: none; }
+  .verb.GET { background: #2e7d5b; } .verb.POST { background: #58407c; }
+  .verb.PUT { background: #b26a00; } .verb.DELETE { background: #b3261e; }
+  .ep .p { font: 500 .95rem ui-monospace, monospace; color: var(--ink); }
+  .ep .s { color: var(--muted); font-size: .9rem; margin-left: auto; text-align: right; }
+  @media (max-width: 700px) { .ep .s { display: none; } }
+  .ep .body { padding: 1rem 1.1rem 1.2rem; display: grid; gap: .9rem; }
+  .ep .body p { margin: 0; font-size: .95rem; }
+  .lbl { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 640; }
+  pre.snippet { background: var(--term); color: var(--term-ink); padding: .85rem 1rem; border-radius: 10px; overflow-x: auto; font-size: .85rem; margin: .35rem 0 0; }
+  .try { display: grid; gap: .6rem; grid-template-columns: 1fr; background: var(--wash); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; margin-bottom: 2rem; }
+  @media (min-width: 720px) { .try { grid-template-columns: 1fr 1fr; } }
+  .try label { display: grid; gap: .3rem; font-size: .84rem; color: var(--muted); font-weight: 600; }
+  .try input { padding: .55rem .7rem; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: inherit; font-size: .92rem; }
+  .authtag { font-size: .74rem; padding: .18rem .45rem; border-radius: 5px; background: var(--wash-deep); color: var(--plum-deep); font-weight: 600; }
+  .grouphead { margin: 2.6rem 0 1rem; }
+  .grouphead p { margin: .4rem 0 0; color: var(--muted); font-size: .96rem; max-width: 68ch; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="../docs/">Docs</a>
+      <a href="./" aria-current="page">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" style="padding:3rem 0 5rem">
+  <p class="eyebrow">API</p>
+  <h1 style="font-size:clamp(2rem,4vw,2.9rem)">The parts worth automating.</h1>
+  <p class="lede">
+    A selection rather than the whole surface — the endpoints most people want, documented properly,
+    instead of everything listed thinly. Fill in your server below and every example becomes the
+    exact command for it.
+  </p>
+
+  <div class="try">
+    <label>Your server
+      <input id="host" type="text" value="https://xema.example.com" spellcheck="false" autocomplete="off">
+    </label>
+    <label>Node&#8209;API secret <span style="font-weight:400">— <code>xema site secret set node-api --generate</code></span>
+      <input id="secret" type="text" value="$XEMA_NODE_API_SECRET" spellcheck="false" autocomplete="off">
+    </label>
+  </div>
+
+  <div id="groups" aria-live="polite"></div>
+
+  <p style="color:var(--muted);font-size:.93rem;margin-top:2.5rem">
+    Something missing that you need? Tell us at <a href="mailto:support@xema.in">support@xema.in</a>
+    and it can be documented here.
+  </p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../docs/">Docs</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+
+<script>
+var AUTH = {
+  "node-api": "Bearer token — the site's node-api secret.",
+  "none": "No credential. Bound to loopback or read-only.",
+  "mixed": "Mostly open; the ones that name a person are authenticated."
+};
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+function curlFor(group, ep, host, secret) {
+  var base = (group.base || '').replace('https://<node>', host).replace('http://127.0.0.1:5030', host + ':5030');
+  var lines = ["curl -sS -X " + ep.method + " '" + base + ep.path + "'"];
+  var auth = ep.auth || group.auth;
+  if (auth === 'node-api') lines.push("  -H 'Authorization: Bearer " + secret + "'");
+  if (ep.body) lines.push("  -H 'Content-Type: application/json'", "  -d '" + ep.body.replace(/\n\s*/g, ' ') + "'");
+  return lines.join(" \\\n");
+}
+
+function render() {
+  var host = document.getElementById('host').value.replace(/\/+$/, '');
+  var secret = document.getElementById('secret').value;
+  var out = document.getElementById('groups');
+  out.innerHTML = '';
+
+  DATA.groups.forEach(function (group) {
+    var head = document.createElement('div');
+    head.className = 'grouphead';
+    head.innerHTML = '<h2 style="font-size:1.4rem;margin:0">' + esc(group.name) + '</h2>' +
+      '<p>' + esc(group.blurb) + ' <span class="authtag">' + esc(AUTH[group.auth] || group.auth) + '</span></p>';
+    out.appendChild(head);
+
+    group.endpoints.forEach(function (ep) {
+      var d = document.createElement('details');
+      d.className = 'ep';
+      var auth = ep.auth || group.auth;
+
+      var parts = ['<summary><span class="verb ' + ep.method + '">' + ep.method + '</span>' +
+        '<span class="p">' + esc(ep.path) + '</span>' +
+        '<span class="s">' + esc(ep.summary) + '</span></summary><div class="body">'];
+
+      parts.push('<p>' + esc(ep.detail || ep.summary) + '</p>');
+      if (auth !== group.auth) parts.push('<p class="lbl">Auth</p><p>' + esc(AUTH[auth] || auth) + '</p>');
+      parts.push('<div><p class="lbl">Request</p><pre class="snippet">' + esc(curlFor(group, ep, host, secret)) + '</pre></div>');
+      if (ep.response) parts.push('<div><p class="lbl">Response</p><pre class="snippet">' + esc(ep.response) + '</pre></div>');
+
+      d.innerHTML = parts.join('') + '</div>';
+      out.appendChild(d);
+    });
+  });
+}
+
+var DATA = { groups: [] };
+fetch('endpoints.json')
+  .then(function (r) { return r.json(); })
+  .then(function (json) { DATA = json; render(); })
+  .catch(function () {
+    document.getElementById('groups').innerHTML =
+      '<p style="color:var(--muted)">The endpoint list could not be loaded.</p>';
+  });
+
+['host', 'secret'].forEach(function (id) {
+  document.getElementById(id).addEventListener('input', function () { if (DATA.groups.length) render(); });
+});
+</script>
+
+</body>
+</html>

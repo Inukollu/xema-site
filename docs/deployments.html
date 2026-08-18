@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deployment shapes — Xema docs</title>
+<meta name="description" content="Four shapes cover almost every Xema installation.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="installing.html">Installing</a>
+    <a href="deployments.html" aria-current="page">Deployment shapes</a>
+    <a href="cluster.html">Building a site</a>
+  </aside>
+  <article class="prose">
+<h1 id="deployment-models">Deployment models</h1>
+<p>Four shapes cover almost every Xema installation. Pick the one that matches what you are building;
+each says what it gives you, what it does not, and the exact commands.</p>
+<p>Two words, used precisely throughout:</p>
+<ul>
+<li>A <strong>site</strong> is servers in one place working as one contact centre. They share a database, a broker
+  and one pool of agents. A call arriving at any of them can be answered by an agent signed in at
+  any other.</li>
+<li>A <strong>cluster</strong> is one or more sites. Sites may be a thousand kilometres apart, and <strong>each keeps
+  working when cut off from the others</strong>. Only asynchronous copying crosses between them — never a
+  lock, never a query that waits.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Shape</th>
+<th>Gives you</th>
+<th>Does not give you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>One server</td>
+<td>The whole contact centre, simply</td>
+<td>Any redundancy</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>Two sites, one server each</td>
+<td>Two independent locations</td>
+<td>Shared capacity; either site's redundancy</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>One site, three servers</td>
+<td>Capacity, one agent pool, room to lose a server</td>
+<td>Redundancy of the shared parts, unless you add it</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td>Two sites, three servers each</td>
+<td>Both of the above, in two locations</td>
+<td>Anything if the shared parts of a site all sit on one machine</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="a-one-server">A — One server</h2>
+<p><strong>The ordinary deployment.</strong> It holds every role: the database, the broker, Redis, Asterisk and
+every Xema service. Nothing about it is a compromise, and nothing below is required to run a real
+contact centre.</p>
+<p>There is <strong>no redundancy</strong>. If the machine fails, the contact centre stops.</p>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+sudo xema connect-database --server localhost --user xema --provision
+xema cluster init --site main
+</code></pre>
+<p>That is the whole of it. <code>cluster init</code> is worth running even here — it gives the server a real
+cluster and site identity rather than an implied one, so the day a second server appears is not the
+day everything has to be re-identified.</p>
+<hr />
+<h2 id="c-one-site-three-servers">C — One site, three servers</h2>
+<p><strong>The one to reach for when one machine is not enough.</strong> Read this before B, because a second <em>site</em>
+is a bigger step than a second <em>server</em> and is usually not what people mean.</p>
+<p>What it gives you:</p>
+<ul>
+<li><strong>Capacity</strong> — more concurrent calls and agents than one machine carries</li>
+<li><strong>One agent pool</strong> — a call arriving anywhere can be answered by an agent signed in anywhere, so
+  agents are not divided up by which server they happened to reach</li>
+<li><strong>Room to lose a server</strong> — one that holds none of the shared parts can fail without stopping the
+  site</li>
+</ul>
+<p>What it does <strong>not</strong> give you, and this is the part most often assumed:</p>
+<blockquote>
+<p>The site still has <strong>one</strong> database, <strong>one</strong> broker and <strong>one</strong> Redis. If they all sit on the
+server that fails, the site stops — with three servers as surely as with one.</p>
+</blockquote>
+<p>Real redundancy of those is a separate exercise: Galera or InnoDB Cluster for MariaDB, Redis
+Sentinel, quorum queues for RabbitMQ. It belongs <strong>inside</strong> a site and never across sites, because
+each of those is designed to stop when it loses quorum. Nothing in the install sets it up.</p>
+<p><strong>Decide before you start:</strong> which server is the database, which is the broker, which is Redis (they
+may be one machine), and which trunk is plugged into which server.</p>
+<p>Full steps are in <strong><a href="CLUSTER.md">CLUSTER.md</a></strong>. In outline:</p>
+<pre><code class="language-bash"># On the first server — this one becomes the site
+sudo xema connect-database --server localhost --user xema --provision
+xema cluster init --site alpha
+xema site secret set redis --generate
+xema site secret set broker --username xema
+xema site secret set node --generate          # without this, calls cannot cross servers
+xema cluster token                            # a single-use pass
+
+# On each of the other two
+xema cluster join --token &lt;pass&gt;
+xema role add bff &amp;&amp; xema role add queue      # whatever that server is for
+xema node apply
+xema node wire &amp;&amp; sudo xema restart all
+</code></pre>
+<p>Then, in the console, set <strong>Connected to node</strong> on every trunk. A trunk nobody has assigned is
+carried by no server at all, and calls on it do not arrive.</p>
+<hr />
+<h2 id="b-two-sites-one-server-each">B — Two sites, one server each</h2>
+<p><strong>Two independent contact centres that share configuration and report as one.</strong> Each site answers
+its own calls with its own agents, and <strong>keeps working when the link between them is down</strong>.</p>
+<p>Use it for two offices, or a primary and a disaster-recovery location.</p>
+<p>What it gives you:</p>
+<ul>
+<li>Each location survives losing the other entirely</li>
+<li>One set of configuration and one place to report from</li>
+</ul>
+<p>What it does <strong>not</strong> give you:</p>
+<ul>
+<li><strong>Shared capacity.</strong> Cross-site help is a bonus, never a guarantee — when the link is down, the
+  other site's agents are genuinely unavailable and calls fall back to local ones.</li>
+<li><strong>Redundancy within either site.</strong> Each is still one server; see A.</li>
+</ul>
+<blockquote>
+<h3 id="not-yet-possible-with-the-shipped-commands">Not yet possible with the shipped commands</h3>
+<p>There is no way to add a <strong>second site to an existing cluster</strong>. Running
+<code>xema cluster init --site beta</code> on the second server creates a brand-new cluster, not a second
+site of the first — so the two do not know about each other.</p>
+<p>Missing: a <code>site init</code> / <code>site join</code> pair, and the asynchronous copying between sites'
+databases. Until then, build each location as model <strong>A</strong> and treat them as unrelated.</p>
+</blockquote>
+<hr />
+<h2 id="d-two-sites-three-servers-each">D — Two sites, three servers each</h2>
+<p><strong>A large deployment in two locations.</strong> Model C twice over, federated as in model B — so each
+location has capacity and an agent pool of its own, and either survives losing the other.</p>
+<p>Everything in C applies to each site separately, including that a site's shared parts are still one
+database, one broker and one Redis unless you deliberately make them redundant.</p>
+<blockquote>
+<h3 id="not-yet-possible-with-the-shipped-commands_1">Not yet possible with the shipped commands</h3>
+<p>Same reason as B: a cluster cannot yet hold a second site. Each location can be built today as
+model <strong>C</strong>; joining them into one cluster is what is missing.</p>
+</blockquote>
+<hr />
+<h2 id="choosing">Choosing</h2>
+<p>Start at A. Move to C when one machine is not enough — that is a change of size, and the commands
+are a superset of A's.</p>
+<p>Move to B or D only when you have <strong>two locations</strong>, because that is what a second site is for. Two
+sites in one building is the wrong shape: it splits the agent pool for nothing and gives up the
+shared capacity that C is for.</p>
+<p>And at every size, the question worth asking early is the one none of these models answers by
+itself: <strong>which single machine must not fail?</strong> In A it is the only one. In C and D it is whichever
+holds the database, the broker and Redis — until somebody makes those redundant on purpose.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

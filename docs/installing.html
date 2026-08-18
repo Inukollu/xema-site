@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installing — Xema docs</title>
+<meta name="description" content="Xema is a product developed by a startup @TechSudoku based in India.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="installing.html" aria-current="page">Installing</a>
+    <a href="deployments.html">Deployment shapes</a>
+    <a href="cluster.html">Building a site</a>
+  </aside>
+  <article class="prose">
+<h1 id="welcome">Welcome!</h1>
+<p>Xema is a product developed by a startup @TechSudoku based in India. We serve the Call Center operators with customized call flows. We are happy to see you here and ready to support your evaluation. You can write to us at support@xema.in</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Xema runs on Ubuntu, the operating system choice of cloud.</p>
+<h3 id="installation">Installation</h3>
+<h4 id="version-2">Version 2</h4>
+<p>Supports Ubuntu 24, 22</p>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+</code></pre>
+<h4 id="dev-branch">Dev Branch</h4>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash -s -- -d -vvv
+</code></pre>
+<h4 id="version-1">Version 1</h4>
+<p>Supports Ubuntu 18</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/xema-in/install/master/xema-manager.sh | sudo bash
+</code></pre>
+<hr />
+<h2 id="after-installing">After installing</h2>
+<p><strong>This script installs software. It does not decide what the server is for.</strong></p>
+<p>That is deliberate. It used to decide three things, all at the one moment nobody yet knew what the
+machine was for: which components to install, what database password to use, and what every
+service's settings should be. The last of those was the worst — a copy of a release's defaults in
+<code>/etc/xema</code> overrides the settings a cluster works out for itself, so servers sat quietly connected
+to the wrong machine with nothing to show for it.</p>
+<p>So when the script finishes, the software is on the machine and <strong>only Manager is running</strong>.
+Everything else waits to be asked for.</p>
+<h3 id="1-say-what-to-connect-to">1. Say what to connect to</h3>
+<pre><code class="language-bash">sudo xema connect-database --server localhost --user xema --provision
+</code></pre>
+<p><code>--provision</code> creates the database user with a password nobody has to choose or remember. It logs
+in to MariaDB as whoever is running the command, over the unix socket — which is how a stock
+install authenticates root — so <code>sudo</code> is the whole credential and nothing is typed or stored by
+hand. The generated password goes straight to <code>/etc/xema/common.yaml</code>, where every service reads it.</p>
+<p>If your own Linux login has no rights to create a MariaDB user, add <code>--trusted-user</code> to log in as
+root instead. For a database that already exists, give <code>--user</code> and <code>--pass</code> and leave
+<code>--provision</code> out.</p>
+<p><code>xema database</code> shows what the server is set to connect to, and never the password.</p>
+<h3 id="2-make-it-a-site-or-join-one">2. Make it a site, or join one</h3>
+<p>A single server is the ordinary deployment and is a site of one:</p>
+<pre><code class="language-bash">xema cluster init --site &lt;name&gt;
+</code></pre>
+<p>To add a <strong>second</strong> server, mint a pass on the first and use it on the new one:</p>
+<pre><code class="language-bash">xema cluster token                  # on the server that is already a site
+xema cluster join --token &lt;pass&gt;    # on the new one
+</code></pre>
+<p><strong>A server joins a site empty.</strong> Joining points it at the site's database, so anything in its own
+would simply stop being read — not merged, not moved. Two working servers are never made into one
+site. To bring an existing server in, run <code>cluster init</code> on <em>it</em> and let the others join it.</p>
+<p>A joining server also arrives with <strong>no roles</strong>, on purpose. Whatever it happened to be running
+before is not this site's business.</p>
+<h3 id="3-say-what-the-server-runs">3. Say what the server runs</h3>
+<pre><code class="language-bash">xema role add bff
+xema role add queue        # bff queue dialer simplecdr metrics
+                           # astermq fastagi tracer sipper ava
+xema node apply
+</code></pre>
+<p><code>role add</code> writes the decision down; <code>node apply</code> is what starts and stops things. A server that is
+out of contact picks up the decision when it returns.</p>
+<h3 id="4-check-it">4. Check it</h3>
+<pre><code class="language-bash">xema site           # the whole site: servers, shared parts, what it holds, what each is running
+xema status         # what is running on this machine
+</code></pre>
+<h3 id="more-than-one-server">More than one server?</h3>
+<p>A single server is the ordinary deployment and needs nothing further.</p>
+<ul>
+<li><strong><a href="DEPLOYMENTS.md">DEPLOYMENTS.md</a></strong> — the four standard shapes, what each gives you and what it
+  does not, and which to choose</li>
+<li><strong><a href="CLUSTER.md">CLUSTER.md</a></strong> — every command for building a site of several servers</li>
+</ul>
+<h2 id="upgrading">Upgrading</h2>
+<p>Re-run the installer. It replaces the code and <strong>never switches anything off</strong>, so a server keeps
+running what it was.</p>
+<p>Schema is not applied automatically — several servers sharing one database must not race each other
+to migrate it, and a deploy should not be the moment the schema changes. Manager says at startup
+when the database is behind the build:</p>
+<pre><code class="language-bash">xema database migrate
+</code></pre>
+<h2 id="what-goes-where">What goes where</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/opt/techsudoku/xema</code></td>
+<td>the code — replaced wholesale on upgrade</td>
+</tr>
+<tr>
+<td><code>/etc/xema</code></td>
+<td>settings, and only what somebody decided</td>
+</tr>
+<tr>
+<td><code>/var/lib/xema</code></td>
+<td>state the services write</td>
+</tr>
+</tbody>
+</table>
+<p>Nothing is seeded into <code>/etc/xema</code> by installing. A release's defaults ship beside its code and are
+read from there; <code>/etc/xema</code> is for choices — the database from <code>connect-database</code>, the site's own
+settings from joining, and anything an administrator writes themselves, which beats both.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

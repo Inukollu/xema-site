@@ -1,0 +1,197 @@
+/* Xema — www.xema.in
+   One stylesheet, no build step and no font CDN beyond Google Fonts, so the site is exactly the
+   files in this folder. The palette is taken from the product's own mark rather than chosen. */
+
+:root {
+  --plum: #58407c;
+  --plum-deep: #3d2c58;
+  --plum-lift: #7a5fa8;
+  --ink: #1b1723;
+  --body: #4a4458;
+  --muted: #6f6880;
+  --line: #e6e2ee;
+  --paper: #ffffff;
+  --wash: #f7f5fb;
+  --wash-deep: #efeaf7;
+  --amber: #f9a825;
+  --green: #2e7d5b;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(27, 23, 35, .05), 0 12px 32px -12px rgba(88, 64, 124, .22);
+  --wide: 1120px;
+  --on-plum: #ffffff;
+
+  /* A terminal is dark in both schemes. These deliberately do NOT flip: --ink is the text colour
+     and inverts, so using it as a background gave light-on-light the moment the page went dark. */
+  --term: #17121f;
+  --term-ink: #ece6f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #f4f1f9;
+    --body: #c3bcd2;
+    --muted: #9890ab;
+    --line: #322a41;
+    --paper: #16121d;
+    --wash: #1c1726;
+    --wash-deep: #241d31;
+    --plum: #b79ae0;
+    --plum-deep: #d6c4f0;
+    --plum-lift: #8f6fc4;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -12px rgba(0, 0, 0, .6);
+    --on-plum: #1b1230;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--body);
+  font: 400 17px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 .5em; }
+h1 { font-size: clamp(2.4rem, 5.5vw, 3.9rem); font-weight: 680; letter-spacing: -.035em; }
+h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); font-weight: 640; }
+h3 { font-size: 1.16rem; font-weight: 620; }
+p { margin: 0 0 1.1em; }
+a { color: var(--plum); text-decoration-color: color-mix(in srgb, var(--plum) 35%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--plum-lift); }
+img, svg { max-width: 100%; }
+code, kbd, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+.wrap { width: min(var(--wide), calc(100% - 3rem)); margin-inline: auto; }
+.lede { font-size: 1.2rem; color: var(--muted); max-width: 62ch; }
+.eyebrow { font-size: .78rem; font-weight: 640; letter-spacing: .14em; text-transform: uppercase; color: var(--plum); margin: 0 0 .9rem; }
+
+/* ---- chrome ---- */
+header.top {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; gap: 1.6rem; height: 66px; }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 660; color: var(--ink); text-decoration: none; font-size: 1.12rem; letter-spacing: -.02em; }
+.brand svg, .brand img { width: 26px; height: 26px; }
+.brand picture { display: flex; }
+.top nav { margin-left: auto; display: flex; gap: 1.5rem; align-items: center; }
+.top nav a { color: var(--body); text-decoration: none; font-size: .95rem; font-weight: 500; }
+.top nav a:hover { color: var(--plum); }
+
+/* `.top nav a` is (0,1,2) and `.btn-primary` is (0,1,0), so the nav link colour won and the Install
+   button rendered as light text on a light lilac fill — unreadable, and only in dark mode, where
+   --body inverts. Stated at matching specificity rather than with !important. */
+.top nav a.btn-primary { color: var(--on-plum); }
+.top nav a.btn-ghost { color: var(--ink); }
+.top nav a.btn-ghost:hover { color: var(--plum); }
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .72rem 1.3rem; border-radius: 999px; font-weight: 600; font-size: .97rem;
+  text-decoration: none; border: 1px solid transparent; cursor: pointer;
+}
+/* The label colour is a variable because the button's fill flips with the scheme: on a dark page
+   `--plum` is a light lilac, and white text on it is unreadable. */
+.btn-primary { background: var(--plum); color: var(--on-plum); }
+.btn-primary:hover { background: var(--plum-lift); color: var(--on-plum); }
+.btn-ghost { border-color: var(--line); color: var(--ink); background: var(--paper); }
+.btn-ghost:hover { border-color: var(--plum); color: var(--plum); }
+
+/* ---- hero ---- */
+.hero { padding: clamp(3.5rem, 9vw, 6.5rem) 0 clamp(2.5rem, 5vw, 4rem); background:
+  radial-gradient(900px 420px at 12% -10%, color-mix(in srgb, var(--plum) 13%, transparent), transparent 70%); }
+.hero h1 { max-width: 16ch; }
+.hero .lede { font-size: 1.28rem; margin-top: 1.2rem; }
+.hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 2rem; align-items: center; }
+
+/* ---- install strip ---- */
+.install {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: var(--term); color: var(--term-ink); border-radius: var(--radius);
+  padding: 1rem 1.15rem; font-family: ui-monospace, monospace; font-size: .93rem;
+  box-shadow: var(--shadow); overflow-x: auto;
+}
+.install .dollar { color: var(--plum-lift); user-select: none; }
+.install code { color: inherit; white-space: nowrap; }
+.copy { margin-left: auto; background: rgba(255,255,255,.12); color: var(--term-ink); border: 0; border-radius: 8px; padding: .4rem .7rem; font: inherit; font-size: .82rem; cursor: pointer; }
+.copy:hover { background: rgba(255,255,255,.2); }
+
+/* ---- sections ---- */
+section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
+section.tinted { background: var(--wash); border-block: 1px solid var(--line); }
+.section-head { max-width: 60ch; margin-bottom: 2.8rem; }
+
+.grid { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; }
+.card h3 { display: flex; align-items: center; gap: .55rem; }
+.card p { margin: 0; font-size: .96rem; color: var(--muted); }
+.card .ico { width: 20px; height: 20px; flex: none; color: var(--plum); }
+
+/* ---- mock UI ---- */
+.shot { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.shot-bar { display: flex; align-items: center; gap: .4rem; padding: .6rem .9rem; border-bottom: 1px solid var(--line); background: var(--wash); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.shot-title { margin-left: .6rem; font-size: .8rem; color: var(--muted); }
+.shot-body { padding: 1.1rem; display: grid; gap: .8rem; }
+
+.agentbar { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 600; }
+.pill-live { background: color-mix(in srgb, var(--green) 15%, transparent); color: var(--green); }
+.pill-wrap { background: color-mix(in srgb, var(--amber) 22%, transparent); color: #8a6100; }
+.pill-idle { background: var(--wash-deep); color: var(--muted); }
+.blip { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .7rem; }
+.stat { background: var(--wash); border: 1px solid var(--line); border-radius: 10px; padding: .8rem .9rem; }
+.stat b { display: block; font-size: 1.5rem; color: var(--ink); font-weight: 660; letter-spacing: -.02em; }
+.stat span { font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 84px; }
+.bars i { flex: 1; background: linear-gradient(180deg, var(--plum-lift), var(--plum)); border-radius: 4px 4px 0 0; display: block; }
+
+.rows { display: grid; gap: .4rem; font-size: .87rem; }
+.row { display: grid; grid-template-columns: 1fr auto auto; gap: .8rem; align-items: center; padding: .5rem .7rem; border: 1px solid var(--line); border-radius: 9px; }
+.row b { color: var(--ink); font-weight: 580; }
+.row span { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.split { display: grid; gap: 2.4rem; grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .split { grid-template-columns: 1fr 1.15fr; gap: 3.2rem; } .split.flip > :first-child { order: 2; } }
+
+.ticks { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: .7rem; }
+.ticks li { display: flex; gap: .65rem; align-items: flex-start; font-size: .98rem; }
+.ticks svg { width: 19px; height: 19px; flex: none; color: var(--plum); margin-top: .18rem; }
+
+/* ---- docs ---- */
+.doc { display: grid; gap: 2.5rem; padding: 3rem 0 5rem; }
+@media (min-width: 900px) { .doc { grid-template-columns: 220px 1fr; gap: 3.5rem; } }
+.doc aside { align-self: start; position: sticky; top: 90px; }
+.doc aside h4 { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.doc aside a { display: block; padding: .34rem 0; color: var(--body); text-decoration: none; font-size: .95rem; }
+.doc aside a:hover, .doc aside a[aria-current="page"] { color: var(--plum); font-weight: 600; }
+.prose { max-width: 74ch; }
+.prose h2 { margin-top: 2.4rem; padding-top: .3rem; }
+.prose h3 { margin-top: 1.8rem; }
+.prose pre { background: var(--term); color: var(--term-ink); padding: 1rem 1.1rem; border-radius: 11px; overflow-x: auto; font-size: .89rem; line-height: 1.55; }
+.prose :not(pre) > code { background: var(--wash-deep); color: var(--plum-deep); padding: .12em .4em; border-radius: 5px; font-size: .89em; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .prose :not(pre) > code { color: var(--plum-deep); } }
+.prose table { width: 100%; border-collapse: collapse; font-size: .93rem; display: block; overflow-x: auto; }
+.prose th, .prose td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); }
+.prose blockquote { margin: 1.2rem 0; padding: .1rem 1.1rem; border-left: 3px solid var(--plum); color: var(--muted); }
+.prose img { border-radius: 10px; border: 1px solid var(--line); }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.4rem 0; }
+
+/* ---- footer ---- */
+footer { border-top: 1px solid var(--line); padding: 2.6rem 0; color: var(--muted); font-size: .92rem; background: var(--wash); }
+footer .wrap { display: flex; gap: 1.4rem; flex-wrap: wrap; align-items: center; }
+footer a { color: var(--body); }
+footer .spacer { margin-left: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .card, .copy { transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease; }
+  .card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--plum) 40%, var(--line)); }
+}
