@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your first server — Xema docs</title>
+<meta name="description" content="One server is a whole contact centre: it answers your numbers, runs your queues, serves the agents">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html" aria-current="page">Your first server</a>
+    <a href="multi-site.html">Clusters and multiple sites</a>
+  </aside>
+  <article class="prose">
+<h1 id="your-first-server">Your first server</h1>
+<p>One server is a whole contact centre: it answers your numbers, runs your queues, serves the agents
+and keeps the recordings and the reporting. Most installations never need a second one.</p>
+<figure class="figure">
+<svg viewBox="0 0 640 200" role="img" aria-label="Callers arrive over a phone line into one server, and agents connect to it from their browsers.">
+  <rect class="dg-box" x="16" y="70" width="120" height="58" rx="10"/>
+  <text class="dg-label" x="76" y="95" text-anchor="middle">Callers</text>
+  <text class="dg-sub" x="76" y="113" text-anchor="middle">your phone numbers</text>
+
+  <rect class="dg-box dg-box-key" x="252" y="52" width="136" height="94" rx="12"/>
+  <text class="dg-title" x="320" y="76" text-anchor="middle">YOUR SERVER</text>
+  <text class="dg-label" x="320" y="99" text-anchor="middle">Xema</text>
+  <text class="dg-sub" x="320" y="119" text-anchor="middle">routing · recording</text>
+  <text class="dg-sub" x="320" y="134" text-anchor="middle">reporting</text>
+
+  <rect class="dg-box" x="504" y="70" width="120" height="58" rx="10"/>
+  <text class="dg-label" x="564" y="95" text-anchor="middle">Agents</text>
+  <text class="dg-sub" x="564" y="113" text-anchor="middle">in a browser</text>
+
+  <path id="r1" class="dg-link dg-flash" style="--dur:6s" d="M136 99 H252"/>
+  <path class="dg-link dg-flash" style="--dur:6s" d="M388 99 H504"/>
+  <circle class="dg-pulse" r="5" style="--route:path('M136 99 H252 M388 99 H504');--dur:6s"/>
+</svg>
+<figcaption>One server answers the calls, runs the queues and serves the agents. Nothing else is needed.</figcaption>
+</figure>
+
+<h2 id="what-you-need">What you need</h2>
+<ul>
+<li>A machine running <strong>Ubuntu 24 or 22</strong> — a cloud instance or one of your own.</li>
+<li>A number to call in on, from whichever carrier you use.</li>
+<li>Root on the box, and about ten minutes.</li>
+</ul>
+<h2 id="install-it">Install it</h2>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+</code></pre>
+<p>That puts the software on the machine and stops. It does not decide what the machine is for, and
+it does not switch anything on — those are yours, and they are the next two commands.</p>
+<p>To follow the rolling build instead of the stable one:</p>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash -s -- -d
+</code></pre>
+<h2 id="set-it-up">Set it up</h2>
+<p><strong>Give it a database.</strong> One command creates it, generates its password and records it where the
+software will look:</p>
+<pre><code class="language-bash">sudo xema connect-database --server localhost --user xema --provision
+</code></pre>
+<p><strong>Make it a site.</strong> A site is the unit everything else belongs to — your queues, your agents, your
+numbers. On a single server it is a formality, and doing it now is what lets you add a second
+server later without starting again:</p>
+<pre><code class="language-bash">sudo xema cluster init --site &lt;name&gt;
+</code></pre>
+<p>Pick any name. <code>main</code>, your company's, the city it sits in.</p>
+<p><strong>Say what it runs, and start it:</strong></p>
+<figure class="figure">
+<svg viewBox="0 0 640 150" role="img" aria-label="A call arriving, being greeted, waiting briefly in a queue, and reaching an agent.">
+  <rect class="dg-box" x="8" y="46" width="112" height="52" rx="10"/>
+  <text class="dg-label" x="64" y="70" text-anchor="middle">Call arrives</text>
+  <text class="dg-sub" x="64" y="87" text-anchor="middle">your number</text>
+
+  <rect class="dg-box" x="176" y="46" width="112" height="52" rx="10"/>
+  <text class="dg-label" x="232" y="70" text-anchor="middle">Greeting</text>
+  <text class="dg-sub" x="232" y="87" text-anchor="middle">menu or straight in</text>
+
+  <rect class="dg-box" x="344" y="46" width="112" height="52" rx="10"/>
+  <text class="dg-label" x="400" y="70" text-anchor="middle">Queue</text>
+  <text class="dg-sub" x="400" y="87" text-anchor="middle">matched on skill</text>
+
+  <rect class="dg-box dg-box-key" x="512" y="46" width="120" height="52" rx="10"/>
+  <text class="dg-label" x="572" y="70" text-anchor="middle">Agent</text>
+  <text class="dg-sub" x="572" y="87" text-anchor="middle">answers</text>
+
+  <path class="dg-link" d="M120 72 H176"/>
+  <path class="dg-link" d="M288 72 H344"/>
+  <path class="dg-link" d="M456 72 H512"/>
+  <circle class="dg-pulse" r="5.5" style="--route:path('M64 72 H176 M288 72 H344 M456 72 H572');--dur:6.5s"/>
+</svg>
+<figcaption>What a caller goes through. Every step is yours to configure — the greeting, who counts as
+the right agent, and what happens when nobody is free.</figcaption>
+</figure>
+
+<pre><code class="language-bash">sudo xema role add bff        # the agents' side
+sudo xema role add queue      # the queues
+sudo xema role add astermq    # call events
+sudo xema role add fastlane   # this machine's telephony
+sudo xema role add simplecdr  # call records
+sudo xema role add metrics    # dashboards and reporting
+
+sudo xema node apply
+</code></pre>
+<p>Add <code>dialer</code> as well if you are calling out, and <code>bridge</code> if agents will transfer, conference or
+be coached.</p>
+<h2 id="check-it">Check it</h2>
+<pre><code class="language-bash">xema status
+</code></pre>
+<p>Everything you declared should be running. Then open the admin pages in a browser at the machine's
+address, and add your first number, your first queue and your first agent.</p>
+<h2 id="when-one-server-is-not-enough">When one server is not enough</h2>
+<p>Two reasons, and only two:</p>
+<ul>
+<li><strong>More calls than one machine will carry.</strong> Adding a second server adds capacity to the same
+  queues and the same reporting.</li>
+<li><strong>Agents in more than one place</strong>, where each place should keep working on its own if the link
+  between them goes down.</li>
+</ul>
+<p>Both are the same next step: <a href="multi-site.html">clusters and multiple sites</a>.</p>
+<h2 id="upgrading">Upgrading</h2>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+</code></pre>
+<p>The same command. It replaces the software and leaves your configuration, your recordings and your
+call history alone.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

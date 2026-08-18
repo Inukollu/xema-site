@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Xema — the contact centre platform you run yourself</title>
-<meta name="description" content="Xema is a contact centre platform for operators who want their own: queues, agents, dialers and reporting on servers you control. Built on Asterisk, installed with one command.">
+<meta name="description" content="Contact centre software you run yourself. Skills-based routing, IVR, outbound campaigns, a browser-based agent desktop, live wallboards and reporting — with no per-seat licence.">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,11 +53,10 @@
   <div class="wrap">
     <div class="section-head">
       <p class="eyebrow">What it is</p>
-      <h2>A whole contact centre, from the trunk to the wallboard.</h2>
+      <h2>Everything a contact centre runs on, in one place.</h2>
       <p class="lede">
-        Xema is built on Asterisk and adds everything around it that a contact centre needs and
-        Asterisk does not have an opinion about — who a call should go to, what the agent sees, and
-        what you can say about it afterwards.
+        Inbound and outbound, the agent's screen, the supervisor's view and the numbers you report
+        on afterwards — one product rather than four that have to be made to agree.
       </p>
     </div>
 
@@ -69,8 +68,8 @@
       </div>
       <div class="card">
         <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v12H7l-3 3z"/></svg>Call flows</h3>
-        <p>IVR, prompts, business hours, dataset lookups and API calls, drawn as a flow and
-        rendered onto every node. No dialplan to hand-edit.</p>
+        <p>Menus, prompts, business hours and callbacks, drawn as a flow. Look a caller up in your
+        own data, or ask your systems a question, before anybody answers.</p>
       </div>
       <div class="card">
         <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Outbound dialing</h3>
@@ -79,18 +78,19 @@
       </div>
       <div class="card">
         <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V9m5 10V5m5 14v-7m5 7V8"/></svg>Live and historic</h3>
-        <p>Wallboards for the floor, and call records with recordings behind them. Answered,
-        abandoned, service level and an agent's day, kept as data rather than a screenshot.</p>
+        <p>Wallboards for the floor, and call records with the recording attached. Answered,
+        abandoned, service level and every agent's day — kept as data you can export, not a
+        screenshot of a dashboard.</p>
       </div>
       <div class="card">
         <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5"/></svg>Your servers</h3>
-        <p>Installs on Ubuntu you already have — a cloud VM, a machine in your own rack, or a rack
-        of them. Your recordings and your customer data stay where you put them.</p>
+        <p>A cloud instance, a machine in your own rack, or a rack of them. Your recordings and your
+        customers' details stay where you put them, under whichever rules you answer to.</p>
       </div>
       <div class="card">
         <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 11V8a5 5 0 0110 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg>Integrations</h3>
-        <p>A REST API over the parts worth automating, and connectors where they earn their keep —
-        CRM screen-pops, attendance, and datasets your flows read at call time.</p>
+        <p>Screen-pop your CRM the moment a call connects, and drive the rest from an API — so the
+        agent works in one window instead of three.</p>
       </div>
     </div>
   </div>
@@ -102,11 +102,12 @@
       <p class="eyebrow">For agents</p>
       <h2>A phone in the browser, and nothing to install.</h2>
       <p>
-        Agents sign in to a web page and take calls through it — WebRTC, so there is no softphone to
-        deploy, no handset to configure, and no desk they have to be sitting at.
+        Agents sign in to a web page and take calls through it. Nothing to install on their machine,
+        no handset to configure, and no particular desk they have to be sitting at — a browser and a
+        headset is the whole of it.
       </p>
       <ul class="ticks">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Hold, transfer, conference and hangup, from the same screen as the customer's record.</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Hold, transfer, conference and hang up, beside the customer's record.</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Breaks that a supervisor can see, with wrap-up time the queue enforces.</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Dispositions, call history and missed calls, per agent.</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Barge, whisper and coaching for whoever is running the floor.</li>
@@ -142,8 +143,8 @@
       <p class="eyebrow">For the floor</p>
       <h2>What is happening, while it happens.</h2>
       <p>
-        Wallboards built from the same event stream the queues run on, so the number on the screen
-        and the number in the report are the same number.
+        The number on the wallboard and the number in the report are the same number — so a
+        conversation about yesterday does not turn into a conversation about whose figures are right.
       </p>
       <ul class="ticks">
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>Waiting, longest wait, answered and abandoned, per queue.</li>
@@ -181,28 +182,28 @@
   <div class="wrap">
     <div class="section-head">
       <p class="eyebrow">Scale</p>
-      <h2>One server, or a room of them.</h2>
+      <h2>Ten seats or a thousand, without starting again.</h2>
       <p class="lede">
-        A single machine is the ordinary deployment and needs nothing special. When one is not
-        enough, servers join a <em>site</em> and share one database, one broker and one set of
-        agents — a caller who lands on one node reaches an agent registered on another.
+        The same product runs a single team and a floor spread across buildings. Growing means
+        adding capacity, not migrating to a different edition and rebuilding what you already
+        configured.
       </p>
     </div>
     <div class="grid">
       <div class="card">
-        <h3>Roles, not installs</h3>
-        <p>You say what a server is for and it becomes that. Adding a queue engine to a machine is
-        a role, not an afternoon.</p>
+        <h3>One floor, several locations</h3>
+        <p>Agents in different offices share the same queues, the same reporting and the same
+        supervisors. Where somebody is sitting stops being an operational question.</p>
       </div>
       <div class="card">
-        <h3>Nodes that heal</h3>
-        <p>Each node renders its own Asterisk configuration from the database. Nothing reaches
-        across to edit another machine's files, so a node that was down catches up by itself.</p>
+        <h3>Built to keep answering</h3>
+        <p>Capacity is spread across machines, so losing one does not take the phones down with it
+        and maintenance does not have to wait for a quiet weekend.</p>
       </div>
       <div class="card">
-        <h3>Sites that stand alone</h3>
-        <p>A site keeps working when the link to another is cut, and calls cross between them while
-        it is up.</p>
+        <h3>No per-seat licence</h3>
+        <p>Add agents for a campaign and take them off afterwards. What it costs to run is what your
+        servers cost, not what your headcount does.</p>
       </div>
     </div>
   </div>
@@ -214,8 +215,8 @@
       <p class="eyebrow">Install</p>
       <h2>One command on a fresh Ubuntu server.</h2>
       <p class="lede">
-        It installs the software and stops there — what the server is <em>for</em> is a decision you
-        make afterwards, with the <code>xema</code> command. Ubuntu 24 and 22.
+        Evaluate it on a machine of your own this afternoon. One command puts it there; nothing is
+        sent anywhere and nothing phones home. Ubuntu 24 and 22.
       </p>
     </div>
 
@@ -226,9 +227,9 @@
     </div>
 
     <p style="margin-top:1.4rem">
-      <a href="docs/installing.html">What it installs and what it does not</a> ·
-      <a href="docs/deployments.html">Deployment shapes</a> ·
-      <a href="docs/cluster.html">Building a site of several servers</a>
+      <a href="docs/first-server.html">What it installs and what it does not</a> ·
+      <a href="docs/multi-site.html">Deployment shapes</a> ·
+      <a href="docs/multi-site.html">Building a site of several servers</a>
     </p>
   </div>
 </section>

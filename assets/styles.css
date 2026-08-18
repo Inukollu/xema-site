@@ -195,3 +195,42 @@ footer .spacer { margin-left: auto; }
   .btn, .card, .copy { transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease; }
   .card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--plum) 40%, var(--line)); }
 }
+
+/* ---- diagrams -------------------------------------------------------------------
+   Inline SVG rather than images: it takes the page's own colours, stays sharp at any
+   size, and a diagram that has to be regenerated to change a label is a diagram that
+   stops matching the words beside it. */
+.figure { margin: 2rem 0; }
+.figure svg { width: 100%; height: auto; display: block; }
+.figure figcaption { margin-top: .7rem; font-size: .89rem; color: var(--muted); }
+
+.dg-box { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+.dg-box-key { fill: color-mix(in srgb, var(--plum) 12%, var(--paper)); stroke: var(--plum); }
+.dg-site { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.dg-label { fill: var(--ink); font: 600 13px Inter, system-ui, sans-serif; }
+.dg-sub { fill: var(--muted); font: 400 11.5px Inter, system-ui, sans-serif; }
+.dg-title { fill: var(--plum); font: 640 11px Inter, system-ui, sans-serif; letter-spacing: .1em; }
+.dg-link { stroke: var(--line); stroke-width: 2; fill: none; }
+.dg-link-live { stroke: var(--plum); stroke-width: 2; fill: none; }
+
+/* The moving dot on a call-flow figure. Each hop is a segment of one path, so the
+   timing is the story: it waits in the queue, then goes to the agent. */
+.dg-pulse { fill: var(--plum); }
+@media (prefers-reduced-motion: no-preference) {
+  .dg-pulse { offset-path: var(--route); animation: dg-travel var(--dur, 7s) linear infinite; }
+  @keyframes dg-travel {
+    0%   { offset-distance: 0%;   opacity: 0; }
+    4%   { opacity: 1; }
+    96%  { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+  .dg-flash { animation: dg-flash var(--dur, 7s) linear infinite; }
+  @keyframes dg-flash {
+    0%, 100% { stroke: var(--line); }
+    45%, 70% { stroke: var(--plum); }
+  }
+}
+/* Without motion the dot sits at the agent, so the figure still says where a call ends. */
+@media (prefers-reduced-motion: reduce) {
+  .dg-pulse { offset-path: var(--route); offset-distance: 100%; }
+}

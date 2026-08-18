@@ -61,7 +61,7 @@
     <label>Your server
       <input id="host" type="text" value="https://xema.example.com" spellcheck="false" autocomplete="off">
     </label>
-    <label>Node&#8209;API secret <span style="font-weight:400">— <code>xema site secret set node-api --generate</code></span>
+    <label>API secret <span style="font-weight:400">— <code>xema site secret set node-api --generate</code></span>
       <input id="secret" type="text" value="$XEMA_NODE_API_SECRET" spellcheck="false" autocomplete="off">
     </label>
   </div>
@@ -98,7 +98,7 @@ function esc(s) {
 }
 
 function curlFor(group, ep, host, secret) {
-  var base = (group.base || '').replace('https://<node>', host).replace('http://127.0.0.1:5030', host + ':5030');
+  var base = (group.base || '').replace('https://<your-server>', host).replace('http://127.0.0.1:5030', host + ':5030');
   var lines = ["curl -sS -X " + ep.method + " '" + base + ep.path + "'"];
   var auth = ep.auth || group.auth;
   if (auth === 'node-api') lines.push("  -H 'Authorization: Bearer " + secret + "'");

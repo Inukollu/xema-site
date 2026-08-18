@@ -2,76 +2,111 @@
   "note": "A curated selection, not the whole surface. Add an entry here and it appears in the explorer.",
   "groups": [
     {
-      "name": "Node — Fastlane",
-      "base": "https://<node>/fastlane",
+      "name": "Call control",
+      "base": "https://<your-server>/fastlane",
       "auth": "node-api",
-      "blurb": "What a node's Asterisk will do, asked over HTTP. This is how an agent's hold, transfer or hangup reaches the machine their phone is registered on.",
+      "blurb": "What happens to a call in progress \u2014 hold, transfer, conference, hang up. This is how an agent's button reaches the call.",
       "endpoints": [
         {
           "method": "GET",
           "path": "/ping",
-          "summary": "Whether this node's Fastlane is up.",
+          "summary": "Whether this server is answering.",
           "response": "{ \"node\": \"dbc98314dd474f4488e9070f87cd7724\" }"
         },
         {
           "method": "POST",
           "path": "/actions",
           "summary": "Run one agent action on this node.",
-          "detail": "One endpoint for every action, because that is what the action set is: a name and the fields it needs. Always answers 200 with the result inside — \"the agent is not on this node\" and \"Asterisk refused it\" are answers, not transport failures.",
+          "detail": "One endpoint for every action: a name and the fields it needs. Always answers 200 with the result inside, because \"the call is not here\" is an answer rather than a transport failure.",
           "body": "{\n  \"action\": \"hold\",\n  \"deviceId\": \"1001\",\n  \"channel\": \"PJSIP/1001-00000042\"\n}",
           "response": "{ \"ok\": true, \"message\": \"\" }"
         }
       ]
     },
     {
-      "name": "Node — Host agent",
-      "base": "https://<node>/host",
+      "name": "Server management",
+      "base": "https://<your-server>/host",
       "auth": "node-api",
-      "blurb": "The machine itself: its units, its network plan, its clock. This is the only service that acts on the box rather than on a call.",
+      "blurb": "Ask a server what it is running, and start or stop it. For your own monitoring and automation.",
       "endpoints": [
-        { "method": "GET", "path": "/ping", "summary": "Whether the host agent is up on this node." },
-        { "method": "GET", "path": "/services", "summary": "Every Xema unit on this machine and what it is doing." },
+        {
+          "method": "GET",
+          "path": "/ping",
+          "summary": "Whether this server is reachable."
+        },
+        {
+          "method": "GET",
+          "path": "/services",
+          "summary": "Every Xema service on this machine and what it is doing."
+        },
         {
           "method": "POST",
           "path": "/services/{unit}/{verb}",
           "summary": "Start, stop or restart one unit.",
-          "detail": "Xema's own units only. Infrastructure — the database, the broker, Redis, Asterisk — is never started or stopped here, because moving one moves data with it.",
+          "detail": "Xema's own services only. Nothing that holds data is started or stopped here.",
           "response": "{ \"ok\": true, \"state\": \"active\" }"
         }
       ]
     },
     {
-      "name": "Metrics",
-      "base": "https://<node>/metrics/api",
+      "name": "Reporting",
+      "base": "https://<your-server>/metrics/api",
       "auth": "mixed",
       "blurb": "What the floor did, live and historic. The dashboards read these; so can you.",
       "endpoints": [
-        { "method": "GET", "path": "/ping", "summary": "Service liveness.", "auth": "none" },
-        { "method": "GET", "path": "/queue-live", "summary": "Every queue's current state — waiting, longest wait, agents ready.", "auth": "none" },
-        { "method": "GET", "path": "/day-summaries?from=2026-08-01&to=2026-08-18", "summary": "Answered, abandoned and service level per day.", "auth": "none" },
+        {
+          "method": "GET",
+          "path": "/ping",
+          "summary": "Service liveness.",
+          "auth": "none"
+        },
+        {
+          "method": "GET",
+          "path": "/queue-live",
+          "summary": "Every queue's current state \u2014 waiting, longest wait, agents ready.",
+          "auth": "none"
+        },
+        {
+          "method": "GET",
+          "path": "/day-summaries?from=2026-08-01&to=2026-08-18",
+          "summary": "Answered, abandoned and service level per day.",
+          "auth": "none"
+        },
         {
           "method": "GET",
           "path": "/agents/{agentId}/day",
-          "summary": "One agent's day — handled, talk time, wrap, breaks.",
-          "detail": "Authenticated, unlike the rest of this service: it names a person rather than a floor-wide total.",
+          "summary": "One agent's day \u2014 handled, talk time, wrap, breaks.",
+          "detail": "Authenticated, unlike the rest: it names a person rather than a floor-wide total.",
           "auth": "node-api"
         }
       ]
     },
     {
-      "name": "Queue engine",
+      "name": "Queues",
       "base": "http://127.0.0.1:5030",
       "auth": "none",
-      "blurb": "The queues themselves, on the node running them. Bound to loopback: which queues run and who is in them is decided by the site, not asked for from outside.",
+      "blurb": "The queues themselves \u2014 who is waiting, and who may be offered a call.",
       "endpoints": [
-        { "method": "GET", "path": "/health", "summary": "Engine liveness and what it is running." },
-        { "method": "GET", "path": "/queues", "summary": "Every queue this node is running, with its callers and members." },
-        { "method": "GET", "path": "/queues/{name}/waiting", "summary": "Who is waiting in one queue, across the whole site." },
+        {
+          "method": "GET",
+          "path": "/health",
+          "summary": "Whether the service is up, and what it is running."
+        },
+        {
+          "method": "GET",
+          "path": "/queues",
+          "summary": "Every queue this server is running, with its callers and agents."
+        },
+        {
+          "method": "GET",
+          "path": "/queues/{name}/waiting",
+          "summary": "Who is waiting in one queue, across the site."
+        },
         {
           "method": "POST",
           "path": "/queues/{name}/members/sync",
           "summary": "Replace a queue's whole roster.",
-          "detail": "One call, and it states the answer rather than describing a change — there is nothing to miss and no ordering to get right. Add, remove and pause used to sit beside it and are gone.",
+          "detail": "Sends the whole roster rather than a change to it, so there is nothing to miss and no ordering to get right.",
           "body": "[\n  { \"interface\": \"PJSIP/agent_priya\", \"memberName\": \"Priya S.\", \"paused\": false }\n]"
         }
       ]
