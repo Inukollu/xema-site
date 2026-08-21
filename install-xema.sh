@@ -579,7 +579,7 @@ function install_xema_tool() {
     mkdir -p "$XEMA_INSTALL_DIR/$dir"
     rm -rf "/tmp/$zip"
 
-    wget -q --show-progress "https://github.com/inukollu/xema-data/releases/download/$tag/$zip" -O "/tmp/$zip"
+    wget -q --show-progress "https://github.com/inukollu/xema-site/releases/download/$tag/$zip" -O "/tmp/$zip"
     unzip -qo "/tmp/$zip" -d "$XEMA_INSTALL_DIR/$dir"
 
     # Nothing is seeded into /etc/xema. A release's appsettings.json ships beside the code and is
@@ -619,7 +619,7 @@ function install_xema_cli() {
     fi
 
     if [ "$distro" == "Ubuntu" ]; then
-        wget -q --show-progress https://github.com/inukollu/xema-data/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
+        wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
         unzip -qo /tmp/cli.zip -d /usr/local/bin
         chmod +x /usr/local/bin/xema
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
@@ -710,7 +710,7 @@ function backup_existing_installation() {
     footer
 }
 
-# https://github.com/inukollu/xema-data/releases/download/v2.0/Manager.zip
+# https://github.com/inukollu/xema-site/releases/download/v2.0/Manager.zip
 function install_xema_prod_channel() {
     header
 
@@ -718,7 +718,7 @@ function install_xema_prod_channel() {
 
     if [ "$distro" == "Ubuntu" ]; then
         mkdir -p "$XEMA_INSTALL_DIR/manager"
-        wget -q --show-progress https://github.com/inukollu/xema-data/releases/download/v2.0/Manager.zip -O /tmp/manager.zip
+        wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/v2.0/Manager.zip -O /tmp/manager.zip
         unzip -qo /tmp/manager.zip -d "$XEMA_INSTALL_DIR/manager"
     fi
 
@@ -729,7 +729,7 @@ function install_xema_prod_channel() {
     footer
 }
 
-# https://github.com/inukollu/xema-data/releases/download/dev/Manager.zip
+# https://github.com/inukollu/xema-site/releases/download/dev/Manager.zip
 function install_xema_dev_channel() {
     header
 
@@ -737,7 +737,7 @@ function install_xema_dev_channel() {
 
     if [ "$distro" == "Ubuntu" ]; then
         mkdir -p "$XEMA_INSTALL_DIR/manager"
-        wget -q --show-progress https://github.com/inukollu/xema-data/releases/download/dev/Manager.zip -O /tmp/manager.zip
+        wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/dev/Manager.zip -O /tmp/manager.zip
         unzip -qo /tmp/manager.zip -d "$XEMA_INSTALL_DIR/manager"
     fi
 
