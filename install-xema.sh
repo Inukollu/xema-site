@@ -359,6 +359,17 @@ function install_tools_and_binaries() {
         install_component ava         "Xema Ava"            ava
         install_component metrics     "Xema Metrics"        metrics
 
+        # The browser applications, on every node and not only where Manager runs.
+        #
+        # They shipped inside Manager.zip until 2026-09-06, so a node had them exactly when it had
+        # Manager. Manager moves — a site claims it wherever nothing holds it — and a console whose
+        # files only exist on the machine that used to run it is a failover nobody can sign in
+        # after. nginx serves them from /opt/techsudoku/xema/www, so no unit and nothing to start.
+        install_component admin       "Xema Admin Console"  admin
+        install_component agent       "Xema Agent"          agent
+        install_component data-portal "Xema Data Portal"    data-portal
+        install_component live-view   "Xema Live View"      live-view
+
         # Tools rather than services: they are run by hand when needed, and are small. Not
         # components — they have no unit and nothing starts them — so they stay here.
         log "-> install_xema_missingcdrs"
