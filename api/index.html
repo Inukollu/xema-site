@@ -61,7 +61,7 @@
     <label>Your server
       <input id="host" type="text" value="https://xema.example.com" spellcheck="false" autocomplete="off">
     </label>
-    <label>API secret <span style="font-weight:400">— <code>xema site secret set node-api --generate</code></span>
+    <label>API secret <span style="font-weight:400">— <code>xema cluster secret set node-api --generate</code></span>
       <input id="secret" type="text" value="$XEMA_NODE_API_SECRET" spellcheck="false" autocomplete="off">
     </label>
   </div>
@@ -86,7 +86,7 @@
 
 <script>
 var AUTH = {
-  "node-api": "Bearer token — the site's node-api secret.",
+  "node-api": "Bearer token — the cluster's node-api secret.",
   "none": "No credential. Bound to loopback or read-only.",
   "mixed": "Mostly open; the ones that name a person are authenticated."
 };

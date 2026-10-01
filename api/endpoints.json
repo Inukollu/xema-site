@@ -101,13 +101,6 @@
           "method": "GET",
           "path": "/queues/{name}/waiting",
           "summary": "Who is waiting in one queue, across the site."
-        },
-        {
-          "method": "POST",
-          "path": "/queues/{name}/members/sync",
-          "summary": "Replace a queue's whole roster.",
-          "detail": "Sends the whole roster rather than a change to it, so there is nothing to miss and no ordering to get right.",
-          "body": "[\n  { \"interface\": \"PJSIP/agent_priya\", \"memberName\": \"Priya S.\", \"paused\": false }\n]"
         }
       ]
     }
