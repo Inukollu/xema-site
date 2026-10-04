@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moving a V1 server to V2 — Xema docs</title>
+<meta name="description" content="A server running Xema V1 becomes a V2 server in place: the same machine, its configuration, its">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html" aria-current="page">Moving a V1 server to V2</a>
+  </aside>
+  <article class="prose">
+<h1 id="moving-a-v1-server-to-v2">Moving a V1 server to V2</h1>
+<p>A server running Xema V1 becomes a V2 server in place: the same machine, its configuration, its
+agents, its call lists and its call history, carried across. V1 keeps answering calls until the
+last moment, and the only outage is the minutes between V1 stopping and V2 starting.</p>
+<h2 id="before-you-start">Before you start</h2>
+<ul>
+<li>Pick a quiet hour. The switch itself takes a few minutes, and calls in progress then are dropped.</li>
+<li>Have root on the box.</li>
+</ul>
+<h2 id="install-the-new-tooling">Install the new tooling</h2>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+</code></pre>
+<p>This only adds the <code>xema</code> command. Nothing of V1 is touched, and V1 keeps running.</p>
+<h2 id="see-what-it-finds">See what it finds</h2>
+<pre><code class="language-bash">sudo xema discover
+</code></pre>
+<p>It says what the machine runs — V1, here — and lists V1's services, its databases and the backups
+already on disk. It writes nothing. Read it before going further.</p>
+<h2 id="rehearse-it">Rehearse it</h2>
+<pre><code class="language-bash">sudo xema migrate --dry-run
+</code></pre>
+<p>The whole plan, step by step, and anything that would stop it. Nothing is changed.</p>
+<h2 id="move-it">Move it</h2>
+<pre><code class="language-bash">sudo xema migrate
+</code></pre>
+<p>It finds the server's address on its local network and says which it took; a server on more than
+one network is asked which, or is told with <code>--address &lt;IP&gt;</code>.</p>
+<p>In order, while V1 keeps answering calls:</p>
+<ol>
+<li>takes the database login V1 already uses;</li>
+<li>fetches every part of V2, without starting any of it;</li>
+<li>records where V1's call history is;</li>
+<li><strong>takes a backup</strong> of V1 — every database, V1 itself with its binaries and settings, the phone
+   system's configuration, the web server's — under <code>/var/backups/xema/&lt;time&gt;/V1/</code>;</li>
+<li>converts V1's data into V2's: accounts, configuration, call lists, reports.</li>
+</ol>
+<p>Each step that has already been done is found done and skipped, so you can take the backup or
+convert the data yourself ahead of time (<code>xema backup</code>, <code>xema database migrate</code>) and the day itself
+is short. A backup counts for twelve hours; an older one is taken again. If any step fails, the run
+stops there and V1 is still serving.</p>
+<p>Then the switch:</p>
+<ol start="6">
+<li>stops V1;</li>
+<li>carries V1's call history across;</li>
+<li>makes the server a cluster of one, gives it its own passwords for the phone system, writes its
+   files and starts V2.</li>
+</ol>
+<p>V1's own tables and files are read and left exactly as they were.</p>
+<h2 id="a-second-v1-server">A second V1 server</h2>
+<p>To add another V1 server to a cluster that is already running V2, join it as in
+<a href="multi-site.html#on-every-other-server">clusters</a>. It is backed up and V1 is stopped as above, but
+its accounts, call lists and call history are not carried into the cluster; they stay on that
+server and in its backup.</p>
+<h2 id="if-it-stops-partway">If it stops partway</h2>
+<p>Run the same command again. Every step checks what is already done; nothing is repeated and
+nothing is overwritten.</p>
+<h2 id="going-back">Going back</h2>
+<p>Everything V1 was is in the backup the run took:</p>
+<pre><code class="language-bash">ls /var/backups/xema/
+</code></pre>
+<p>The <code>mariadb</code> folder holds a dump of every database, and each archive beside it restores with
+<code>tar -xzf &lt;archive&gt; -C /</code>.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

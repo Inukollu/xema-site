@@ -28,7 +28,8 @@
     <h4>Documentation</h4>
     <a href="./">Overview</a>
     <a href="first-server.html" aria-current="page">Your first server</a>
-    <a href="multi-site.html">Clusters and multiple sites</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
   </aside>
   <article class="prose">
 <h1 id="your-first-server">Your first server</h1>
@@ -71,18 +72,23 @@ it does not switch anything on — those are yours, and they are the next two co
 <p>To follow the rolling build instead of the stable one:</p>
 <pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash -s -- -d
 </code></pre>
-<h2 id="set-it-up">Set it up</h2>
-<p><strong>Give it a database.</strong> One command creates it, generates its password and records it where the
-software will look:</p>
-<pre><code class="language-bash">sudo xema connect-database --server localhost --user xema --provision
+<h2 id="bring-it-up">Bring it up</h2>
+<pre><code class="language-bash">sudo xema init
 </code></pre>
-<p><strong>Make it a site.</strong> A site is the unit everything else belongs to — your queues, your agents, your
-numbers. On a single server it is a formality, and doing it now is what lets you add a second
-server later without starting again:</p>
-<pre><code class="language-bash">sudo xema cluster init --site &lt;name&gt;
-</code></pre>
-<p>Pick any name. <code>main</code>, your company's, the city it sits in.</p>
-<p><strong>Say what it runs, and start it:</strong></p>
+<p>One command, and it is safe to run again if anything stops it partway. It:</p>
+<ul>
+<li>sets up the database and a login for Xema, with a password nobody has to choose — recorded in
+  <code>/etc/xema</code>, readable only by root;</li>
+<li>fetches every part of Xema this server will run;</li>
+<li>makes the server a <strong>cluster of one</strong>, named after the machine (<code>--cluster &lt;name&gt;</code> names it
+  yourself), holding every role;</li>
+<li>gives the machine its own passwords for the phone system's control interfaces;</li>
+<li>starts everything, and restarts only what is running an older build or older settings.</li>
+</ul>
+<p>It finds the server's address on its local network — how other servers would reach this one —
+leaving out VPN tunnels and Docker's bridges, and says which it took. A server on more than one
+network is asked which; <code>--address &lt;IP&gt;</code> answers in advance, and <code>xema node address</code> changes it
+later. <code>--dry-run</code> shows the whole plan and changes nothing.</p>
 <figure class="figure">
 <svg viewBox="0 0 640 150" role="img" aria-label="A call arriving, being greeted, waiting briefly in a queue, and reaching an agent.">
   <rect class="dg-box" x="8" y="46" width="112" height="52" rx="10"/>
@@ -110,22 +116,21 @@ server later without starting again:</p>
 the right agent, and what happens when nobody is free.</figcaption>
 </figure>
 
-<pre><code class="language-bash">sudo xema role add bff        # the agents' side
-sudo xema role add queue      # the queues
-sudo xema role add astermq    # call events
-sudo xema role add fastlane   # this machine's telephony
-sudo xema role add simplecdr  # call records
-sudo xema role add metrics    # dashboards and reporting
-
-sudo xema node apply
-</code></pre>
-<p>Add <code>dialer</code> as well if you are calling out, and <code>bridge</code> if agents will transfer, conference or
-be coached.</p>
 <h2 id="check-it">Check it</h2>
 <pre><code class="language-bash">xema status
+xema discover
 </code></pre>
-<p>Everything you declared should be running. Then open the admin pages in a browser at the machine's
-address, and add your first number, your first queue and your first agent.</p>
+<p><code>status</code> shows what is running. <code>discover</code> shows everything the commands decide from — which version
+the machine runs, its databases, the cluster and the backups — and writes nothing.</p>
+<p>Then open the admin pages in a browser at the machine's address, and add your first number, your
+first queue and your first agent.</p>
+<h2 id="keep-a-backup">Keep a backup</h2>
+<pre><code class="language-bash">sudo xema backup
+</code></pre>
+<p>Every database, and the files that cannot be downloaded again — settings, the phone system's
+configuration, the web server's — in one folder per run under <code>/var/backups/xema/</code>, a folder inside
+it for each: <code>mariadb</code>, <code>xema</code>, <code>asterisk</code>, <code>nginx</code>, <code>systemd</code>. A file archive restores with
+<code>tar -xzf &lt;archive&gt; -C /</code>. Call recordings are not included; copy them separately.</p>
 <h2 id="when-one-server-is-not-enough">When one server is not enough</h2>
 <p>Two reasons, and only two:</p>
 <ul>
@@ -136,10 +141,13 @@ address, and add your first number, your first queue and your first agent.</p>
 </ul>
 <p>Both are the same next step: <a href="multi-site.html">clusters and multiple sites</a>.</p>
 <h2 id="upgrading">Upgrading</h2>
-<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+<pre><code class="language-bash">sudo xema upgrade
 </code></pre>
-<p>The same command. It replaces the software and leaves your configuration, your recordings and your
-call history alone.</p>
+<p>It brings every part of Xema on the server, and the <code>xema</code> command itself, up to the current
+release, and restarts what was running. Your configuration, recordings and call history are left
+alone.</p>
+<p>A server still running <strong>Xema V1</strong> is a different step — see
+<a href="from-v1.html">moving a V1 server to V2</a>.</p>
   </article>
 </main>
 <footer>

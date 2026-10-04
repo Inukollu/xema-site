@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Clusters and multiple sites — Xema docs</title>
-<meta name="description" content="Two different things, and the difference decides which one you want.">
+<title>Clusters — Xema docs</title>
+<meta name="description" content="A cluster is one contact centre: its numbers, its queues, its agents and its reporting.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,24 +28,23 @@
     <h4>Documentation</h4>
     <a href="./">Overview</a>
     <a href="first-server.html">Your first server</a>
-    <a href="multi-site.html" aria-current="page">Clusters and multiple sites</a>
+    <a href="multi-site.html" aria-current="page">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
   </aside>
   <article class="prose">
-<h1 id="clusters-and-multiple-sites">Clusters and multiple sites</h1>
-<p>Two different things, and the difference decides which one you want.</p>
-<p>A <strong>cluster</strong> is several servers acting as one contact centre. More capacity, one set of queues,
-one report. A <strong>site</strong> is a contact centre that stands on its own — its own numbers, its own
-agents, and its own ability to keep answering when it cannot reach anywhere else.</p>
-<p>You can have several servers in one site, several sites of one server, or both.</p>
+<h1 id="clusters">Clusters</h1>
+<p>A <strong>cluster</strong> is one contact centre: its numbers, its queues, its agents and its reporting. It can be
+one server or several, and every server in it — a <strong>node</strong> — works as part of the same whole.</p>
+<p>Several contact centres that must stand on their own are several clusters.</p>
 <h2 id="more-servers-one-contact-centre">More servers, one contact centre</h2>
 <figure class="figure">
-<svg viewBox="0 0 640 300" role="img" aria-label="One site made of three servers sharing the same queues and agents.">
+<svg viewBox="0 0 640 300" role="img" aria-label="One cluster made of three servers sharing the same queues and agents.">
   <rect class="dg-site" x="188" y="24" width="264" height="252" rx="16"/>
-  <text class="dg-title" x="320" y="48" text-anchor="middle">ONE SITE</text>
+  <text class="dg-title" x="320" y="48" text-anchor="middle">ONE CLUSTER</text>
 
   <rect class="dg-box dg-box-key" x="212" y="64" width="216" height="52" rx="10"/>
   <text class="dg-label" x="320" y="86" text-anchor="middle">Server 1</text>
-  <text class="dg-sub" x="320" y="104" text-anchor="middle">holds the site's shared parts</text>
+  <text class="dg-sub" x="320" y="104" text-anchor="middle">holds the cluster's shared parts</text>
 
   <rect class="dg-box" x="212" y="130" width="216" height="46" rx="10"/>
   <text class="dg-label" x="320" y="158" text-anchor="middle">Server 2</text>
@@ -68,48 +67,45 @@ agents, and its own ability to keep answering when it cannot reach anywhere else
   <path class="dg-link dg-flash" style="--dur:7s" d="M428 149 H504"/>
   <circle class="dg-pulse" r="5" style="--route:path('M136 149 H212 M428 149 H504');--dur:7s"/>
 </svg>
-<figcaption>Three servers, one site. Agents share the same queues and the same reporting whichever
+<figcaption>Three servers, one cluster. Agents share the same queues and the same reporting whichever
 server they happen to be connected to, and a caller reaches an agent regardless of which server
 took the call.</figcaption>
 </figure>
 
-<p>Everything is shared: a queue is the same queue on every server, an agent belongs to the site
+<p>Everything is shared: a queue is the same queue on every server, an agent belongs to the cluster
 rather than to a machine, and the reporting is one set of numbers. A caller who arrives on one
 server reaches an agent connected to another without anybody arranging it.</p>
 <p><strong>The first server holds the shared parts.</strong> The others join it. That is the only asymmetry, and it
 is why the order below matters.</p>
 <h3 id="on-the-first-server">On the first server</h3>
-<p>Install as in <a href="first-server.html">your first server</a>, then:</p>
-<pre><code class="language-bash">sudo xema cluster init --site &lt;name&gt;
-sudo xema site secret set node-api --generate
-sudo xema site secret set node --generate
+<p>Bring it up exactly as in <a href="first-server.html">your first server</a>:</p>
+<pre><code class="language-bash">sudo xema init
 </code></pre>
-<p>Those two passwords are how the servers prove themselves to each other. Generate them once, here.</p>
-<p>Mint a pass for the next machine — single use, and it expires:</p>
+<p>That also generates the passwords the nodes use to trust each other. Then mint a pass for the next
+machine — single use, and it expires:</p>
 <pre><code class="language-bash">sudo xema cluster token
 </code></pre>
 <h3 id="on-every-other-server">On every other server</h3>
-<p>Install, then present the pass:</p>
-<pre><code class="language-bash">sudo xema cluster join --token &lt;the string from above&gt;
+<p>Install Xema, then copy the cluster's key ring from the first server — every secret the cluster
+holds is encrypted with it, and a node with a different one could read none of them:</p>
+<pre><code class="language-bash">sudo scp &lt;first server&gt;:/etc/xema/keyring.pfx /etc/xema/keyring.pfx
 </code></pre>
-<p>A joining server arrives holding nothing on purpose. Whatever it happened to be running before is
-not read, because it was not chosen for this site. Say what it is for:</p>
-<pre><code class="language-bash">sudo xema role add bff
-sudo xema role add queue
-sudo xema role add astermq
-sudo xema role add fastlane
-
-sudo xema node apply
+<p>Then join, saying what this server is for:</p>
+<pre><code class="language-bash">sudo xema migrate --join &lt;the pass from above&gt; --address &lt;this server's IP address&gt; \
+                  --roles bff,queue,astermq,fastlane
 </code></pre>
+<p>A joining server arrives holding nothing it was not given: whatever it ran before is not read,
+because it was not chosen for this cluster. It fetches what its roles need, joins, and starts them.
+Add <code>dialer</code> if it calls out, <code>bridge</code> if agents transfer, conference or are coached here.</p>
 <h3 id="check-it">Check it</h3>
 <pre><code class="language-bash">xema cluster status
 </code></pre>
-<p>Every server should be listed, each one seen within the last minute.</p>
+<p>Every node should be listed, each one seen within the last minute.</p>
 <h2 id="several-contact-centres">Several contact centres</h2>
 <figure class="figure">
-<svg viewBox="0 0 640 320" role="img" aria-label="Two sites in different cities, linked, each able to work alone.">
+<svg viewBox="0 0 640 320" role="img" aria-label="Two clusters in different cities, linked, each able to work alone.">
   <rect class="dg-site" x="24" y="60" width="248" height="180" rx="16"/>
-  <text class="dg-title" x="148" y="84" text-anchor="middle">SITE — MUMBAI</text>
+  <text class="dg-title" x="148" y="84" text-anchor="middle">CLUSTER — MUMBAI</text>
   <rect class="dg-box dg-box-key" x="48" y="100" width="200" height="48" rx="10"/>
   <text class="dg-label" x="148" y="129" text-anchor="middle">Servers</text>
   <rect class="dg-box" x="48" y="164" width="200" height="52" rx="10"/>
@@ -118,7 +114,7 @@ sudo xema node apply
   <path class="dg-link" d="M148 148 V164"/>
 
   <rect class="dg-site" x="368" y="60" width="248" height="180" rx="16"/>
-  <text class="dg-title" x="492" y="84" text-anchor="middle">SITE — PUNE</text>
+  <text class="dg-title" x="492" y="84" text-anchor="middle">CLUSTER — PUNE</text>
   <rect class="dg-box dg-box-key" x="392" y="100" width="200" height="48" rx="10"/>
   <text class="dg-label" x="492" y="129" text-anchor="middle">Servers</text>
   <rect class="dg-box" x="392" y="164" width="200" height="52" rx="10"/>
@@ -130,28 +126,26 @@ sudo xema node apply
   <text class="dg-sub" x="320" y="112" text-anchor="middle">calls cross</text>
   <circle class="dg-pulse" r="5" style="--route:path('M272 124 H368');--dur:8s"/>
 
-  <text class="dg-sub" x="320" y="266" text-anchor="middle">While the link is up, either site can answer the other's callers.</text>
+  <text class="dg-sub" x="320" y="266" text-anchor="middle">While the link is up, either cluster can answer the other's callers.</text>
   <text class="dg-sub" x="320" y="286" text-anchor="middle">Cut it, and both keep answering their own.</text>
 </svg>
-<figcaption>Two sites, each complete on its own. While the link between them is up a caller in one
-city can be answered by an agent in the other; when it is down, each carries on with its own
-callers and its own agents.</figcaption>
+<figcaption>Two clusters, each complete on its own, each carrying on with its own callers and its
+own agents whatever happens to the link between them.</figcaption>
 </figure>
 
-<p>Separate sites when the places are genuinely separate — different cities, different customers,
+<p>Separate clusters when the places are genuinely separate — different cities, different customers,
 different hours — and each has to carry on alone if the connection between them drops.</p>
-<p>While the link is up, a caller in one city can be answered by an agent in the other. When it is
-down, each site keeps answering its own calls with its own agents and neither waits for the other.
-Nothing has to be switched over and nobody has to notice.</p>
-<p>Each site is built exactly as above: its own first server, its own <code>cluster init</code>, its own name.
-They are separate by construction, which is the point.</p>
+<p>Each is built exactly as above: its own first server, its own <code>xema init</code>. They share nothing, so
+losing the link between them costs neither anything. Answering one cluster's callers from another
+cluster's agents is not part of Xema yet; within a cluster, any node's agent can take any node's
+call.</p>
 <h2 id="choosing">Choosing</h2>
 <table>
 <thead>
 <tr>
 <th></th>
 <th>Servers</th>
-<th>Sites</th>
+<th>Clusters</th>
 <th>Use it when</th>
 </tr>
 </thead>
@@ -163,31 +157,25 @@ They are separate by construction, which is the point.</p>
 <td>Almost always. Start here.</td>
 </tr>
 <tr>
-<td><strong>One site, several servers</strong></td>
+<td><strong>One cluster, several servers</strong></td>
 <td>2+</td>
 <td>1</td>
-<td>One site, more calls than a machine will carry</td>
+<td>More calls than a machine will carry</td>
 </tr>
 <tr>
-<td><strong>Several sites</strong></td>
+<td><strong>Several clusters</strong></td>
 <td>any</td>
 <td>2+</td>
-<td>Places that must survive losing the link to each other</td>
-</tr>
-<tr>
-<td><strong>Several sites, several servers each</strong></td>
-<td>2+ each</td>
-<td>2+</td>
-<td>Large operations across locations</td>
+<td>Places that must carry on without each other</td>
 </tr>
 </tbody>
 </table>
 <p>The honest advice: start with one server. Adding capacity later is a join, not a migration, and
 guessing at scale before you have it costs more than the second machine would.</p>
 <h2 id="taking-one-out">Taking one out</h2>
-<p>A server can be removed from a site, and a site can be reduced to one server:</p>
-<pre><code class="language-bash">sudo xema cluster remove &lt;server&gt;     # run on a server that stays
-sudo xema cluster reset --site &lt;name&gt; # run on the one leaving, to make it its own site
+<pre><code class="language-bash">sudo xema cluster remove &lt;server&gt;     # on a server that stays: takes the other out, hands over its trunks
+sudo xema cluster leave               # on the one leaving: it forgets its membership
+sudo xema init                        # then, on it, if it is to be a cluster of its own
 </code></pre>
 <p>Anything the departing machine was responsible for moves to a machine that stays, rather than being
 left pointing at something that has gone.</p>
