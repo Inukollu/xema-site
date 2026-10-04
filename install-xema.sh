@@ -466,10 +466,10 @@ function setup_and_start_services() {
     log "-> install_and_configure_system"
     install_and_configure_system
 
-    if [[ $configured == "yes" ]]; then
-
-        # do anything else neededd
-
+    # Done when the CLI is in place: that is the whole of this script's job since configuring moved to the CLI.
+    # It waited on `configured`, which nothing sets any more, so every install ended "success=no" and skipped the
+    # closing message — seen on mini5, 2026-10-05, after an install that had worked.
+    if [[ $installed == "yes" ]]; then
         started="yes"
     fi
 
