@@ -161,7 +161,8 @@ numbers, and cannot replace itself: run the installer once to replace it, then <
 as above.</p>
 <pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
 </code></pre>
-<p>The installer only puts the <code>xema</code> command in place; it changes nothing else on the server. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
+<p>The installer only puts the <code>xema</code> command in place, and records which channel it was run for; it changes nothing
+else on the server. <code>xema channel</code> shows that channel, and <code>xema channel set stable</code> (or <code>dev</code>) changes it. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
 both commands refuse a release of another version rather than install it, check every file they
 download, and say what they change from and to. <code>--dry-run</code> lists it without changing anything, and
 <code>xema status</code> shows the version each part of Xema is on.</p>

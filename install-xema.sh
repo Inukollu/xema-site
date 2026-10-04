@@ -428,6 +428,10 @@ function install_xema_cli() {
         unzip -qo /tmp/cli.zip -d /usr/local/bin
         chmod +x /usr/local/bin/xema
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
+
+        # The channel this was installed from, so the first `xema update` or `xema upgrade` takes it without being told
+        # again. Recorded through `xema`, which owns where it lives; a file only, nothing a V1 server reads.
+        /usr/local/bin/xema channel set "$channel" > /dev/null
     fi
 
     footer
