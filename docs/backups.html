@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backups — Xema docs</title>
+<meta name="description" content="A backup is everything that cannot be downloaded again: every database, Xema's settings, the phone">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html" aria-current="page">Backups</a>
+  </aside>
+  <article class="prose">
+<h1 id="backups">Backups</h1>
+<p>A backup is everything that cannot be downloaded again: every database, Xema's settings, the phone
+system's configuration and the web server's. Call recordings are not included; copy them separately.</p>
+<p>Backups are made on the server that holds the database. In a cluster of several servers, that is the
+one server that does; the admin pages say which.</p>
+<h2 id="from-the-admin-pages">From the admin pages</h2>
+<p>Open <strong>System → Backups</strong>.</p>
+<h3 id="back-up-now">Back up now</h3>
+<p><strong>Back up now</strong> starts a backup on the database server and shows it running until it is done. It
+runs alongside calls; nothing stops while it does. Only one backup runs at a time.</p>
+<h3 id="a-daily-backup">A daily backup</h3>
+<p>Set the schedule beside it:</p>
+<ul>
+<li><strong>On</strong> or <strong>off</strong>.</li>
+<li><strong>The time</strong>, as a 24-hour <code>HH:mm</code>. It is read in the time zone the page names beside it, which
+  is the cluster's, and may not be yours.</li>
+<li><strong>How many to keep</strong>, from 1 to 365. After each backup that succeeds, the oldest beyond that
+  number are deleted. A backup that fails deletes nothing, so a run of failures never removes the
+  last good one.</li>
+</ul>
+<p>Until a schedule is saved, nothing is backed up automatically, and the page says so.</p>
+<h3 id="the-list">The list</h3>
+<p>Every backup on the server, newest first, with when it was taken, its size and whether it is
+complete. <strong>Download</strong> saves one to your computer as a single <code>.tar.gz</code>. An incomplete backup can
+still be downloaded, and is marked as incomplete.</p>
+<p>If the last backup failed, the page says so above the list, with the reason.</p>
+<h2 id="from-the-command-line">From the command line</h2>
+<p>The same backup, on the database server:</p>
+<pre><code class="language-bash">sudo xema backup
+</code></pre>
+<p>Each run is a folder under <code>/var/backups/xema/</code>, named for when it was taken, for example
+<code>/var/backups/xema/20261004-020000/</code>. Inside it is a folder per kind of data: <code>mariadb</code> holds a dump
+of every database, and <code>xema</code>, <code>asterisk</code>, <code>nginx</code> and <code>systemd</code> hold archives of their files.</p>
+<h2 id="putting-a-backup-back">Putting a backup back</h2>
+<p>Not from the admin pages yet. By hand, on the database server:</p>
+<ul>
+<li>each database: <code>sudo mysql &lt; mariadb/&lt;name&gt;.sql</code> — each dump creates and selects its own database</li>
+<li>each file archive: <code>tar -xzf &lt;archive&gt; -C /</code></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

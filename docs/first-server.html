@@ -30,6 +30,7 @@
     <a href="first-server.html" aria-current="page">Your first server</a>
     <a href="multi-site.html">Clusters</a>
     <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
   </aside>
   <article class="prose">
 <h1 id="your-first-server">Your first server</h1>
@@ -131,6 +132,8 @@ first queue and your first agent.</p>
 configuration, the web server's — in one folder per run under <code>/var/backups/xema/</code>, a folder inside
 it for each: <code>mariadb</code>, <code>xema</code>, <code>asterisk</code>, <code>nginx</code>, <code>systemd</code>. A file archive restores with
 <code>tar -xzf &lt;archive&gt; -C /</code>. Call recordings are not included; copy them separately.</p>
+<p>To back up from the admin pages, on a daily schedule, and to download a backup, see
+<a href="backups.html">backups</a>.</p>
 <h2 id="when-one-server-is-not-enough">When one server is not enough</h2>
 <p>Two reasons, and only two:</p>
 <ul>
