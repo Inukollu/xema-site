@@ -156,7 +156,12 @@ sudo xema upgrade
 <li><strong><code>xema migrate</code></strong> is for another version — a V1 server becoming V2, and later V2 becoming V3.</li>
 </ul>
 <p>Run <code>update</code> first: a release is applied by its own <code>xema</code>, and <code>upgrade</code> says so if this one is
-older. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
+older. A <code>xema</code> that answers <code>update</code> with its list of commands is from before releases had version
+numbers, and cannot replace itself: run the installer once to replace it, then <code>update</code> and <code>upgrade</code>
+as above.</p>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
+</code></pre>
+<p>The installer only puts the <code>xema</code> command in place; it changes nothing else on the server. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
 both commands refuse a release of another version rather than install it, check every file they
 download, and say what they change from and to. <code>--dry-run</code> lists it without changing anything, and
 <code>xema status</code> shows the version each part of Xema is on.</p>
