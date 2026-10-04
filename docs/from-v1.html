@@ -69,10 +69,10 @@ one network is asked which, or is told with <code>--address &lt;IP&gt;</code>.</
    system's configuration, the web server's — under <code>/var/backups/xema/&lt;time&gt;/V1/</code>;</li>
 <li>converts V1's data into V2's: accounts, configuration, call lists, reports.</li>
 </ol>
-<p>Each step that has already been done is found done and skipped, so you can take the backup or
-convert the data yourself ahead of time (<code>xema backup</code>, <code>xema database migrate</code>) and the day itself
-is short. A backup counts for twelve hours; an older one is taken again. If any step fails, the run
-stops there and V1 is still serving.</p>
+<p>Each step that has already been done is found done and skipped, so you can take the backup yourself
+ahead of time (<code>sudo xema backup</code>) and the day itself is shorter; a run that stops partway finds the
+data it already converted done. A backup counts for twelve hours; an older one is taken again. If
+any step fails, the run stops there and V1 is still serving.</p>
 <p>Then the switch:</p>
 <ol start="6">
 <li>stops V1;</li>
@@ -95,6 +95,11 @@ nothing is overwritten.</p>
 </code></pre>
 <p>The <code>mariadb</code> folder holds a dump of every database, and each archive beside it restores with
 <code>tar -xzf &lt;archive&gt; -C /</code>.</p>
+<h2 id="after-the-move">After the move</h2>
+<p>The server runs V2 from here on. A later V2 release arrives by <code>sudo xema update</code> (the <code>xema</code>
+command itself) and then <code>sudo xema upgrade</code> (Xema's components and the release's database
+changes), both within the installed version — see <a href="first-server.html#upgrading">upgrading</a>.
+<code>xema migrate</code> is only ever for another version.</p>
   </article>
 </main>
 <footer>

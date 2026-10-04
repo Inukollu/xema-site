@@ -144,11 +144,26 @@ it for each: <code>mariadb</code>, <code>xema</code>, <code>asterisk</code>, <co
 </ul>
 <p>Both are the same next step: <a href="multi-site.html">clusters and multiple sites</a>.</p>
 <h2 id="upgrading">Upgrading</h2>
-<pre><code class="language-bash">sudo xema upgrade
+<pre><code class="language-bash">sudo xema update
+sudo xema upgrade
 </code></pre>
-<p>It brings every part of Xema on the server, and the <code>xema</code> command itself, up to the current
-release, and restarts what was running. Your configuration, recordings and call history are left
-alone.</p>
+<p>Three commands, and each does one thing:</p>
+<ul>
+<li><strong><code>xema update</code></strong> replaces the <code>xema</code> command itself with the newest one, within the installed
+  version.</li>
+<li><strong><code>xema upgrade</code></strong> brings Xema's components and the release's schema changes, within the
+  installed version.</li>
+<li><strong><code>xema migrate</code></strong> is for another version — a V1 server becoming V2, and later V2 becoming V3.</li>
+</ul>
+<p>Run <code>update</code> first: a release is applied by its own <code>xema</code>, and <code>upgrade</code> says so if this one is
+older. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
+both commands refuse a release of another version rather than install it, check every file they
+download, and say what they change from and to. <code>--dry-run</code> lists it without changing anything, and
+<code>xema status</code> shows the version each part of Xema is on.</p>
+<p><code>upgrade</code> takes a backup on the server that holds the database, applies the release's changes to
+the database, then replaces what changed. A part that did not change is left running, and only the
+services that need it are restarted. On a cluster, upgrade the server with the database first; the
+others wait for it and say so. Your configuration, recordings and call history are left alone.</p>
 <p>A server still running <strong>Xema V1</strong> is a different step — see
 <a href="from-v1.html">moving a V1 server to V2</a>.</p>
   </article>
