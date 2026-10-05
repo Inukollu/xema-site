@@ -273,15 +273,17 @@ function install_tools_and_binaries() {
         # `<SelfContained>false`, so a single-file `xema` still needs .NET on the box. Installing it
         # is the larger half of "make the CLI runnable" and the only reason this script needs the
         # network for anything but the CLI itself.
+        # Each step's failure stops it: carrying on past a missing runtime is how this once said "installed" over a
+        # `xema` that could not start.
         log "-> install_dotnet"
         echo "${green}Installing .NET runtime ...${reset}"
-        install_dotnet
-
-        log "-> install_xema_cli"
-        echo "${green}Installing Xema CLI ...${reset}"
-        install_xema_cli
-
-        installed="yes"
+        if install_dotnet; then
+            log "-> install_xema_cli"
+            echo "${green}Installing Xema CLI ...${reset}"
+            if install_xema_cli; then
+                installed="yes"
+            fi
+        fi
     fi
 
     footer installed="$installed"
@@ -361,36 +363,61 @@ function install_tools() {
 # it by this script -- and the binaries are framework-dependent, so they could only ever have run
 # on a box where something else had already installed it. The failure was one line in a long
 # install log, which is why it survived.
+# Whether `xema` can start here: a .NET 10 runtime, not merely some `dotnet`. A V1 server has V1's .NET Core 3.1, and
+# reading that as "installed" left `xema` unable to start ("libhostfxr.so does not support single-file apps") while
+# this script reported success (bsnldialer2, 2026-10-06).
+#
+# **Both frameworks `xema` names**, because the published binary asks for `Microsoft.AspNetCore.App` beside
+# `Microsoft.NETCore.App`: with the base runtime alone it still refuses to start ("Framework: 'Microsoft.AspNetCore.App',
+# version '10.0.0' ... No frameworks were found", bsnldialer2, 2026-10-06).
+function has_dotnet_10() {
+    command -v dotnet >/dev/null 2>&1 \
+        && dotnet --list-runtimes 2>/dev/null | grep -q '^Microsoft\.NETCore\.App 10\.' \
+        && dotnet --list-runtimes 2>/dev/null | grep -q '^Microsoft\.AspNetCore\.App 10\.'
+}
+
+# variable $dotnet_replaced
 function install_dotnet() {
     header
+    dotnet_replaced=""
 
-    # Already there, whatever put it there. The CLI needs a runtime, not a particular provenance.
-    if command -v dotnet >/dev/null 2>&1; then
-        footer "dotnet already installed"
+    if has_dotnet_10; then
+        footer "dotnet 10 already installed"
         return 0
     fi
 
+    # Said in the closing message: an older .NET from Microsoft's feed is replaced (Vasu, 2026-10-06: "we dont need
+    # 3.1 anymore"), because Ubuntu's `dotnet-host-10.0` conflicts with Microsoft's `dotnet-host` and apt takes it out.
+    local before=""
+    if command -v dotnet >/dev/null 2>&1; then
+        before=$(dotnet --list-runtimes 2>/dev/null | awk '/^Microsoft\.NETCore\.App /{print $2}')
+    fi
+
     if [ "$distro" == "Ubuntu" ]; then
-        # Microsoft's feed, registered the way this repository has always registered it --
-        # `install/xema-manager.sh` does the same per-release `packages-microsoft-prod.deb`. The
-        # release is the one already detected, rather than a guess, so an unsupported Ubuntu fails
-        # here saying which version it is instead of installing something arbitrary.
-        wget -q "https://packages.microsoft.com/config/ubuntu/$version.04/packages-microsoft-prod.deb" \
-            -O /tmp/packages-microsoft-prod.deb
-        if [ "$?" -ne "0" ]; then
-            echo "${red}$LINENO: no Microsoft package feed for Ubuntu $version${reset}"
-            footer
-            return 1
+        # **Ubuntu's own build, never Microsoft's feed.** Microsoft's feed has no .NET 10 for 22.04 at all, and where it
+        # has one it lays it out in /usr/share/dotnet against Ubuntu's /usr/lib/dotnet; mixing the two is how a box ends
+        # up with a runtime that `xema` cannot find. Pinned, so a feed some other package registered cannot win.
+        cat > /etc/apt/preferences.d/xema-dotnet <<'PIN'
+Package: dotnet* aspnet* netstandard*
+Pin: origin "packages.microsoft.com"
+Pin-Priority: -10
+PIN
+
+        # 22.04's archive stops at .NET 8; Canonical publishes .NET 10 for it in its backports PPA. 24.04 and later carry
+        # it in the archive itself.
+        if [ "$oever" == "22" ]; then
+            apt $apt_quiet install -y software-properties-common
+            if ! add-apt-repository -y ppa:dotnet/backports; then
+                echo "${red}$LINENO: could not add ppa:dotnet/backports, where Ubuntu 22.04 gets .NET 10${reset}"
+                footer
+                return 1
+            fi
         fi
 
-        dpkg -i /tmp/packages-microsoft-prod.deb
-        rm -f /tmp/packages-microsoft-prod.deb
         apt $apt_quiet update
 
-        # The runtime, not the SDK, and not ASP.NET: `xema` is a console application. A node that
-        # later runs Manager or the BFF needs `aspnetcore-runtime`, and installing that is the
-        # CLI's business when it installs those components.
-        apt $apt_quiet install -y dotnet-runtime-10.0
+        # The runtimes, not the SDK: ASP.NET Core's, which brings the base runtime with it, because `xema` asks for both.
+        apt $apt_quiet install -y aspnetcore-runtime-10.0
     fi
 
     if [ "$distro" == "CentOS" ]; then
@@ -401,13 +428,18 @@ function install_dotnet() {
         echo "${red}$LINENO: $distro OS${reset}"
     fi
 
-    # Said out loud rather than left to fail later: without a runtime the CLI cannot start, and
-    # "installed" would be a lie.
-    if ! command -v dotnet >/dev/null 2>&1; then
-        echo "${red}$LINENO: .NET was not installed, so the Xema CLI will not run${reset}"
+    # Said out loud rather than left to fail later: without a runtime the CLI cannot start, and "installed" would be a
+    # lie.
+    if ! has_dotnet_10; then
+        echo "${red}$LINENO: .NET 10 was not installed, so the Xema CLI will not run${reset}"
         footer
         return 1
     fi
+
+    # Only what is gone now: a runtime apt does not own stays where it was, and is not said to have been replaced.
+    local after
+    after=$(dotnet --list-runtimes 2>/dev/null | awk '/^Microsoft\.NETCore\.App /{print $2}')
+    dotnet_replaced=$(comm -23 <(echo "$before" | sed '/^$/d' | sort -u) <(echo "$after" | sort -u) | paste -sd, -)
 
     footer
 }
@@ -436,11 +468,23 @@ function install_xema_cli() {
             chmod +x /opt/techsudoku/xema/scripts/*.sh
         fi
         chmod +x /usr/local/bin/xema
+
+        # Run once before anything relies on it: a binary that cannot start is not an installed CLI.
+        if ! /usr/local/bin/xema --version > /dev/null; then
+            echo "${red}$LINENO: the Xema CLI was placed but does not start${reset}"
+            footer
+            return 1
+        fi
+
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
 
         # The channel this was installed from, so the first `xema update` or `xema upgrade` takes it without being told
         # again. Recorded through `xema`, which owns where it lives; a file only, nothing a V1 server reads.
-        /usr/local/bin/xema channel set "$channel" > /dev/null
+        if ! /usr/local/bin/xema channel set "$channel" > /dev/null; then
+            echo "${red}$LINENO: the Xema CLI could not record the $channel channel${reset}"
+            footer
+            return 1
+        fi
     fi
 
     footer
@@ -592,7 +636,15 @@ if [[ $success == "yes" ]]; then
     echo
     # Says what it did *and* what it did not, because the difference is the whole point: somebody
     # running this on a live V1 server needs to know their server was not otherwise touched.
-    echo "${green}Installed the Xema CLI.${reset} Nothing else was installed and nothing was configured;"
-    echo "whatever is already running on this machine is untouched. Run ${green}xema --help${reset} to go on."
+    echo "${green}Installed the Xema CLI${reset} and the .NET 10 runtime it runs on. Nothing else was installed and"
+    echo "nothing was configured. Run ${green}xema --help${reset} to go on."
+    if [[ -n $dotnet_replaced ]]; then
+        echo "The .NET runtime this machine had (${dotnet_replaced}) was replaced by .NET 10."
+    fi
     echo
+else
+    echo
+    echo "${red}The Xema CLI was not installed.${reset} The first red line above says why."
+    echo
+    exit 1
 fi
