@@ -425,7 +425,9 @@ function install_xema_cli() {
 
     if [ "$distro" == "Ubuntu" ]; then
         wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
-        unzip -qo /tmp/cli.zip -d /usr/local/bin
+        # Only the binary: the archive also carries the operator's scripts in scripts/, which `xema update` places
+        # under /opt/techsudoku/xema. Unpacked whole, they would land in /usr/local/bin/scripts.
+        unzip -qo /tmp/cli.zip xema -d /usr/local/bin
         chmod +x /usr/local/bin/xema
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
 
