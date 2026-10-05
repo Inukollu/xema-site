@@ -31,6 +31,7 @@
     <a href="multi-site.html">Clusters</a>
     <a href="from-v1.html">Moving a V1 server to V2</a>
     <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
   </aside>
   <article class="prose">
 <h1 id="your-first-server">Your first server</h1>
@@ -149,8 +150,8 @@ sudo xema upgrade
 </code></pre>
 <p>Three commands, and each does one thing:</p>
 <ul>
-<li><strong><code>xema update</code></strong> replaces the <code>xema</code> command itself with the newest one, within the installed
-  version.</li>
+<li><strong><code>xema update</code></strong> replaces the <code>xema</code> command itself when the channel has a newer one — on any
+  server, a V1 one included, since that <code>xema</code> is the tool that converts it.</li>
 <li><strong><code>xema upgrade</code></strong> brings Xema's components and the release's schema changes, within the
   installed version.</li>
 <li><strong><code>xema migrate</code></strong> is for another version — a V1 server becoming V2, and later V2 becoming V3.</li>
@@ -162,9 +163,11 @@ as above.</p>
 <pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash
 </code></pre>
 <p>The installer only puts the <code>xema</code> command in place, and records which channel it was run for; it changes nothing
-else on the server. <code>xema channel</code> shows that channel, and <code>xema channel set stable</code> (or <code>dev</code>) changes it. Each release has a version number (<code>2.0.412</code>) and says which version of Xema it belongs to;
-both commands refuse a release of another version rather than install it, check every file they
-download, and say what they change from and to. <code>--dry-run</code> lists it without changing anything, and
+else on the server. <code>xema channel</code> shows that channel, and <code>xema channel set stable</code> (or <code>dev</code>) changes it.</p>
+<p>Each part of Xema has its own version number (<code>2.0.412</code>), and each release says which version of Xema it belongs
+to. <code>upgrade</code> refuses a release of another version rather than install it — that is <code>migrate</code> — while <code>update</code> only
+asks whether the channel's <code>xema</code> is newer. Both check every file they download and say what they change from and
+to. <code>--dry-run</code> lists it without changing anything, and
 <code>xema status</code> shows the version each part of Xema is on.</p>
 <p><code>upgrade</code> takes a backup on the server that holds the database, applies the release's changes to
 the database, then replaces what changed. A part that did not change is left running, and only the

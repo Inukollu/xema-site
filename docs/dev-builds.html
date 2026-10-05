@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dev builds — Xema docs</title>
+<meta name="description" content="Xema is released on two channels.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html" aria-current="page">Dev builds</a>
+  </aside>
+  <article class="prose">
+<h1 id="dev-builds">Dev builds</h1>
+<p>Xema is released on two channels. <strong>Stable</strong> is what a live call centre runs. <strong>Dev</strong> is the canary: every change
+reaches it as soon as it is merged, and stable only after it has run there. Use dev on a test server, to try a fix
+or a feature before it is released, or to help find what breaks before your agents do.</p>
+<p>A dev build has been through the same automated checks as a stable one, and nothing more. It has not been run on a
+live site yet; that is what dev is for.</p>
+<h2 id="what-a-dev-build-is">What a dev build is</h2>
+<p>Each part of Xema is released on its own, as soon as a change to it is merged, so a dev server can take one part
+without the others. Every release has a version number — <code>2.0.3228</code> — that only ever grows, and says which version of
+Xema it belongs to. The dev channel keeps the ten newest of each part.</p>
+<p><strong>A version number means the same code on both channels.</strong> When a dev build reaches stable it keeps its number: dev's
+<code>2.0.3228</code> is stable's <code>2.0.3228</code>. So a server can move between the channels and always knows where it stands.</p>
+<p>Everything is checked the same way on both channels: every file is checked against the size and checksum the channel
+lists before it replaces anything, and a release is applied by its own <code>xema</code>.</p>
+<h2 id="a-new-server-on-dev">A new server on dev</h2>
+<p>Run the installer with <code>-d</code>:</p>
+<pre><code class="language-bash">curl -fsSL https://www.xema.in/install-xema.sh | sudo bash -s -- -d
+</code></pre>
+<p>It puts the <code>xema</code> command in place and records that this server takes dev builds; nothing else on the server is
+touched. From there, set it up as in <a href="first-server.html">your first server</a>, or convert a V1 server as in
+<a href="from-v1.html">moving a V1 server to V2</a>.</p>
+<h2 id="moving-a-server-to-dev">Moving a server to dev</h2>
+<pre><code class="language-bash">xema channel                 # which channel this server takes releases from
+sudo xema channel set dev
+sudo xema update             # the newest xema from dev
+sudo xema upgrade --dry-run  # what would change, from which version to which
+sudo xema upgrade
+</code></pre>
+<h2 id="going-back-to-stable">Going back to stable</h2>
+<pre><code class="language-bash">sudo xema channel set stable
+</code></pre>
+<p>An upgrade never goes backwards. A dev server usually runs newer versions than stable has, so until stable reaches
+them <code>sudo xema upgrade</code> keeps those parts as they are and says so; once stable has caught up there is nothing to
+change, and from then on the server moves forward with stable. <code>sudo xema upgrade --dry-run</code> shows the versions either
+side.</p>
+<h2 id="what-to-tell-us">What to tell us</h2>
+<p>When something on a dev build is not right, the version tells us which build it is:</p>
+<pre><code class="language-bash">xema --version
+xema status
+</code></pre>
+<p><code>xema status</code> shows the version each part of Xema is on. Send both with what you saw.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

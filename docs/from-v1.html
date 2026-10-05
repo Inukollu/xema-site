@@ -31,6 +31,7 @@
     <a href="multi-site.html">Clusters</a>
     <a href="from-v1.html" aria-current="page">Moving a V1 server to V2</a>
     <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
   </aside>
   <article class="prose">
 <h1 id="moving-a-v1-server-to-v2">Moving a V1 server to V2</h1>
@@ -97,8 +98,8 @@ nothing is overwritten.</p>
 <code>tar -xzf &lt;archive&gt; -C /</code>.</p>
 <h2 id="after-the-move">After the move</h2>
 <p>The server runs V2 from here on. A later V2 release arrives by <code>sudo xema update</code> (the <code>xema</code>
-command itself) and then <code>sudo xema upgrade</code> (Xema's components and the release's database
-changes), both within the installed version — see <a href="first-server.html#upgrading">upgrading</a>.
+command itself, whenever the channel's is newer) and then <code>sudo xema upgrade</code> (Xema's components and
+the release's database changes, within the installed version) — see <a href="first-server.html#upgrading">upgrading</a>.
 <code>xema migrate</code> is only ever for another version.</p>
   </article>
 </main>
