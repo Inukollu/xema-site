@@ -425,9 +425,16 @@ function install_xema_cli() {
 
     if [ "$distro" == "Ubuntu" ]; then
         wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
-        # Only the binary: the archive also carries the operator's scripts in scripts/, which `xema update` places
-        # under /opt/techsudoku/xema. Unpacked whole, they would land in /usr/local/bin/scripts.
+        # The binary on the PATH, and the operator's scripts beside the rest of Xema's code — not unpacked whole, which
+        # put scripts/ in /usr/local/bin. Placed here because `xema update` places them only when it replaces the
+        # binary, and straight after this the binary is the channel's already. A V1 server is not read as V2 for it:
+        # discovery does not count scripts as a component.
         unzip -qo /tmp/cli.zip xema -d /usr/local/bin
+        if unzip -l /tmp/cli.zip 'scripts/*' >/dev/null 2>&1; then
+            mkdir -p /opt/techsudoku/xema
+            unzip -qo /tmp/cli.zip 'scripts/*' -d /opt/techsudoku/xema
+            chmod +x /opt/techsudoku/xema/scripts/*.sh
+        fi
         chmod +x /usr/local/bin/xema
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
 
