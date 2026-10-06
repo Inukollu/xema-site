@@ -257,12 +257,36 @@ function print_support_matrix() {
     footer
 }
 
+# The release the channel's files are attached to.
+function channel_tag() {
+    if [ "$channel" == "dev" ]; then echo "dev"; else echo "v2.0"; fi
+}
+
+# **A channel is installed from only once it has a release**, which its manifest is: everything `xema` does next reads
+# it, and without one the channel's `Cli.zip` is whatever was last left there. The stable channel held an unversioned CLI
+# from August, `xema 1.0.0`, which installed and then could never update (2026-10-06). Asked before anything is installed,
+# so a refusal leaves the machine as it was.
+function channel_has_release() {
+    header
+    if ! curl -fsSL -o /dev/null -m 60 "https://github.com/inukollu/xema-site/releases/download/$(channel_tag)/manifest.json"; then
+        echo "${red}$LINENO: the $channel channel has no release yet, so there is no xema to install from it.${reset}"
+        echo "Install from the dev channel:  curl -fsSL https://www.xema.in/install-xema.sh | sudo bash -s -- -d"
+        footer
+        return 1
+    fi
+    footer
+}
+
 function install_tools_and_binaries() {
     header
     installed="no"
 
     log "-> xema_capable_operating_environment"
     xema_capable_operating_environment
+
+    if [[ $installable == "yes" ]] && ! channel_has_release; then
+        installable="no"
+    fi
 
     if [[ $installable == "yes" ]]; then
         log "-> install_tools"
@@ -449,11 +473,7 @@ function install_xema_cli() {
 
     rm -rf /tmp/cli.zip
 
-    if [ "$channel" == "dev" ]; then
-        release_tag="dev"
-    else
-        release_tag="v2.0"
-    fi
+    release_tag=$(channel_tag)
 
     if [ "$distro" == "Ubuntu" ]; then
         wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
@@ -476,6 +496,8 @@ function install_xema_cli() {
             return 1
         fi
 
+        # A minimal Ubuntu has no bash-completion directory, and writing into one that is not there failed and was passed over.
+        mkdir -p /etc/bash_completion.d
         /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
 
         # The channel this was installed from, so the first `xema update` or `xema upgrade` takes it without being told
