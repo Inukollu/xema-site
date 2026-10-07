@@ -40,19 +40,50 @@
 # single-directory arrangement. It installs one binary to /usr/local/bin now and knows nothing about
 # the rest, so the constants that described that layout have gone with the code that used them.
 
-# Define the support matrix in a central place
-function define_support_matrix() {
-    # Define arrays for each configuration
-    # Format: distro|hostsys|kernel|version|installable|supported|details
-    SUPPORT_MATRIX=(
-        "Ubuntu|Linux|Linux|20|no|no"
-        "Ubuntu|Linux|Linux|22|yes|yes"
-        "Ubuntu|Linux|Linux|24|yes|no"
-        "Ubuntu|Linux|Linux|25|yes|no"
-        "Ubuntu|Linux|Linux|26|yes|no"
-        "CentOS|Linux|Linux|4|no|no"
-        "Ubuntu|WSL|Linux|25|yes|no"
-    )
+# Whether Xema V2 can be installed on the machine an os-release describes: the sentence that says why not, and status 1,
+# or nothing and status 0. The path defaults to /etc/os-release and is an argument so it can be tested.
+#
+# **Ubuntu 24.04 or later, and nothing else** (Vasu, 2026-10-08: "change the v2 installer require Ubuntu 24 minimum").
+# ahmedabad was converted on 22.04, whose newest Asterisk, 18.10, answers BSNL's `tel:` request URIs with 416, and whose
+# systemd 249 does not know unit keys V2 writes. V2 needs the Asterisk 22 and the systemd 24.04 and later carry.
+# **Nothing passes for want of knowing**: an os-release that is missing or unreadable, or an Ubuntu without a version
+# this can read, is refused too. Read, not sourced, so nothing in the file is run. Asked before anything is installed.
+function os_release_refusal() {
+    local file="${1:-/etc/os-release}"
+    local requirement="Xema V2 needs Ubuntu 24.04 or later"
+    local key value id="" version="" name=""
+
+    if [[ ! -f $file || ! -r $file ]]; then
+        echo "This server's $file could not be read, so which operating system it runs cannot be told. $requirement."
+        return 1
+    fi
+
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        value=${value%\"}; value=${value#\"}; value=${value%\'}; value=${value#\'}
+        case $key in
+        ID) id=$value ;;
+        VERSION_ID) version=$value ;;
+        NAME) name=$value ;;
+        esac
+    done < "$file"
+
+    if [[ $id != "ubuntu" ]]; then
+        echo "This server runs ${name:-${id:-an operating system its os-release does not name}}${version:+ $version}." \
+            "$requirement; install it on Ubuntu and run this again."
+        return 1
+    fi
+
+    if [[ ! $version =~ ^([0-9]+)\.([0-9]+)$ ]]; then
+        echo "This server runs Ubuntu, but $file gives no version that can be read${version:+ (\"$version\")}. $requirement."
+        return 1
+    fi
+
+    # Compared as numbers, so 24.10 is after 24.04 and 26.04 after both.
+    local year=$((10#${BASH_REMATCH[1]})) month=$((10#${BASH_REMATCH[2]}))
+    if (( year < 24 || (year == 24 && month < 4) )); then
+        echo "This server runs Ubuntu $version. $requirement; upgrade the operating system and run this again."
+        return 1
+    fi
 }
 
 function set_colors() {
@@ -126,137 +157,6 @@ function detect_host() {
     footer hostsys="$hostsys",kernel="$kernel"
 }
 
-# variable $oever
-function detect_ubuntu_version() {
-    header
-
-    lsbOut="$(lsb_release -rs)"
-    log "lsb_release -rs: ""${green}$lsbOut${reset}"
-
-    case "${lsbOut}" in
-    18.*) oever="18" ;;
-    20.*) oever="20" ;;
-    22.*) oever="22" ;;
-    24.*) oever="24" ;;
-    25.*) oever="25" ;;
-    26.*) oever="26" ;;
-    # 24.*) oever="24" ;;
-    *) oever="Unknown" ;;
-    esac
-
-    footer oever="$oever"
-}
-
-# variable $oever
-function detect_centos_version() {
-    header
-
-    log "${red}Not implemented${reset}"
-
-    footer
-}
-
-# variable $distro
-function detect_distro() {
-    header
-
-    if [[ $(lsb_release -is) = *Ubuntu* ]]; then
-        log "lsb_release -is: "${green}$(lsb_release -is)${reset}
-        distro="Ubuntu"
-        detect_ubuntu_version
-    elif [[ $(cat /etc/os-release | grep "^NAME=") = *CentOS* ]]; then
-        distro="CentOS"
-        detect_centos_version
-    else
-        distro="Unknown"
-    fi
-
-    footer distro="$distro"
-}
-
-# variable $supported, $installable
-function check_support_matrix() {
-    header
-    supported="no"
-    installable="no"
-
-    log "${red}$hostsys $kernel $distro $oever${reset}"
-
-    # Call the common function to define the support matrix
-    define_support_matrix
-
-    # Check the current configuration against the matrix
-    for config in "${SUPPORT_MATRIX[@]}"; do
-        # More compatible way to split the string
-        OLD_IFS="$IFS"
-        IFS="|"
-        set -- $config
-        conf_distro="$1"
-        conf_hostsys="$2"
-        conf_kernel="$3"
-        conf_version="$4"
-        conf_installable="$5"
-        conf_supported="$6"
-        IFS="$OLD_IFS"
-        
-        if [[ $distro == "$conf_distro" && $hostsys == "$conf_hostsys" && $kernel == "$conf_kernel" && $oever == "$conf_version" ]]; then
-            installable="$conf_installable"
-            supported="$conf_supported"
-            break
-        fi
-    done
-
-    footer installable="$installable",supported="$supported"
-}
-
-function print_support_matrix() {
-    header
-
-    # Call the common function to define the support matrix
-    define_support_matrix
-
-    # Table header
-    printf "+------------------+----------+----------+----------+\n"
-    printf "| %-16s | %-8s | %-8s | %-8s |\n" "Environment" "Version" "Install" "Support"
-    printf "+------------------+----------+----------+----------+\n"
-    
-    # Loop through the support matrix to print each configuration
-    for config in "${SUPPORT_MATRIX[@]}"; do
-        # More compatible way to split the string
-        OLD_IFS="$IFS"
-        IFS="|"
-        set -- $config
-        conf_distro="$1"
-        conf_hostsys="$2"
-        conf_kernel="$3"
-        conf_version="$4"
-        conf_installable="$5"
-        conf_supported="$6"
-        IFS="$OLD_IFS"
-                
-        # Format the install and support status with fixed column width
-        if [[ $conf_installable == "yes" ]]; then
-            install_mark="   ${green}✅${reset}   "
-        else
-            install_mark="   ${red}❌${reset}   "
-        fi
-        
-        if [[ $conf_supported == "yes" ]]; then
-            support_mark="   ${green}✅${reset}   "
-        else
-            support_mark="   ${red}❌${reset}   "
-        fi
-        
-        # Print the row with fixed column widths
-        printf "| %-16s | %-8s | %-8s | %-8s |\n" "$conf_distro ($conf_hostsys)" "$conf_version" "$install_mark" "$support_mark"
-    done
-    
-    # Footer line
-    printf "+------------------+----------+----------+----------+\n"
-
-    footer
-}
-
 # The release the channel's files are attached to.
 function channel_tag() {
     if [ "$channel" == "dev" ]; then echo "dev"; else echo "v2.0"; fi
@@ -284,11 +184,7 @@ function install_tools_and_binaries() {
     log "-> xema_capable_operating_environment"
     xema_capable_operating_environment
 
-    if [[ $installable == "yes" ]] && ! channel_has_release; then
-        installable="no"
-    fi
-
-    if [[ $installable == "yes" ]]; then
+    if [[ $capable == "yes" ]] && channel_has_release; then
         log "-> install_tools"
         echo "${green}Installing tools ...${reset}"
         install_tools
@@ -315,61 +211,28 @@ function install_tools_and_binaries() {
 
 function xema_capable_operating_environment() {
     header
+    capable="no"
 
     log "-> detect_host"
     detect_host
     if [[ ! $kernel = *Linux* ]]; then
         echo "${red}$kernel Environment is not supported.${reset}"
+    elif ! refusal=$(os_release_refusal /etc/os-release); then
+        echo "${red}$refusal${reset}"
     else
-        log "-> detect_distro and version"
-        detect_distro
-        # detect_distro also calls version detection
-        if [[ ! $distro = *Ubuntu* ]]; then
-            echo "${red}$distro Linux Distribution is not supported.${reset}"
-        else
-            log "-> check_support_matrix"
-            check_support_matrix
-
-            if [[ $installable == "yes" && $supported == "no" ]]; then
-                log "-> print_support_matrix"
-                print_support_matrix
-                echo "${red}Unsupported configuration.${reset} $hostsys $kernel $distro $oever"
-                echo "${red}!!! Install at your own risk !!! ${reset}"
-            elif [[ $installable == "no" ]]; then
-                echo "${red}!!! Unable to install !!! ${reset}"
-                echo "${red}Unsupported configuration.${reset} $hostsys $kernel $distro $oever"
-            fi
-
-            if [[ $installable == "yes" ]]; then
-                # echo "${green}"
-                echo -e "Distro:  " $distro
-                echo -e "Version: " $oever
-                if [[ $supported == "yes" ]]; then echo -e "Support:  ${green}✅${reset}"; fi
-                if [[ $supported == "no" ]]; then echo -e "Support:  ${red}❌${reset}"; fi
-                # echo "${reset}"
-            fi
-        fi
+        capable="yes"
+        log "os-release: Ubuntu 24.04 or later"
     fi
 
-    footer
+    footer capable="$capable"
 }
 
 function install_tools() {
     header
 
-    if [ "$distro" == "Ubuntu" ]; then
-        apt $apt_quiet update
-        apt $apt_quiet install -y curl wget unzip at sngrep libpcap0.8
-        # apt $apt_quiet install -y git sipsak linphone-cli
-    fi
-
-    if [ "$distro" == "CentOS" ]; then
-        echo "${red}$LINENO: Not implemented${reset}"
-    fi
-
-    if [ "$distro" == "Unknown" ]; then
-        echo "${red}$LINENO: $distro OS${reset}"
-    fi
+    apt $apt_quiet update
+    apt $apt_quiet install -y curl wget unzip at sngrep libpcap0.8
+    # apt $apt_quiet install -y git sipsak linphone-cli
 
     footer
 }
@@ -417,40 +280,20 @@ function install_dotnet() {
         before=$(dotnet --list-runtimes 2>/dev/null | awk '/^Microsoft\.NETCore\.App /{print $2}')
     fi
 
-    if [ "$distro" == "Ubuntu" ]; then
-        # **Ubuntu's own build, never Microsoft's feed.** Microsoft's feed has no .NET 10 for 22.04 at all, and where it
-        # has one it lays it out in /usr/share/dotnet against Ubuntu's /usr/lib/dotnet; mixing the two is how a box ends
-        # up with a runtime that `xema` cannot find. Pinned, so a feed some other package registered cannot win.
-        cat > /etc/apt/preferences.d/xema-dotnet <<'PIN'
+    # **Ubuntu's own build, never Microsoft's feed.** Where Microsoft's feed has .NET 10 it lays it
+    # out in /usr/share/dotnet against Ubuntu's /usr/lib/dotnet; mixing the two is how a box ends
+    # up with a runtime that `xema` cannot find. Pinned, so a feed some other package registered cannot win.
+    cat > /etc/apt/preferences.d/xema-dotnet <<'PIN'
 Package: dotnet* aspnet* netstandard*
 Pin: origin "packages.microsoft.com"
 Pin-Priority: -10
 PIN
 
-        # 22.04's archive stops at .NET 8; Canonical publishes .NET 10 for it in its backports PPA. 24.04 and later carry
-        # it in the archive itself.
-        if [ "$oever" == "22" ]; then
-            apt $apt_quiet install -y software-properties-common
-            if ! add-apt-repository -y ppa:dotnet/backports; then
-                echo "${red}$LINENO: could not add ppa:dotnet/backports, where Ubuntu 22.04 gets .NET 10${reset}"
-                footer
-                return 1
-            fi
-        fi
+    # 24.04 and later carry .NET 10 in the archive itself, so no other source is added.
+    apt $apt_quiet update
 
-        apt $apt_quiet update
-
-        # The runtimes, not the SDK: ASP.NET Core's, which brings the base runtime with it, because `xema` asks for both.
-        apt $apt_quiet install -y aspnetcore-runtime-10.0
-    fi
-
-    if [ "$distro" == "CentOS" ]; then
-        echo "${red}$LINENO: Not implemented${reset}"
-    fi
-
-    if [ "$distro" == "Unknown" ]; then
-        echo "${red}$LINENO: $distro OS${reset}"
-    fi
+    # The runtimes, not the SDK: ASP.NET Core's, which brings the base runtime with it, because `xema` asks for both.
+    apt $apt_quiet install -y aspnetcore-runtime-10.0
 
     # Said out loud rather than left to fail later: without a runtime the CLI cannot start, and "installed" would be a
     # lie.
@@ -475,38 +318,36 @@ function install_xema_cli() {
 
     release_tag=$(channel_tag)
 
-    if [ "$distro" == "Ubuntu" ]; then
-        wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
-        # The binary on the PATH, and the operator's scripts beside the rest of Xema's code — not unpacked whole, which
-        # put scripts/ in /usr/local/bin. Placed here because `xema update` places them only when it replaces the
-        # binary, and straight after this the binary is the channel's already. A V1 server is not read as V2 for it:
-        # discovery does not count scripts as a component.
-        unzip -qo /tmp/cli.zip xema -d /usr/local/bin
-        if unzip -l /tmp/cli.zip 'scripts/*' >/dev/null 2>&1; then
-            mkdir -p /opt/techsudoku/xema
-            unzip -qo /tmp/cli.zip 'scripts/*' -d /opt/techsudoku/xema
-            chmod +x /opt/techsudoku/xema/scripts/*.sh
-        fi
-        chmod +x /usr/local/bin/xema
+    wget -q --show-progress https://github.com/inukollu/xema-site/releases/download/$release_tag/Cli.zip -O /tmp/cli.zip
+    # The binary on the PATH, and the operator's scripts beside the rest of Xema's code — not unpacked whole, which
+    # put scripts/ in /usr/local/bin. Placed here because `xema update` places them only when it replaces the
+    # binary, and straight after this the binary is the channel's already. A V1 server is not read as V2 for it:
+    # discovery does not count scripts as a component.
+    unzip -qo /tmp/cli.zip xema -d /usr/local/bin
+    if unzip -l /tmp/cli.zip 'scripts/*' >/dev/null 2>&1; then
+        mkdir -p /opt/techsudoku/xema
+        unzip -qo /tmp/cli.zip 'scripts/*' -d /opt/techsudoku/xema
+        chmod +x /opt/techsudoku/xema/scripts/*.sh
+    fi
+    chmod +x /usr/local/bin/xema
 
-        # Run once before anything relies on it: a binary that cannot start is not an installed CLI.
-        if ! /usr/local/bin/xema --version > /dev/null; then
-            echo "${red}$LINENO: the Xema CLI was placed but does not start${reset}"
-            footer
-            return 1
-        fi
+    # Run once before anything relies on it: a binary that cannot start is not an installed CLI.
+    if ! /usr/local/bin/xema --version > /dev/null; then
+        echo "${red}$LINENO: the Xema CLI was placed but does not start${reset}"
+        footer
+        return 1
+    fi
 
-        # A minimal Ubuntu has no bash-completion directory, and writing into one that is not there failed and was passed over.
-        mkdir -p /etc/bash_completion.d
-        /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
+    # A minimal Ubuntu has no bash-completion directory, and writing into one that is not there failed and was passed over.
+    mkdir -p /etc/bash_completion.d
+    /usr/local/bin/xema completion bash > /etc/bash_completion.d/xema
 
-        # The channel this was installed from, so the first `xema update` or `xema upgrade` takes it without being told
-        # again. Recorded through `xema`, which owns where it lives; a file only, nothing a V1 server reads.
-        if ! /usr/local/bin/xema channel set "$channel" > /dev/null; then
-            echo "${red}$LINENO: the Xema CLI could not record the $channel channel${reset}"
-            footer
-            return 1
-        fi
+    # The channel this was installed from, so the first `xema update` or `xema upgrade` takes it without being told
+    # again. Recorded through `xema`, which owns where it lives; a file only, nothing a V1 server reads.
+    if ! /usr/local/bin/xema channel set "$channel" > /dev/null; then
+        echo "${red}$LINENO: the Xema CLI could not record the $channel channel${reset}"
+        footer
+        return 1
     fi
 
     footer
@@ -558,14 +399,14 @@ function setup_and_start_services() {
 help() {
     # Display Help
     echo "Install Xema Platform software."
-    echo "Syntax: ./install-xema.sh [-d|h|m|v]"
+    echo "Syntax: ./install-xema.sh [-d|h|v]"
     echo "options:"
     echo "h     Print this Help."
     echo "d     Install the Dev release."
-    echo "m     Display the OS support matrix."
     echo "v     Increase verbosity (use up to -vvv to remove apt quiet flags)."
     echo
     echo 'This installs the xema command only. Everything else is done afterwards, with xema.'
+    echo 'Xema V2 needs Ubuntu 24.04 or later.'
     echo
 }
 
@@ -597,9 +438,8 @@ function show_log() {
 # finally
 channel="release"
 
-display_matrix="false"
 verbosity=0
-while getopts hdmv option; do
+while getopts hdv option; do
     case $option in
     h) # display Help
         help
@@ -607,9 +447,6 @@ while getopts hdmv option; do
         ;;
     d) # Dev release
         channel="dev"
-        ;;
-    m) # Display support matrix
-        display_matrix="true"
         ;;
     v) # Increase verbosity
         verbosity=$((verbosity + 1))
@@ -639,12 +476,6 @@ unset _quiet_level
 #detect_installed_channel
 
 log "channel: ""${green}$channel${reset}"
-
-# Display just the support matrix if requested
-if [[ $display_matrix == "true" ]]; then
-    print_support_matrix
-    exit 0
-fi
 
 depth=0
 set_colors
