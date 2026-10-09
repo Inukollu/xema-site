@@ -77,7 +77,7 @@ it does not switch anything on — those are yours, and they are the next two co
 <h2 id="bring-it-up">Bring it up</h2>
 <pre><code class="language-bash">sudo xema init
 </code></pre>
-<p>One command, and it is safe to run again if anything stops it partway. It:</p>
+<p>One command, for a server with nothing set up on it. It:</p>
 <ul>
 <li>sets up the database and a login for Xema, with a password nobody has to choose — recorded in
   <code>/etc/xema</code>, readable only by root;</li>
@@ -91,6 +91,8 @@ it does not switch anything on — those are yours, and they are the next two co
 leaving out VPN tunnels and Docker's bridges, and says which it took. A server on more than one
 network is asked which; <code>--address &lt;IP&gt;</code> answers in advance, and <code>xema node address</code> changes it
 later. <code>--dry-run</code> shows the whole plan and changes nothing.</p>
+<p>If it stops partway, <code>sudo xema node reset</code> removes what it set up — keeping the databases, the
+credentials and the key ring — and <code>sudo xema init</code> can be run again.</p>
 <figure class="figure">
 <svg viewBox="0 0 640 150" role="img" aria-label="A call arriving, being greeted, waiting briefly in a queue, and reaching an agent.">
   <rect class="dg-box" x="8" y="46" width="112" height="52" rx="10"/>

@@ -93,8 +93,8 @@ holds is encrypted with it, and a node with a different one could read none of t
 <pre><code class="language-bash">sudo scp &lt;first server&gt;:/etc/xema/keyring.pfx /etc/xema/keyring.pfx
 </code></pre>
 <p>Then join, saying what this server is for:</p>
-<pre><code class="language-bash">sudo xema migrate --join &lt;the pass from above&gt; --address &lt;this server's IP address&gt; \
-                  --roles bff,queue,astermq,fastlane
+<pre><code class="language-bash">sudo xema join &lt;the pass from above&gt; --address &lt;this server's IP address&gt; \
+               --roles bff,queue,astermq,fastlane
 </code></pre>
 <p>A joining server arrives holding nothing it was not given: whatever it ran before is not read,
 because it was not chosen for this cluster. It fetches what its roles need, joins, and starts them.
@@ -176,7 +176,7 @@ call.</p>
 guessing at scale before you have it costs more than the second machine would.</p>
 <h2 id="taking-one-out">Taking one out</h2>
 <pre><code class="language-bash">sudo xema cluster remove &lt;server&gt;     # on a server that stays: takes the other out, hands over its trunks
-sudo xema cluster leave               # on the one leaving: it forgets its membership
+sudo xema node reset                  # on the one leaving: removes what it runs, keeps its databases
 sudo xema init                        # then, on it, if it is to be a cluster of its own
 </code></pre>
 <p>Anything the departing machine was responsible for moves to a machine that stays, rather than being
