@@ -454,7 +454,7 @@ while getopts hdv option; do
     \?) # Invalid option
         # -r used to name what the server was for. It is gone rather than ignored: a script that
         # silently installed everything when told to install a subset would be believed for
-        # months. Roles are `xema role add` now, after the install.
+        # months. Roles are `xema node role add` now, after the install.
         echo "Error: Invalid option"
         echo
         help
