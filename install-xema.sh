@@ -189,7 +189,7 @@ function install_tools_and_binaries() {
         echo "${green}Installing tools ...${reset}"
         install_tools
 
-        # The runtime, because the CLI is framework-dependent: `Cli.csproj` is
+        # The runtime, because the CLI is framework-dependent: `Cli.OnPrem.csproj` is
         # `<SelfContained>false`, so a single-file `xema` still needs .NET on the box. Installing it
         # is the larger half of "make the CLI runnable" and the only reason this script needs the
         # network for anything but the CLI itself.
