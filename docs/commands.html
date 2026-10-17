@@ -1,0 +1,2276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commands — Xema docs</title>
+<meta name="description" content="Every xema command, 331 of them, as xema <command> --help describes it.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="commands.html" aria-current="page">Commands</a>
+  </aside>
+  <article class="prose">
+<h1 id="commands">Commands</h1>
+<p>Every <code>xema</code> command, 331 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
+<h2 id="install-and-upgrade">Install and upgrade</h2>
+<p>Put Xema on a server, join it to a cluster, and keep it current.</p>
+<h3 id="init"><code>init</code></h3>
+<pre><code>xema init
+</code></pre>
+<p>Set up this server as the first node of a new cluster.</p>
+<ul>
+<li><code>--address &lt;address&gt;</code>: This machine's IP address as the other nodes reach it. Found when it has one LAN address, asked for when it has several.</li>
+<li><code>--cluster &lt;cluster&gt;</code>: The cluster's name. Defaults to this machine's name.</li>
+<li><code>--name &lt;name&gt;</code>: This node's name in the roster. Defaults to this machine's name.</li>
+<li><code>--server &lt;server&gt;</code>: The database server. Only used where no credentials are recorded yet; defaults to this machine.</li>
+<li><code>--user &lt;user&gt;</code>: The database login to create where none is recorded yet.</li>
+<li><code>--dry-run</code>: Say what would be set up, and change nothing.</li>
+<li><code>--yes</code>: Do not ask before writing.</li>
+</ul>
+<h3 id="join"><code>join</code></h3>
+<pre><code>xema join
+</code></pre>
+<p>Join this server to an existing cluster and set it up there.</p>
+<ul>
+<li><code>--token &lt;token&gt;</code>: The token <code>xema cluster token</code> printed on a node already in the cluster.</li>
+<li><code>--address &lt;address&gt;</code>: This machine's IP address as the other nodes reach it. Left out, it is the one on the cluster's subnet.</li>
+<li><code>--name &lt;name&gt;</code>: This node's name in the roster. Defaults to this machine's name.</li>
+<li><code>--roles &lt;roles&gt;</code>: Roles to give this node, comma separated. A joined node holds none until it is given some.</li>
+<li><code>--yes</code>: Do not ask before writing.</li>
+</ul>
+<h3 id="migrate"><code>migrate</code></h3>
+<pre><code>xema migrate
+</code></pre>
+<p>Bring this node up on this build: another version of Xema converted to it, or a new node joined. Within the installed version, the xema command itself is <code>xema update</code> and its components <code>xema upgrade</code>.</p>
+<ul>
+<li><code>--address &lt;address&gt;</code>: This machine's IP address as the other nodes reach it. Found when the first node has one LAN address, asked for when it has several; required on a node that joins.</li>
+<li><code>--join &lt;join&gt;</code>: A pass from <code>xema cluster token</code>, to join an existing cluster instead of creating one.</li>
+<li><code>--cluster &lt;cluster&gt;</code>: The cluster's name. Defaults to this machine's name; ignored with --join.</li>
+<li><code>--name &lt;name&gt;</code>: This node's name in the roster. Defaults to this machine's name.</li>
+<li><code>--roles &lt;roles&gt;</code>: Roles to give this node, comma separated. A cluster of one already holds every role.</li>
+<li><code>--dry-run</code>: Say what would happen, and change nothing.</li>
+<li><code>--yes</code>: Do not ask before writing.</li>
+</ul>
+<h3 id="update"><code>update</code></h3>
+<pre><code>xema update
+</code></pre>
+<p>Replace the xema command itself with the channel's newest, within its own version; another version is <code>xema migrate</code>, and Xema's components are <code>xema upgrade</code>.</p>
+<ul>
+<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
+<li><code>--dry-run</code>: Say which version it would replace the command with, and change nothing.</li>
+</ul>
+<h3 id="upgrade"><code>upgrade</code></h3>
+<pre><code>xema upgrade [&lt;components&gt;…]
+</code></pre>
+<p>Upgrade Xema's components and the release's schema changes, within the installed version; another version is <code>xema migrate</code>, and the xema command itself is <code>xema update</code>.</p>
+<ul>
+<li><code>[&lt;components&gt;…]</code>: Upgrade only these, leaving every other component on the version it runs. The schema must already be at the release: <code>xema database upgrade</code> applies it.</li>
+<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
+<li><code>--yes</code>: Don't ask. Restarting a component drops the calls it is carrying.</li>
+<li><code>--dry-run</code>: List what would change, by version, and change nothing.</li>
+</ul>
+<h3 id="channel"><code>channel</code></h3>
+<pre><code>xema channel
+</code></pre>
+<p>Show the release channel this server is recorded as taking releases from.</p>
+<h3 id="channel-set"><code>channel set</code></h3>
+<pre><code>xema channel set &lt;channel&gt;
+</code></pre>
+<p>Record the release channel this server takes releases from.</p>
+<ul>
+<li><code>&lt;channel&gt;</code>: <code>dev</code> for the rolling channel, <code>stable</code> otherwise.</li>
+</ul>
+<h3 id="component-list"><code>component list</code></h3>
+<pre><code>xema component list
+</code></pre>
+<p>What is installed on this server, and what could be.</p>
+<h3 id="component-install"><code>component install</code></h3>
+<pre><code>xema component install &lt;name&gt;
+</code></pre>
+<p>Fetch a component's release and put it in place.</p>
+<ul>
+<li><code>&lt;name&gt;</code>: Which component. <code>xema component list</code> shows them.</li>
+<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
+<li><code>--force</code>: Install again even if it is already here.</li>
+</ul>
+<h3 id="component-remove"><code>component remove</code></h3>
+<pre><code>xema component remove &lt;name&gt;
+</code></pre>
+<p>Take a component's code and unit off this server.</p>
+<ul>
+<li><code>&lt;name&gt;</code>: Which component.</li>
+<li><code>--yes</code>: Don't ask. Required when there is nobody to answer.</li>
+</ul>
+<h3 id="tokens"><code>tokens</code></h3>
+<pre><code>xema tokens
+</code></pre>
+<p>Show this node's token certificates and client secrets, and say plainly what is missing.</p>
+<h3 id="tokens-create"><code>tokens create</code></h3>
+<pre><code>xema tokens create
+</code></pre>
+<p>Make the certificates tokens are signed and encrypted with.</p>
+<ul>
+<li><code>--years &lt;years&gt;</code>: How long they last.</li>
+<li><code>--force</code>: Replace certificates already there. Every sign-in on the cluster ends.</li>
+</ul>
+<h3 id="tokens-secrets"><code>tokens secrets</code></h3>
+<pre><code>xema tokens secrets
+</code></pre>
+<p>Make the browser apps' client secrets, or replace them without a pause.</p>
+<ul>
+<li><code>--rotate</code>: Put a new secret first for every app, keeping the old ones, which Manager still accepts.</li>
+<li><code>--retire</code>: Keep only each app's first secret, once every node sends it.</li>
+</ul>
+<h3 id="keyring"><code>keyring</code></h3>
+<pre><code>xema keyring
+</code></pre>
+<p>Show this node's key ring certificate, and say plainly when there is none.</p>
+<h3 id="keyring-create"><code>keyring create</code></h3>
+<pre><code>xema keyring create
+</code></pre>
+<p>Make the certificate this cluster's key ring is encrypted with.</p>
+<ul>
+<li><code>--years &lt;years&gt;</code>: How long it lasts. Replacing it later means copying the new file to every node.</li>
+<li><code>--force</code>: Replace a certificate that is already there. Read what this costs first.</li>
+</ul>
+<h3 id="completion"><code>completion</code></h3>
+<pre><code>xema completion [&lt;shell&gt;]
+</code></pre>
+<p>Print a shell completion script. <code>xema completion install</code> puts it where bash finds it.</p>
+<ul>
+<li><code>[&lt;shell&gt;]</code>: Shell to generate the script for: bash or zsh.</li>
+</ul>
+<h3 id="completion-install"><code>completion install</code></h3>
+<pre><code>xema completion install
+</code></pre>
+<p>Tab completion for <code>xema</code> in bash, root's shells included: <code>sudo xema completion install</code>.</p>
+<h2 id="the-cluster-and-its-nodes">The cluster and its nodes</h2>
+<p>What each server runs, how the servers reach each other, and what they hold.</p>
+<h3 id="status"><code>status</code></h3>
+<pre><code>xema status
+</code></pre>
+<p>Show the status of the infra and Xema services (state, start time, CPU, memory).</p>
+<ul>
+<li><code>--json</code>: Emit machine-readable JSON instead of the tables — this is what the Manager serves to the dashboard.</li>
+</ul>
+<h3 id="discover"><code>discover</code></h3>
+<pre><code>xema discover [&lt;version&gt;]
+</code></pre>
+<p>Run each version's discovery in order and stop at the last one found, which is this machine's current version; an older one found before it is still on the machine and is discovered too.</p>
+<ul>
+<li><code>[&lt;version&gt;]</code>: <code>v1</code> or <code>v2</code> to discover that version only; omitted, every version found here.</li>
+</ul>
+<h3 id="nodes"><code>nodes</code></h3>
+<pre><code>xema nodes
+</code></pre>
+<p>Ask every server in this cluster what it is running.</p>
+<ul>
+<li><code>--seconds &lt;seconds&gt;</code>: How long to wait for answers before calling the rest unreachable.</li>
+</ul>
+<h3 id="node-roles"><code>node roles</code></h3>
+<pre><code>xema node roles
+</code></pre>
+<p>Show what this server is meant to run, beside what it actually is.</p>
+<h3 id="node-role-add"><code>node role add</code></h3>
+<pre><code>xema node role add &lt;role&gt;
+</code></pre>
+<p>Declare that this server should run something.</p>
+<ul>
+<li><code>&lt;role&gt;</code>: One of the roles listed by <code>xema node roles</code>.</li>
+</ul>
+<h3 id="node-role-remove"><code>node role remove</code></h3>
+<pre><code>xema node role remove &lt;role&gt;
+</code></pre>
+<p>Declare that this server should not run something.</p>
+<ul>
+<li><code>&lt;role&gt;</code>: One of the roles listed by <code>xema node roles</code>.</li>
+</ul>
+<h3 id="node-apply"><code>node apply</code></h3>
+<pre><code>xema node apply
+</code></pre>
+<p>Start what this server should run, and stop what it should not.</p>
+<ul>
+<li><code>--dry-run</code>: Print what would change and change nothing.</li>
+<li><code>--yes</code>: Don't ask. Required when there is nobody to answer.</li>
+</ul>
+<h3 id="node-address"><code>node address</code></h3>
+<pre><code>xema node address &lt;node&gt; [&lt;address&gt;]
+</code></pre>
+<p>Change the address the other nodes reach a node at, for the whole cluster.</p>
+<ul>
+<li><code>&lt;node&gt;</code>: The node's name or its id. Its own name is the ordinary case.</li>
+<li><code>[&lt;address&gt;]</code>: Where the other nodes should reach it: an IP address, optionally with a port. Left out only with --derive.</li>
+<li><code>--derive</code>: Derive the address instead of typing it: this machine's address on the subnet every other node of the cluster is on. Only for the node the command is run on, since only it can see its own interfaces. Refused when no such subnet exists — what remains is routed or tunnelled, and that is a decision, not a guess.</li>
+</ul>
+<h3 id="node-claim"><code>node claim</code></h3>
+<pre><code>xema node claim
+</code></pre>
+<p>Records this machine as the node its bootstrap file names.</p>
+<ul>
+<li><code>--yes</code>: Do not ask before writing.</li>
+</ul>
+<h3 id="node-wire"><code>node wire</code></h3>
+<pre><code>xema node wire
+</code></pre>
+<p>Write this node's settings from the cluster's wiring.</p>
+<ul>
+<li><code>--dry-run</code>: Print what would be written and write nothing.</li>
+<li><code>--yes</code>: Don't ask. Required when there is nobody to answer.</li>
+<li><code>--restart</code>: Restart this node's Xema services afterwards. Drops any calls it is carrying.</li>
+</ul>
+<h3 id="node-files"><code>node files</code></h3>
+<pre><code>xema node files
+</code></pre>
+<p>Place the unit, nginx, logrotate and Prometheus files this build carries, and start the host agent.</p>
+<ul>
+<li><code>--dry-run</code>: Say what would change and change nothing.</li>
+</ul>
+<h3 id="node-check"><code>node check</code></h3>
+<pre><code>xema node check
+</code></pre>
+<p>Check this node's token files and nginx files, and say how to put right what is wrong.</p>
+<ul>
+<li><code>--fix</code>: Place this build's nginx files where they differ, tested before nginx is reloaded.</li>
+</ul>
+<h3 id="node-reset"><code>node reset</code></h3>
+<pre><code>xema node reset
+</code></pre>
+<p>Remove what was set up on this server. Databases, credentials, the key ring and backups are kept.</p>
+<ul>
+<li><code>--force</code>: Go ahead on a node that holds the database role, and remove that role too.</li>
+<li><code>--dry-run</code>: Say what would be removed, and change nothing.</li>
+<li><code>--yes</code>: Do not ask before removing.</li>
+</ul>
+<h3 id="node-enable"><code>node enable</code></h3>
+<pre><code>xema node enable &lt;node&gt;
+</code></pre>
+<p>Let a node take part in the cluster again: <code>xema node enable mini4</code>.</p>
+<ul>
+<li><code>&lt;node&gt;</code>: The node, by name.</li>
+</ul>
+<h3 id="node-disable"><code>node disable</code></h3>
+<pre><code>xema node disable &lt;node&gt;
+</code></pre>
+<p>Set a node aside, so the cluster gives it nothing to carry: <code>xema node disable mini4</code>.</p>
+<ul>
+<li><code>&lt;node&gt;</code>: The node, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="node-start"><code>node start</code></h3>
+<pre><code>xema node start [&lt;words&gt;…]
+</code></pre>
+<p>Start services: <code>xema node start bff</code>, or <code>--node mini4</code> for another node's.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The services, <code>--node</code> with a node's name, and <code>--yes</code>. None named, here: every Xema service.</li>
+</ul>
+<h3 id="node-stop"><code>node stop</code></h3>
+<pre><code>xema node stop [&lt;words&gt;…]
+</code></pre>
+<p>Stop services: <code>xema node stop dialer --node mini4</code>. Calls a stopped service carries drop.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The services, <code>--node</code> with a node's name, and <code>--yes</code>. None named, here: every Xema service, asked first.</li>
+</ul>
+<h3 id="node-restart"><code>node restart</code></h3>
+<pre><code>xema node restart [&lt;words&gt;…]
+</code></pre>
+<p>Restart services: <code>xema node restart bff --node mini4</code>. Calls a restarted service carries drop.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The services, <code>--node</code> with a node's name, and <code>--yes</code>. None named, here: every Xema service, asked first.</li>
+</ul>
+<h3 id="node-ssh"><code>node ssh</code></h3>
+<pre><code>xema node ssh [&lt;state&gt;]
+</code></pre>
+<p>The SSH setting a node holds: <code>xema node ssh</code>. <code>on</code> or <code>off</code> changes it: <code>xema node ssh off --node mini4</code>.</p>
+<ul>
+<li><code>[&lt;state&gt;]</code>: <code>on</code> or <code>off</code>; left out, it is shown.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+<li><code>--yes</code>: Answer yes, up front, to turning SSH off.</li>
+</ul>
+<h3 id="node-reboot"><code>node reboot</code></h3>
+<pre><code>xema node reboot
+</code></pre>
+<p>Stop the platform in order and restart the machine: <code>xema node reboot --node mini4</code>. Every call the node carries drops.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="node-interfaces"><code>node interfaces</code></h3>
+<pre><code>xema node interfaces
+</code></pre>
+<p>A node's network interfaces, as SIP capture chooses from them: <code>xema node interfaces</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="node-capture"><code>node capture</code></h3>
+<pre><code>xema node capture
+</code></pre>
+<p>Whether a node is capturing SIP, and what: <code>xema node capture</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="node-capture-start"><code>node capture start</code></h3>
+<pre><code>xema node capture start
+</code></pre>
+<p>Start capturing SIP on a node: <code>xema node capture start --port 5060 --record Failed --number 98480</code>. What it keeps is listed by <code>xema node captures</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+<li><code>--device &lt;device&gt;</code>: Interfaces to capture on, comma-separated; every usable one when not given.</li>
+<li><code>--port &lt;port&gt;</code>: Ports SIP is expected on, comma-separated.</li>
+<li><code>--record &lt;record&gt;</code>: Which calls to keep: All, Answered or Failed.</li>
+<li><code>--number &lt;number&gt;</code>: Phone numbers to narrow to, comma-separated; a call is kept when one is at either end.</li>
+</ul>
+<h3 id="node-capture-stop"><code>node capture stop</code></h3>
+<pre><code>xema node capture stop
+</code></pre>
+<p>Stop capturing SIP on a node: <code>xema node capture stop</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="node-captures"><code>node captures</code></h3>
+<pre><code>xema node captures
+</code></pre>
+<p>The captured calls, newest first, from every node's captures: <code>xema node captures --search 98480 --outcome Failed</code>.</p>
+<ul>
+<li><code>--search &lt;search&gt;</code>: Part of a number, a SIP call id or an address.</li>
+<li><code>--outcome &lt;outcome&gt;</code>: All, Answered or Failed.</li>
+<li><code>--take &lt;take&gt;</code>: How many to show, up to 500.</li>
+</ul>
+<h3 id="node-capture-show"><code>node capture show</code></h3>
+<pre><code>xema node capture show &lt;call&gt;
+</code></pre>
+<p>One captured call, every SIP message in it: <code>xema node capture show 01a1…</code>.</p>
+<ul>
+<li><code>&lt;call&gt;</code>: The call, as <code>xema node captures</code> lists it.</li>
+</ul>
+<h3 id="cluster-status"><code>cluster status</code></h3>
+<pre><code>xema cluster status
+</code></pre>
+<p>Show what this server belongs to, and who else is in it.</p>
+<h3 id="cluster-token"><code>cluster token</code></h3>
+<pre><code>xema cluster token
+</code></pre>
+<p>Mint a single-use pass for another server to join this cluster.</p>
+<ul>
+<li><code>--cluster &lt;cluster&gt;</code>: Which cluster the new server joins. Defaults to this node's.</li>
+<li><code>--minutes &lt;minutes&gt;</code>: How long it stays valid.</li>
+<li><code>--label &lt;label&gt;</code>: A note about who it was minted for.</li>
+<li><code>--server &lt;server&gt;</code>: How the joining server reaches this cluster's database. Defaults to the address recorded for this node, because the local setting is usually a loopback and would send the new server to its own database.</li>
+<li><code>--address &lt;address&gt;</code>: The joining server's IPv4 address, where it is outside this cluster's subnet — a DR node: the database is let in from it first. Run on the node holding the database.</li>
+</ul>
+<h3 id="cluster-remove"><code>cluster remove</code></h3>
+<pre><code>xema cluster remove &lt;node&gt;
+</code></pre>
+<p>Take one server out of this cluster, and give what it held to another.</p>
+<ul>
+<li><code>&lt;node&gt;</code>: The node to remove, by name or by id.</li>
+<li><code>--to &lt;to&gt;</code>: Which node takes its trunks and devices. Defaults to this one.</li>
+<li><code>--yes</code>: Answer the confirmation.</li>
+</ul>
+<h3 id="cluster-name"><code>cluster name</code></h3>
+<pre><code>xema cluster name &lt;name&gt;
+</code></pre>
+<p>Name the cluster, as every screen shows it: <code>xema cluster name "Ajmer site"</code>.</p>
+<ul>
+<li><code>&lt;name&gt;</code>: Its name.</li>
+</ul>
+<h3 id="cluster"><code>cluster</code></h3>
+<pre><code>xema cluster
+</code></pre>
+<p>The whole cluster: what it is made of, and what each server has made of it.</p>
+<ul>
+<li><code>--seconds &lt;seconds&gt;</code>: How long to wait for servers to say what they are running. Zero skips asking them, which is worth having when the broker is the thing that is broken.</li>
+</ul>
+<h3 id="cluster-secret-set"><code>cluster secret set</code></h3>
+<pre><code>xema cluster secret set &lt;purpose&gt;
+</code></pre>
+<p>Record the password this cluster's nodes use for one of its shared parts.</p>
+<ul>
+<li><code>&lt;purpose&gt;</code>: redis or broker.</li>
+<li><code>--secret &lt;secret&gt;</code>: The password. Prompted for, unhidden, if not given.</li>
+<li><code>--username &lt;username&gt;</code>: The user, where the part has users. The broker does; Redis does not.</li>
+<li><code>--generate</code>: Make one up instead of asking for it — 32 characters, safe to paste.</li>
+</ul>
+<h3 id="cluster-secret-clear"><code>cluster secret clear</code></h3>
+<pre><code>xema cluster secret clear &lt;purpose&gt;
+</code></pre>
+<p>Forget a recorded password. The nodes then connect without one.</p>
+<ul>
+<li><code>&lt;purpose&gt;</code>: redis or broker.</li>
+</ul>
+<h3 id="bff-failover"><code>bff failover</code></h3>
+<pre><code>xema bff failover
+</code></pre>
+<p>Move the active BFF to another node. Calls continue; agents' connections move with it.</p>
+<ul>
+<li><code>--to &lt;to&gt;</code>: The node to move to, by name. Needed where more than one other node holds the bff role.</li>
+<li><code>--yes</code>: Do not ask before moving it.</li>
+</ul>
+<h3 id="broker-queues"><code>broker queues</code></h3>
+<pre><code>xema broker queues
+</code></pre>
+<p>Show Xema's queues on this broker, with the type each one currently has.</p>
+<h3 id="broker-queues-migrate"><code>broker queues migrate</code></h3>
+<pre><code>xema broker queues migrate
+</code></pre>
+<p>Move Xema's classic queues to quorum, so they survive a broker node going away.</p>
+<ul>
+<li><code>--yes</code>: Don't ask. Required when there's nobody to answer.</li>
+<li><code>--dry-run</code>: Print what would be deleted, and delete nothing.</li>
+<li><code>--force</code>: Delete a queue even with messages still in it, losing them.</li>
+</ul>
+<h3 id="hosts"><code>hosts</code></h3>
+<pre><code>xema hosts
+</code></pre>
+<p>The hosts every service answers at: <code>xema hosts</code>.</p>
+<h3 id="hosts-limit"><code>hosts limit</code></h3>
+<pre><code>xema hosts limit [&lt;hosts&gt;…]
+</code></pre>
+<p>Limit the hosts to the cluster's own and any named: <code>xema hosts limit</code>, <code>xema hosts limit lb.example.com</code>.</p>
+<ul>
+<li><code>[&lt;hosts&gt;…]</code>: Host names or IP addresses beyond the cluster's own, added to those already named.</li>
+</ul>
+<h3 id="hosts-any"><code>hosts any</code></h3>
+<pre><code>xema hosts any
+</code></pre>
+<p>Answer at any host, the default: <code>xema hosts any</code>. The named hosts are kept for a later <code>limit</code>.</p>
+<h3 id="hosts-add"><code>hosts add</code></h3>
+<pre><code>xema hosts add &lt;host&gt;
+</code></pre>
+<p>Name a host beyond the cluster's own: <code>xema hosts add lb.example.com</code>.</p>
+<ul>
+<li><code>&lt;host&gt;</code>: A host name or IP address.</li>
+</ul>
+<h3 id="hosts-remove"><code>hosts remove</code></h3>
+<pre><code>xema hosts remove &lt;host&gt;
+</code></pre>
+<p>Stop naming a host: <code>xema hosts remove lb.example.com</code>. The cluster's own cannot be removed.</p>
+<ul>
+<li><code>&lt;host&gt;</code>: A host named with <code>add</code> or <code>limit</code>.</li>
+</ul>
+<h3 id="cors"><code>cors</code></h3>
+<pre><code>xema cors
+</code></pre>
+<p>Which pages may call from another origin: <code>xema cors</code>.</p>
+<h3 id="cors-add"><code>cors add</code></h3>
+<pre><code>xema cors add &lt;origin&gt;
+</code></pre>
+<p>Let another site's pages call: <code>xema cors add https://crm.example.com</code>.</p>
+<ul>
+<li><code>&lt;origin&gt;</code>: Scheme, host and any port, as the browser sends it.</li>
+</ul>
+<h3 id="cors-remove"><code>cors remove</code></h3>
+<pre><code>xema cors remove &lt;origin&gt;
+</code></pre>
+<p>Stop another site's pages calling: <code>xema cors remove https://crm.example.com</code>.</p>
+<ul>
+<li><code>&lt;origin&gt;</code>: An origin added with <code>add</code>.</li>
+</ul>
+<h3 id="cors-any"><code>cors any</code></h3>
+<pre><code>xema cors any
+</code></pre>
+<p>Let any site's pages call: <code>xema cors any</code>. The origins added are kept for a later <code>limit</code>.</p>
+<h3 id="cors-limit"><code>cors limit</code></h3>
+<pre><code>xema cors limit
+</code></pre>
+<p>Only the cluster's own pages and those added, the default: <code>xema cors limit</code>.</p>
+<h3 id="dns"><code>dns</code></h3>
+<pre><code>xema dns
+</code></pre>
+<p>The DNS of the node Manager runs on: <code>xema dns</code>.</p>
+<h3 id="dns-servers"><code>dns servers</code></h3>
+<pre><code>xema dns servers &lt;servers&gt;
+</code></pre>
+<p>The name servers of the node Manager runs on: <code>xema dns servers 10.0.0.2,10.0.0.3</code>.</p>
+<ul>
+<li><code>&lt;servers&gt;</code>: The servers, comma-separated.</li>
+</ul>
+<h3 id="dns-domains"><code>dns domains</code></h3>
+<pre><code>xema dns domains &lt;domains&gt;
+</code></pre>
+<p>The search domains of the node Manager runs on: <code>xema dns domains site.local</code>.</p>
+<ul>
+<li><code>&lt;domains&gt;</code>: The domains, comma-separated.</li>
+</ul>
+<h3 id="time"><code>time</code></h3>
+<pre><code>xema time
+</code></pre>
+<p>A node's clock, zone and time sync: <code>xema time</code>, or <code>--node mini4</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="time-clocks"><code>time clocks</code></h3>
+<pre><code>xema time clocks
+</code></pre>
+<p>Every node's clock against the BFF's: <code>xema time clocks</code>.</p>
+<h3 id="time-zone"><code>time zone</code></h3>
+<pre><code>xema time zone &lt;zone&gt;
+</code></pre>
+<p>Move a node to another time zone: <code>xema time zone Asia/Kolkata</code>. Its services keep running.</p>
+<ul>
+<li><code>&lt;zone&gt;</code>: The zone, as tzdata names it.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="time-sync"><code>time sync</code></h3>
+<pre><code>xema time sync &lt;state&gt;
+</code></pre>
+<p>Turn a node's time sync on or off: <code>xema time sync on</code>.</p>
+<ul>
+<li><code>&lt;state&gt;</code>: <code>on</code> or <code>off</code>.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="time-servers"><code>time servers</code></h3>
+<pre><code>xema time servers [&lt;servers&gt;]
+</code></pre>
+<p>The servers a node takes its time from: <code>xema time servers 0.pool.ntp.org,1.pool.ntp.org</code>. None given hands the question back to the machine's own configuration.</p>
+<ul>
+<li><code>[&lt;servers&gt;]</code>: The servers, comma-separated.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="binding-add"><code>binding add</code></h3>
+<pre><code>xema binding add &lt;address&gt; &lt;purpose&gt;
+</code></pre>
+<p>Bind an address on a node to a purpose: <code>xema binding add 10.0.0.5 sip --node mini4 --host-name sip.site.local</code>.</p>
+<ul>
+<li><code>&lt;address&gt;</code>: One of the node's addresses.</li>
+<li><code>&lt;purpose&gt;</code>: What it carries, as <code>xema bindings</code> names purposes.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+<li><code>--host-name &lt;host-name&gt;</code>: The name it answers to.</li>
+<li><code>--description &lt;description&gt;</code>: What it is for.</li>
+</ul>
+<h3 id="binding-remove"><code>binding remove</code></h3>
+<pre><code>xema binding remove &lt;address&gt;
+</code></pre>
+<p>Remove a node's binding: <code>xema binding remove 10.0.0.5 --node mini4</code>. One a trunk uses is refused by Manager.</p>
+<ul>
+<li><code>&lt;address&gt;</code>: The bound address.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h3 id="bindings-apply"><code>bindings apply</code></h3>
+<pre><code>xema bindings apply
+</code></pre>
+<p>Apply this node's network bindings: the node agent writes the SIP listeners and trunk addresses they name and reloads PJSIP. A listener whose address another program still holds is reported, not forced. Run as root.</p>
+<h3 id="bindings"><code>bindings</code></h3>
+<pre><code>xema bindings
+</code></pre>
+<p>A node's network bindings, what uses each, and whether it has applied them: <code>xema bindings --node mini4</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
+</ul>
+<h2 id="running-services">Running services</h2>
+<p>Start and stop Xema's services, and read what they log.</p>
+<h3 id="start"><code>start</code></h3>
+<pre><code>xema start [&lt;service&gt;…]
+</code></pre>
+<p>Start services. With none named, every Xema service on this node; starting drops no call, so nothing is asked.</p>
+<ul>
+<li><code>[&lt;service&gt;…]</code>: Services (manager, xema-manager, redis) or a group (infra, all). None: every Xema service.</li>
+</ul>
+<h3 id="stop"><code>stop</code></h3>
+<pre><code>xema stop [&lt;service&gt;…]
+</code></pre>
+<p>Stop services. With none named, every Xema service on this node, after asking: the calls they carry drop.</p>
+<ul>
+<li><code>[&lt;service&gt;…]</code>: Services (manager, xema-manager, redis) or a group (infra, all). None: every Xema service.</li>
+<li><code>--yes</code>: Do not ask before stopping every Xema service.</li>
+</ul>
+<h3 id="restart"><code>restart</code></h3>
+<pre><code>xema restart [&lt;service&gt;…]
+</code></pre>
+<p>Restart services. With none named, every Xema service on this node, after asking: the calls they carry drop.</p>
+<ul>
+<li><code>[&lt;service&gt;…]</code>: Services (manager, xema-manager, redis) or a group (infra, all). None: every Xema service.</li>
+<li><code>--yes</code>: Do not ask before restarting every Xema service.</li>
+</ul>
+<h3 id="shutdown"><code>shutdown</code></h3>
+<pre><code>xema shutdown
+</code></pre>
+<p>Stop every Xema service in order, then power the machine off — or restart it with --reboot.</p>
+<ul>
+<li><code>--yes</code>: Don't ask. Required when there's nobody to answer.</li>
+<li><code>--reboot</code>: Restart instead of powering off.</li>
+<li><code>--dry-run</code>: Print what would be stopped, and stop nothing.</li>
+</ul>
+<h3 id="logs"><code>logs</code></h3>
+<pre><code>xema logs [&lt;service&gt;]
+</code></pre>
+<p>Show journal logs for the Xema services — a live two-pane browser when run in a terminal.</p>
+<ul>
+<li><code>[&lt;service&gt;]</code>: Service to select initially, e.g. manager or xema-manager.</li>
+<li><code>--lines &lt;lines&gt;</code>: -n, Number of recent log lines to load.</li>
+<li><code>--follow</code>: -f, Keep following new output (only relevant when output is redirected).</li>
+</ul>
+<h3 id="logs-backup"><code>logs backup</code></h3>
+<pre><code>xema logs backup
+</code></pre>
+<p>Copy the logs database, which the conversion does not touch.</p>
+<h3 id="crash-reports"><code>crash-reports</code></h3>
+<pre><code>xema crash-reports
+</code></pre>
+<p>Browse restart reasons and recent errors for each Xema service.</p>
+<ul>
+<li><code>--lines &lt;lines&gt;</code>: -n, How many recent journal lines to scan per service.</li>
+</ul>
+<h3 id="loglevel-show"><code>loglevel show</code></h3>
+<pre><code>xema loglevel show [&lt;words&gt;…]
+</code></pre>
+<p>One service's levels, by category: <code>xema loglevel bff</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The service, and <code>--node</code> with a node's name.</li>
+</ul>
+<h3 id="loglevel-set"><code>loglevel set</code></h3>
+<pre><code>xema loglevel set [&lt;words&gt;…]
+</code></pre>
+<p>Set categories' levels in one service: <code>xema loglevel set bff Default=Debug Xema.Bff.Queues=Trace</code>. A category set to nothing (<code>Microsoft=</code>) is taken out; the rest of the block is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The service, Category=Level for each, and <code>--node</code> with a node's name.</li>
+</ul>
+<h3 id="loglevels"><code>loglevels</code></h3>
+<pre><code>xema loglevels
+</code></pre>
+<p>The services whose log levels can be changed: <code>xema loglevels</code>, or <code>--node mini4</code>.</p>
+<ul>
+<li><code>--node &lt;node&gt;</code>: The node, by name; the one Manager runs on when not given.</li>
+</ul>
+<h2 id="backups-and-data">Backups and data</h2>
+<p>Backups, the databases, call records, and what comes across from V1.</p>
+<h3 id="backup"><code>backup</code></h3>
+<pre><code>xema backup
+</code></pre>
+<p>Back up this node entirely: every database on its server that holds a table, the call record where it is on a server of its own, and the files it cannot download again. Each part is taken and reported even when one before it failed, and the exit code is the worst of them.</p>
+<h3 id="backup-list"><code>backup list</code></h3>
+<pre><code>xema backup list
+</code></pre>
+<p><code>xema backup list</code>: every run on this machine, newest first.</p>
+<ul>
+<li><code>--json</code>: The runs as a JSON array, which is what the node agent reads.</li>
+</ul>
+<h3 id="backup-prune"><code>backup prune</code></h3>
+<pre><code>xema backup prune
+</code></pre>
+<p><code>xema backup prune --keep N</code>: keeps the N newest complete runs and deletes every run older than them.</p>
+<ul>
+<li><code>--keep &lt;keep&gt;</code>: How many complete runs to keep. At least one.</li>
+</ul>
+<h3 id="files-backup"><code>files backup</code></h3>
+<pre><code>xema files backup
+</code></pre>
+<p>Back up the files this node cannot download again. <code>xema backup</code> runs this after the databases.</p>
+<h3 id="metrics-backup"><code>metrics backup</code></h3>
+<pre><code>xema metrics backup
+</code></pre>
+<p>Copy the metrics database, which the conversion does not touch and which is usually the largest on the server.</p>
+<h3 id="database-connect"><code>database connect</code></h3>
+<pre><code>xema database connect
+</code></pre>
+<p>Record how this server reaches its database, check that it works, and set up the schema.</p>
+<ul>
+<li><code>--server &lt;server&gt;</code>: The database host. <code>localhost</code> for the ordinary single server.</li>
+<li><code>--user &lt;user&gt;</code>: The MariaDB user Xema connects as.</li>
+<li><code>--pass &lt;pass&gt;</code>: Its password. Prompted for if left out, which keeps it out of shell history.</li>
+<li><code>--provision</code>: Create the user first, with a password nobody has to choose or remember. Logs in to MariaDB as whoever is running the command, so it needs a login that may create users.</li>
+<li><code>--trusted-user</code>: Log in to MariaDB as root instead of as yourself. Needed when your own Linux login has no rights to create a user; run the whole command under <code>sudo</code> for it to work.</li>
+<li><code>--from-v1</code>: Take the server, user and password from the V1 installation on this machine rather than being told them. Every V1 service signs in as the one user V1's installer made, so on an upgraded server the right credentials already exist and making new ones is the only wrong move.</li>
+</ul>
+<h3 id="database"><code>database</code></h3>
+<pre><code>xema database
+</code></pre>
+<p>Show what this server is set to connect to. Never the password.</p>
+<h3 id="database-tables"><code>database tables</code></h3>
+<pre><code>xema database tables
+</code></pre>
+<p>List the tables V2's schemas own, one per line: server, database and table, separated by tabs. Read from this build's schemas; nothing is written.</p>
+<h3 id="database-upgrade"><code>database upgrade</code></h3>
+<pre><code>xema database upgrade
+</code></pre>
+<p>Apply this release's schema changes: every schema when all of them are additive, or only the schemas named, whatever they change. Components keep the versions they run.</p>
+<ul>
+<li><code>--allow-narrowing</code>: Also apply migrations that shorten columns. A value that does not fit fails the migration.</li>
+<li><code>--dry-run</code>: List the pending migrations and whether they can be applied, and change nothing.</li>
+<li><code>--yes</code>: Do not ask before applying.</li>
+<li><code>--schemas &lt;schemas&gt;</code>: Apply only these, whatever their changes are, and leave every other schema as it is. What uses a schema whose change is destructive may fail until it is upgraded. <code>xema database upgrade --dry-run</code> lists them.</li>
+</ul>
+<h3 id="database-backup"><code>database backup</code></h3>
+<pre><code>xema database backup
+</code></pre>
+<p>Copy the databases <code>Database.Migrate</code> converts, before it converts them.</p>
+<h3 id="cdr"><code>cdr</code></h3>
+<pre><code>xema cdr
+</code></pre>
+<p>Show what this node is set to connect to for the CDR. Never the password.</p>
+<h3 id="cdr-connect"><code>cdr connect</code></h3>
+<pre><code>xema cdr connect
+</code></pre>
+<p>Record which database server this node's call record is kept on, and check it works.</p>
+<ul>
+<li><code>--server &lt;server&gt;</code>: The server the CDR is on. Left out, this records this node's own database.</li>
+<li><code>--user &lt;user&gt;</code>: The MariaDB user SimpleCdr connects as.</li>
+<li><code>--pass &lt;pass&gt;</code>: Its password. Prompted for if left out, which keeps it out of shell history.</li>
+<li><code>--role &lt;role&gt;</code>: Which copy of the call record this node's recorder keeps: primary, ha or dr. One node each.</li>
+<li><code>--allow-narrowing</code>: Also apply schema changes that shorten columns, as <code>xema database upgrade</code> allows. A value that does not fit fails the change.</li>
+</ul>
+<h3 id="cdr-backup"><code>cdr backup</code></h3>
+<pre><code>xema cdr backup
+</code></pre>
+<p>Copy the call record, which the conversion changes and <code>database backup</code> does not cover.</p>
+<h3 id="cdr-copy"><code>cdr copy</code></h3>
+<pre><code>xema cdr copy
+</code></pre>
+<p>Copy the call record's history from another copy into this node's: for a new ha or dr copy, once its recorder is running. Rows it already has are skipped. Run as root.</p>
+<ul>
+<li><code>--from-server &lt;from-server&gt;</code>: The server the history is on. Defaults to the cluster's database server.</li>
+<li><code>--from-user &lt;from-user&gt;</code>: Its MariaDB user. Defaults to this node's cluster user; with another, the password is asked for.</li>
+<li><code>--from-database &lt;from-database&gt;</code>: The database the history is in.</li>
+<li><code>--yes</code>: Do not ask before copying.</li>
+</ul>
+<h3 id="cdr-columns"><code>cdr columns</code></h3>
+<pre><code>xema cdr columns
+</code></pre>
+<p>Each spare column of the call record and the variable it is filled from: <code>xema cdr columns</code>.</p>
+<h3 id="cdr-column"><code>cdr column</code></h3>
+<pre><code>xema cdr column &lt;column&gt; [&lt;variable&gt;]
+</code></pre>
+<p>Fill a spare column from a channel variable, or leave it empty with no variable: <code>xema cdr column Text1 CUSTOMER_ID</code>. The rest are kept.</p>
+<ul>
+<li><code>&lt;column&gt;</code>: The column, as <code>xema cdr columns</code> lists it.</li>
+<li><code>[&lt;variable&gt;]</code>: The channel variable; left out, the column is filled from nothing.</li>
+</ul>
+<h3 id="cdr-script"><code>cdr script</code></h3>
+<pre><code>xema cdr script
+</code></pre>
+<p>The SQL run against the call records once a call is written: <code>xema cdr script</code>. <code>--set script.sql</code> replaces it, an empty file stops it, and <code>--try script.sql</code> runs a script once and undoes it, saying what it would have touched.</p>
+<ul>
+<li><code>--set &lt;set&gt;</code>: A file whose SQL becomes the script.</li>
+<li><code>--@try &lt;@try&gt;</code></li>
+</ul>
+<h3 id="v2cdr-correct"><code>v2cdr correct</code></h3>
+<pre><code>xema v2cdr correct
+</code></pre>
+<p>Re-key the calls recorded under ids that are not UUID v7, so reports find them. Run as root.</p>
+<h3 id="v1cdr-migrate"><code>v1cdr migrate</code></h3>
+<pre><code>xema v1cdr migrate
+</code></pre>
+<p>Copy V1's call-record history into this build's tables, while V2 serves. Run as root.</p>
+<ul>
+<li><code>--from-start</code>: Read every table from its start again, trying each refused row once more: for after a refusal's cause is fixed. Rows already copied are written again as the same keys, which changes nothing.</li>
+</ul>
+<h3 id="v1data-migrate"><code>v1data migrate</code></h3>
+<pre><code>xema v1data migrate
+</code></pre>
+<p>Copy V1's dataset rows into this build's tables, while V2 serves. Run as root.</p>
+<h3 id="v1reports-migrate"><code>v1reports migrate</code></h3>
+<pre><code>xema v1reports migrate
+</code></pre>
+<p>Convert a converted V1 site's saved reports and post-processing script to this version's call-record tables. Examines and writes the before and after of each, changing nothing, unless --apply or --restore is given. Run as root.</p>
+<ul>
+<li><code>--apply</code>: Write the reports and the script that convert cleanly, keeping their originals first.</li>
+<li><code>--restore</code>: Put back the originals an earlier --apply kept, wherever they have not been changed since.</li>
+<li><code>--dry-run</code>: Examine and write the before and after of each, changing nothing. This is the default.</li>
+</ul>
+<h2 id="people">People</h2>
+<p>Agents, teams, skills, roles and processes, as the console sets them.</p>
+<h3 id="agents"><code>agents</code></h3>
+<pre><code>xema agents
+</code></pre>
+<p>The agents, their teams and the skills they take calls on: <code>xema agents</code>.</p>
+<h3 id="agent-show"><code>agent show</code></h3>
+<pre><code>xema agent show &lt;user-name&gt;
+</code></pre>
+<p>One agent: their name, team, phone, skills and roles: <code>xema agent show vasu</code>.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
+</ul>
+<h3 id="agent-add"><code>agent add</code></h3>
+<pre><code>xema agent add &lt;user-name&gt;
+</code></pre>
+<p>Add an agent who signs in to an Agent UI with this username and a password: <code>xema agent add vasu --name "Vasu" --team Sales --skill English,Billing</code>, or <code>--like vasu1</code> for another agent's team and skills.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The username they sign in with.</li>
+<li><code>--name &lt;name&gt;</code>: Their name, as the console shows it. Asked at a terminal when not given.</li>
+<li><code>--team &lt;team&gt;</code>: The team they are in, by name. Asked at a terminal when neither this nor --like is given.</li>
+<li><code>--skill &lt;skill&gt;</code>: The skills they take calls on, by name, comma-separated.</li>
+<li><code>--like &lt;like&gt;</code>: An agent, by username, whose team and skills they get; --team and --skill override either.</li>
+<li><code>--phone &lt;phone&gt;</code>: What they take calls on: <code>softphone</code>, their own, which Manager gives when this is not said; or <code>desk</code>, a handset whose number they give at sign-in.</li>
+<li><code>--mobile &lt;mobile&gt;</code>: Their mobile number.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+</ul>
+<h3 id="agent-set"><code>agent set</code></h3>
+<pre><code>xema agent set [&lt;user-name&gt;]
+</code></pre>
+<p>Change an agent: <code>xema agent set vasu --team Sales --add-skill Billing --phone desk</code>. Only what is named changes; the rest is sent back as Manager holds it, since Manager's edit replaces the whole agent.</p>
+<ul>
+<li><code>[&lt;user-name&gt;]</code>: The agent, by username.</li>
+<li><code>--all</code>: Every agent, in place of one: <code>xema agent set --all --add-role "Night Shift"</code>. Roles only.</li>
+<li><code>--name &lt;name&gt;</code>: Their name.</li>
+<li><code>--team &lt;team&gt;</code>: Their team, by name.</li>
+<li><code>--skill &lt;skill&gt;</code>: Their skills, by name, comma-separated: these and no others.</li>
+<li><code>--add-skill &lt;add-skill&gt;</code>: Skills to give them, by name, comma-separated.</li>
+<li><code>--remove-skill &lt;remove-skill&gt;</code>: Skills to take away, by name, comma-separated.</li>
+<li><code>--phone &lt;phone&gt;</code>: <code>softphone</code> or <code>desk</code>.</li>
+<li><code>--mobile &lt;mobile&gt;</code>: Their mobile number.</li>
+<li><code>--role &lt;role&gt;</code>: Their roles, by name, comma-separated: these and no others. <code>xema roles</code> lists them.</li>
+<li><code>--add-role &lt;add-role&gt;</code>: Roles to give them, by name, comma-separated.</li>
+<li><code>--remove-role &lt;remove-role&gt;</code>: Roles to take away, by name, comma-separated.</li>
+</ul>
+<h3 id="agent-password"><code>agent password</code></h3>
+<pre><code>xema agent password &lt;user-name&gt;
+</code></pre>
+<p>Set an agent's password: <code>xema agent password vasu</code>.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+</ul>
+<h3 id="agent-remove"><code>agent remove</code></h3>
+<pre><code>xema agent remove &lt;user-name&gt;
+</code></pre>
+<p>Remove an agent and their sign-in: <code>xema agent remove vasu</code>.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="teams"><code>teams</code></h3>
+<pre><code>xema teams
+</code></pre>
+<p>The teams, their leads and how many agents each has: <code>xema teams</code>.</p>
+<h3 id="team-show"><code>team show</code></h3>
+<pre><code>xema team show &lt;team&gt;
+</code></pre>
+<p>One team, every field: <code>xema team show Sales</code>.</p>
+<ul>
+<li><code>&lt;team&gt;</code>: The team, by name.</li>
+</ul>
+<h3 id="team-add"><code>team add</code></h3>
+<pre><code>xema team add [&lt;words&gt;…]
+</code></pre>
+<p>Add a team: <code>xema team add Sales description="Inbound sales" tlUserName=vasu</code>. <code>--process</code> puts it in a process as it is made.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value for anything else, and <code>--process</code> with a process's name; <code>xema team fields</code> lists the fields.</li>
+</ul>
+<h3 id="team-set"><code>team set</code></h3>
+<pre><code>xema team set [&lt;words&gt;…]
+</code></pre>
+<p>Change a team: <code>xema team set Sales enableBarging=on breakPolicy=Suspended</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The team, by name, then field=value; <code>xema team fields</code> lists them.</li>
+</ul>
+<h3 id="team-remove"><code>team remove</code></h3>
+<pre><code>xema team remove &lt;team&gt;
+</code></pre>
+<p>Remove a team. One with agents in it is refused, with who they are.</p>
+<ul>
+<li><code>&lt;team&gt;</code>: The team, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="team-fields"><code>team fields</code></h3>
+<pre><code>xema team fields
+</code></pre>
+<p>What can be set on a team, and the values each field takes.</p>
+<h3 id="skills"><code>skills</code></h3>
+<pre><code>xema skills
+</code></pre>
+<p>The skills, and how many agents hold each: <code>xema skills</code>.</p>
+<h3 id="skill-show"><code>skill show</code></h3>
+<pre><code>xema skill show &lt;skill&gt;
+</code></pre>
+<p>One skill: <code>xema skill show English</code>.</p>
+<ul>
+<li><code>&lt;skill&gt;</code>: The skill, by name.</li>
+</ul>
+<h3 id="skill-add"><code>skill add</code></h3>
+<pre><code>xema skill add [&lt;words&gt;…]
+</code></pre>
+<p>Add a skill: <code>xema skill add English description="English-speaking callers"</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema skill fields</code> lists them.</li>
+</ul>
+<h3 id="skill-set"><code>skill set</code></h3>
+<pre><code>xema skill set [&lt;words&gt;…]
+</code></pre>
+<p>Change a skill: <code>xema skill set English name=Hindi</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The skill, by name, then field=value.</li>
+</ul>
+<h3 id="skill-remove"><code>skill remove</code></h3>
+<pre><code>xema skill remove &lt;skill&gt;
+</code></pre>
+<p>Remove a skill.</p>
+<ul>
+<li><code>&lt;skill&gt;</code>: The skill, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="skill-fields"><code>skill fields</code></h3>
+<pre><code>xema skill fields
+</code></pre>
+<p>What can be set on a skill.</p>
+<h3 id="roles"><code>roles</code></h3>
+<pre><code>xema roles
+</code></pre>
+<p>The roles and what each grants: <code>xema roles</code>.</p>
+<h3 id="role-show"><code>role show</code></h3>
+<pre><code>xema role show &lt;role&gt;
+</code></pre>
+<p>One role, every field: <code>xema role show Supervisor</code>.</p>
+<ul>
+<li><code>&lt;role&gt;</code>: The role, by name.</li>
+</ul>
+<h3 id="role-add"><code>role add</code></h3>
+<pre><code>xema role add [&lt;words&gt;…]
+</code></pre>
+<p>Add a role: <code>xema role add Supervisor permissions=queues.view,agents.view</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema role fields</code> lists the fields.</li>
+</ul>
+<h3 id="role-set"><code>role set</code></h3>
+<pre><code>xema role set [&lt;words&gt;…]
+</code></pre>
+<p>Change a role: <code>xema role set Supervisor permissions=queues.view</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The role, by name, then field=value.</li>
+</ul>
+<h3 id="role-remove"><code>role remove</code></h3>
+<pre><code>xema role remove &lt;role&gt;
+</code></pre>
+<p>Remove a role.</p>
+<ul>
+<li><code>&lt;role&gt;</code>: The role, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="role-fields"><code>role fields</code></h3>
+<pre><code>xema role fields
+</code></pre>
+<p>What can be set on a role.</p>
+<h3 id="role-permissions"><code>role permissions</code></h3>
+<pre><code>xema role permissions
+</code></pre>
+<p>Every permission a role can grant: <code>xema role permissions</code>.</p>
+<h3 id="processes"><code>processes</code></h3>
+<pre><code>xema processes
+</code></pre>
+<p>The processes: <code>xema processes</code>.</p>
+<h3 id="process-show"><code>process show</code></h3>
+<pre><code>xema process show &lt;process&gt;
+</code></pre>
+<p>One process, every field: <code>xema process show Renewals</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+</ul>
+<h3 id="process-add"><code>process add</code></h3>
+<pre><code>xema process add [&lt;words&gt;…]
+</code></pre>
+<p>Add a process: <code>xema process add Renewals ownerMayAddAgents=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema process fields</code> lists them.</li>
+</ul>
+<h3 id="process-set"><code>process set</code></h3>
+<pre><code>xema process set [&lt;words&gt;…]
+</code></pre>
+<p>Change a process: <code>xema process set Renewals allowListening=on</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The process, by name, then field=value.</li>
+</ul>
+<h3 id="process-remove"><code>process remove</code></h3>
+<pre><code>xema process remove &lt;process&gt;
+</code></pre>
+<p>Remove a process. Its agents, teams, queues and the rest are kept; only their link to it goes.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="process-fields"><code>process fields</code></h3>
+<pre><code>xema process fields
+</code></pre>
+<p>What can be set on a process.</p>
+<h3 id="process-members"><code>process members</code></h3>
+<pre><code>xema process members &lt;process&gt;
+</code></pre>
+<p>What a process holds: its agents, teams, queues, dialers and datasets: <code>xema process members Renewals</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+</ul>
+<h3 id="process-link"><code>process link</code></h3>
+<pre><code>xema process link [&lt;words&gt;…]
+</code></pre>
+<p>Put something in a process: <code>xema process link Renewals agent vasu</code>, or <code>team</code>, <code>queue</code>, <code>dialer</code>, <code>dataset</code> by name.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The process, what kind of thing, and its name.</li>
+</ul>
+<h3 id="process-unlink"><code>process unlink</code></h3>
+<pre><code>xema process unlink [&lt;words&gt;…]
+</code></pre>
+<p>Take something out of a process: <code>xema process unlink Renewals queue Sales</code>. The thing itself is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The process, what kind of thing, and its name.</li>
+</ul>
+<h3 id="process-lead"><code>process lead</code></h3>
+<pre><code>xema process lead [&lt;words&gt;…]
+</code></pre>
+<p>Set the lead of a team in a process: <code>xema process lead Renewals Sales vasu</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The process, the team, and the lead's username.</li>
+</ul>
+<h3 id="process-owners"><code>process owners</code></h3>
+<pre><code>xema process owners &lt;process&gt;
+</code></pre>
+<p>A process's owners, or its QAs with <code>--qa</code>: <code>xema process owners Renewals</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+<li><code>--qa</code>: Its QAs rather than its owners.</li>
+</ul>
+<h3 id="process-owner-add"><code>process owner-add</code></h3>
+<pre><code>xema process owner-add &lt;process&gt; &lt;user-name&gt;
+</code></pre>
+<p>Make somebody an owner of a process, or a QA with <code>--qa</code>: <code>xema process owner-add Renewals asha</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+<li><code>&lt;user-name&gt;</code>: Their username.</li>
+<li><code>--qa</code>: As a QA rather than an owner.</li>
+</ul>
+<h3 id="process-owner-remove"><code>process owner-remove</code></h3>
+<pre><code>xema process owner-remove &lt;process&gt; &lt;user-name&gt;
+</code></pre>
+<p>Stop somebody being an owner of a process, or a QA with <code>--qa</code>: <code>xema process owner-remove Renewals asha</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+<li><code>&lt;user-name&gt;</code>: Their username.</li>
+<li><code>--qa</code>: As a QA rather than an owner.</li>
+</ul>
+<h3 id="process-trunks"><code>process trunks</code></h3>
+<pre><code>xema process trunks &lt;process&gt;
+</code></pre>
+<p>The trunks a process takes its calls from, whole or by number: <code>xema process trunks Renewals</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+</ul>
+<h3 id="process-trunk"><code>process trunk</code></h3>
+<pre><code>xema process trunk [&lt;words&gt;…]
+</code></pre>
+<p>Have a process take a trunk's calls (Vasu, 2026-10-16): <code>xema process trunk Renewals carrier1</code> for every call on it, or the numbers dialled after the trunk's name for those alone. One process per number; a manager's to set.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The process, the trunk, and any numbers on it, by their patterns.</li>
+</ul>
+<h3 id="process-untrunk"><code>process untrunk</code></h3>
+<pre><code>xema process untrunk &lt;process&gt; &lt;trunk&gt;
+</code></pre>
+<p>Stop a process taking a trunk's calls: <code>xema process untrunk Renewals carrier1</code>.</p>
+<ul>
+<li><code>&lt;process&gt;</code>: The process, by name.</li>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+</ul>
+<h3 id="breaks"><code>breaks</code></h3>
+<pre><code>xema breaks
+</code></pre>
+<p>The break types: <code>xema breaks</code>.</p>
+<h3 id="break-show"><code>break show</code></h3>
+<pre><code>xema break show &lt;name&gt;
+</code></pre>
+<p>One break, every field: <code>xema break show Lunch</code>.</p>
+<ul>
+<li><code>&lt;name&gt;</code>: The break, by name.</li>
+</ul>
+<h3 id="break-add"><code>break add</code></h3>
+<pre><code>xema break add [&lt;words&gt;…]
+</code></pre>
+<p>Add a break: <code>xema break add Lunch kind=Lunch enabled=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema break fields</code> lists the fields.</li>
+</ul>
+<h3 id="break-set"><code>break set</code></h3>
+<pre><code>xema break set [&lt;words&gt;…]
+</code></pre>
+<p>Change a break: <code>xema break set Lunch mandatory=on</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The break, by name, then field=value.</li>
+</ul>
+<h3 id="break-remove"><code>break remove</code></h3>
+<pre><code>xema break remove &lt;name&gt;
+</code></pre>
+<p>Remove a break.</p>
+<ul>
+<li><code>&lt;name&gt;</code>: The break, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="break-fields"><code>break fields</code></h3>
+<pre><code>xema break fields
+</code></pre>
+<p>What can be set on a break.</p>
+<h3 id="schedules"><code>schedules</code></h3>
+<pre><code>xema schedules
+</code></pre>
+<p>The calling schedules and the dialers on each: <code>xema schedules</code>.</p>
+<h3 id="schedule-show"><code>schedule show</code></h3>
+<pre><code>xema schedule show &lt;schedule&gt;
+</code></pre>
+<p>One schedule, every field: <code>xema schedule show "Business hours"</code>.</p>
+<ul>
+<li><code>&lt;schedule&gt;</code>: The schedule, by name.</li>
+</ul>
+<h3 id="schedule-add"><code>schedule add</code></h3>
+<pre><code>xema schedule add [&lt;words&gt;…]
+</code></pre>
+<p>Add a schedule: <code>xema schedule add "Business hours" cronStrings='["* 3-12 * * 1-5"]'</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema schedule fields</code> lists the fields.</li>
+</ul>
+<h3 id="schedule-set"><code>schedule set</code></h3>
+<pre><code>xema schedule set [&lt;words&gt;…]
+</code></pre>
+<p>Change a schedule: <code>xema schedule set "Business hours" description=Weekdays</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The schedule, by name, then field=value.</li>
+</ul>
+<h3 id="schedule-remove"><code>schedule remove</code></h3>
+<pre><code>xema schedule remove &lt;schedule&gt;
+</code></pre>
+<p>Remove a schedule.</p>
+<ul>
+<li><code>&lt;schedule&gt;</code>: The schedule, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="schedule-fields"><code>schedule fields</code></h3>
+<pre><code>xema schedule fields
+</code></pre>
+<p>What can be set on a schedule.</p>
+<h3 id="agentfeatures"><code>agentfeatures</code></h3>
+<pre><code>xema agentfeatures
+</code></pre>
+<p>What every Agent UI offers its agents: <code>xema agentfeatures</code>.</p>
+<h3 id="agentfeatures-set"><code>agentfeatures set</code></h3>
+<pre><code>xema agentfeatures set [&lt;words&gt;…]
+</code></pre>
+<p>Change what Agent UIs offer: <code>xema agentfeatures set callHistory=on myDay=off</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: field=value; <code>xema agentfeatures fields</code> lists them.</li>
+</ul>
+<h3 id="agentfeatures-fields"><code>agentfeatures fields</code></h3>
+<pre><code>xema agentfeatures fields
+</code></pre>
+<p>What can be set.</p>
+<h3 id="busyhours"><code>busyhours</code></h3>
+<pre><code>xema busyhours
+</code></pre>
+<p>The busy hours, and how they are found: <code>xema busyhours</code>.</p>
+<h3 id="busyhours-set"><code>busyhours set</code></h3>
+<pre><code>xema busyhours set [&lt;words&gt;…]
+</code></pre>
+<p>Change the busy hours: <code>xema busyhours set declaredStartHour=9 declaredEndHour=18</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: field=value; <code>xema busyhours fields</code> lists them.</li>
+</ul>
+<h3 id="busyhours-fields"><code>busyhours fields</code></h3>
+<pre><code>xema busyhours fields
+</code></pre>
+<p>What can be set.</p>
+<h3 id="phones"><code>phones</code></h3>
+<pre><code>xema phones
+</code></pre>
+<p>The phones, and how many nodes hold each one's registration: <code>xema phones</code>.</p>
+<h3 id="phone-show"><code>phone show</code></h3>
+<pre><code>xema phone show &lt;phone&gt;
+</code></pre>
+<p>One phone: its group, who is on it, and each node holding its registration: <code>xema phone show 1999</code>. Its password only with <code>--password</code>, for typing into the handset.</p>
+<ul>
+<li><code>&lt;phone&gt;</code>: The phone, by number.</li>
+<li><code>--password</code>: Show its password too.</li>
+</ul>
+<h3 id="phone-add"><code>phone add</code></h3>
+<pre><code>xema phone add &lt;phone&gt;
+</code></pre>
+<p>Add a desk phone, which a handset registers as with this number and a password: <code>xema phone add 1999 --node mini1</code>. The password is typed twice, or read from standard input with <code>--password-stdin</code>, and never made up here: somebody has to type it into the handset, so it is theirs to choose.</p>
+<ul>
+<li><code>&lt;phone&gt;</code>: Its number, which is also what the handset registers as.</li>
+<li><code>--node &lt;node&gt;</code>: The node it registers to; every node when not given.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+</ul>
+<h3 id="phone-password"><code>phone password</code></h3>
+<pre><code>xema phone password &lt;phone&gt;
+</code></pre>
+<p>Set a phone's password, which its handset then registers with: <code>xema phone password 1999</code>.</p>
+<ul>
+<li><code>&lt;phone&gt;</code>: The phone, by number.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+</ul>
+<h3 id="phone-remove"><code>phone remove</code></h3>
+<pre><code>xema phone remove &lt;phone&gt;
+</code></pre>
+<p>Remove a phone: <code>xema phone remove 1999</code>.</p>
+<ul>
+<li><code>&lt;phone&gt;</code>: The phone, by number.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="phone-assign"><code>phone assign</code></h3>
+<pre><code>xema phone assign [&lt;words&gt;…]
+</code></pre>
+<p>Assign phones to the node they register to: <code>xema phone assign 1006 1007 --node mini4</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The phones, by number, and <code>--node</code> with the node's name.</li>
+</ul>
+<h3 id="phone-unassign"><code>phone unassign</code></h3>
+<pre><code>xema phone unassign [&lt;phone&gt;…]
+</code></pre>
+<p>Unassign phones, so every node renders them: <code>xema phone unassign 1006</code>.</p>
+<ul>
+<li><code>[&lt;phone&gt;…]</code>: The phones, by number.</li>
+</ul>
+<h3 id="plans"><code>plans</code></h3>
+<pre><code>xema plans
+</code></pre>
+<p>The plans, what each forecasts, and the terms where none applies: <code>xema plans</code>.</p>
+<h3 id="plan-show"><code>plan show</code></h3>
+<pre><code>xema plan show &lt;plan&gt;
+</code></pre>
+<p>One plan, every field, and what it forecasts: <code>xema plan show 3f9c2a</code>.</p>
+<ul>
+<li><code>&lt;plan&gt;</code>: The plan, by its id or the end of it.</li>
+</ul>
+<h3 id="plan-add"><code>plan add</code></h3>
+<pre><code>xema plan add [&lt;words&gt;…]
+</code></pre>
+<p>Add a plan: <code>xema plan add process=Renewals skills=English demandModel=Growth growthPercent=110 reach=500 reachPeriod=Day</code>. What is not named starts from the terms Metrics uses where no plan applies. No process is every process.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: field=value; <code>xema plan fields</code> lists them.</li>
+</ul>
+<h3 id="plan-set"><code>plan set</code></h3>
+<pre><code>xema plan set [&lt;words&gt;…]
+</code></pre>
+<p>Change a plan: <code>xema plan set 3f9c2a growthPercent=120</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The plan, by its id or the end of it, then field=value.</li>
+</ul>
+<h3 id="plan-remove"><code>plan remove</code></h3>
+<pre><code>xema plan remove &lt;plan&gt;
+</code></pre>
+<p>Remove a plan; its skills are forecast on the next plan that applies, or the defaults.</p>
+<ul>
+<li><code>&lt;plan&gt;</code>: The plan, by its id or the end of it.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="plan-fields"><code>plan fields</code></h3>
+<pre><code>xema plan fields
+</code></pre>
+<p>What can be set on a plan, and the values Manager takes for its choices.</p>
+<h2 id="calls">Calls</h2>
+<p>Trunks, numbers, queues, dialers and the flows a call takes.</p>
+<h3 id="trunks"><code>trunks</code></h3>
+<pre><code>xema trunks
+</code></pre>
+<p>Show each trunk and the node it is connected to.</p>
+<h3 id="trunk-assign"><code>trunk assign</code></h3>
+<pre><code>xema trunk assign &lt;trunk&gt;
+</code></pre>
+<p>Assign a trunk to the node its circuit is plugged into: <code>xema trunk assign 9001 --node mini4</code>.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+<li><code>--node &lt;node&gt;</code>: The node, by name.</li>
+</ul>
+<h3 id="trunk-unassign"><code>trunk unassign</code></h3>
+<pre><code>xema trunk unassign &lt;trunk&gt;
+</code></pre>
+<p>Unassign a trunk, so no node carries it: <code>xema trunk unassign 9001</code>.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+</ul>
+<h3 id="trunk-show"><code>trunk show</code></h3>
+<pre><code>xema trunk show &lt;trunk&gt;
+</code></pre>
+<p>One trunk, every field: <code>xema trunk show 9001</code>. Its password is shown, as the console's edit page shows it.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+</ul>
+<h3 id="trunk-add"><code>trunk add</code></h3>
+<pre><code>xema trunk add [&lt;words&gt;…]
+</code></pre>
+<p>Add a trunk: <code>xema trunk add carrier1 kind=Provider serverIp=10.0.0.5 pilotNumber=4000</code>. <code>xema trunk assign</code> then gives it its node.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema trunk fields</code> lists them.</li>
+</ul>
+<h3 id="trunk-set"><code>trunk set</code></h3>
+<pre><code>xema trunk set [&lt;words&gt;…]
+</code></pre>
+<p>Change a trunk: <code>xema trunk set 9001 codecs=alaw,ulaw</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, then field=value.</li>
+</ul>
+<h3 id="trunk-remove"><code>trunk remove</code></h3>
+<pre><code>xema trunk remove &lt;trunk&gt;
+</code></pre>
+<p>Remove a trunk.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="trunk-fields"><code>trunk fields</code></h3>
+<pre><code>xema trunk fields
+</code></pre>
+<p>What can be set on a trunk.</p>
+<h3 id="numbers"><code>numbers</code></h3>
+<pre><code>xema numbers &lt;trunk&gt;
+</code></pre>
+<p>The numbers a trunk answers and what each starts: <code>xema numbers 9001</code>.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+</ul>
+<h3 id="number-show"><code>number show</code></h3>
+<pre><code>xema number show [&lt;words&gt;…]
+</code></pre>
+<p>One number: <code>xema number show 9001 4000</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, then the number.</li>
+</ul>
+<h3 id="number-add"><code>number add</code></h3>
+<pre><code>xema number add [&lt;words&gt;…]
+</code></pre>
+<p>A number a trunk answers, and the XApp it starts: <code>xema number add 9001 4000 xApp=Welcome enabled=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, the number, then field=value; <code>xema number fields</code> lists them.</li>
+</ul>
+<h3 id="number-set"><code>number set</code></h3>
+<pre><code>xema number set [&lt;words&gt;…]
+</code></pre>
+<p>Change a number: <code>xema number set 9001 4000 xApp=Sales</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, the number, then field=value.</li>
+</ul>
+<h3 id="number-remove"><code>number remove</code></h3>
+<pre><code>xema number remove [&lt;words&gt;…]
+</code></pre>
+<p>Stop a trunk answering a number: <code>xema number remove 9001 4000</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, then the number; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="number-fields"><code>number fields</code></h3>
+<pre><code>xema number fields
+</code></pre>
+<p>What can be set on a number.</p>
+<h3 id="phonegroups"><code>phonegroups</code></h3>
+<pre><code>xema phonegroups
+</code></pre>
+<p>The phone groups: <code>xema phonegroups</code>.</p>
+<h3 id="phonegroup-show"><code>phonegroup show</code></h3>
+<pre><code>xema phonegroup show &lt;group&gt;
+</code></pre>
+<p>One phone group: <code>xema phonegroup show Reception</code>.</p>
+<ul>
+<li><code>&lt;group&gt;</code>: The group, by name.</li>
+</ul>
+<h3 id="phonegroup-add"><code>phonegroup add</code></h3>
+<pre><code>xema phonegroup add [&lt;words&gt;…]
+</code></pre>
+<p>Add a phone group: <code>xema phonegroup add Reception enableDialing=on dialTrunk=9001</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema phonegroup fields</code> lists them.</li>
+</ul>
+<h3 id="phonegroup-set"><code>phonegroup set</code></h3>
+<pre><code>xema phonegroup set [&lt;words&gt;…]
+</code></pre>
+<p>Change a phone group: <code>xema phonegroup set Reception enableRecording=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The group, by name, then field=value.</li>
+</ul>
+<h3 id="phonegroup-remove"><code>phonegroup remove</code></h3>
+<pre><code>xema phonegroup remove &lt;group&gt;
+</code></pre>
+<p>Remove a phone group.</p>
+<ul>
+<li><code>&lt;group&gt;</code>: The group, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="phonegroup-fields"><code>phonegroup fields</code></h3>
+<pre><code>xema phonegroup fields
+</code></pre>
+<p>What can be set on a phone group.</p>
+<h3 id="queues"><code>queues</code></h3>
+<pre><code>xema queues
+</code></pre>
+<p>The call queues and the skills they offer calls to: <code>xema queues</code>.</p>
+<h3 id="queue-show"><code>queue show</code></h3>
+<pre><code>xema queue show &lt;queue&gt;
+</code></pre>
+<p>One queue, every field: <code>xema queue show Sales</code>.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+</ul>
+<h3 id="queue-add"><code>queue add</code></h3>
+<pre><code>xema queue add [&lt;words&gt;…]
+</code></pre>
+<p>Add a queue: <code>xema queue add Sales skills=English,Billing enableRecording=on</code>. <code>--process</code> puts it in a process as it is made.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value, and <code>--process</code> with a process's name; <code>xema queue fields</code> lists the fields.</li>
+</ul>
+<h3 id="queue-set"><code>queue set</code></h3>
+<pre><code>xema queue set [&lt;words&gt;…]
+</code></pre>
+<p>Change a queue: <code>xema queue set Sales weight=2 skills=English</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, by name, then field=value.</li>
+</ul>
+<h3 id="queue-remove"><code>queue remove</code></h3>
+<pre><code>xema queue remove &lt;queue&gt;
+</code></pre>
+<p>Remove a queue.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="queue-fields"><code>queue fields</code></h3>
+<pre><code>xema queue fields
+</code></pre>
+<p>What can be set on a queue.</p>
+<h3 id="dialers"><code>dialers</code></h3>
+<pre><code>xema dialers
+</code></pre>
+<p>The dialers and whether each is running: <code>xema dialers</code>.</p>
+<h3 id="dialer-show"><code>dialer show</code></h3>
+<pre><code>xema dialer show &lt;dialer&gt;
+</code></pre>
+<p>One dialer, every field: <code>xema dialer show Renewals</code>.</p>
+<ul>
+<li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
+</ul>
+<h3 id="dialer-add"><code>dialer add</code></h3>
+<pre><code>xema dialer add [&lt;words&gt;…]
+</code></pre>
+<p>Add a dialer: <code>xema dialer add Renewals kind=Progressive trunk=9001 dataset=Leads xApp=Renewals</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value, and <code>--process</code> with a process's name; <code>xema dialer fields</code> lists the fields.</li>
+</ul>
+<h3 id="dialer-set"><code>dialer set</code></h3>
+<pre><code>xema dialer set [&lt;words&gt;…]
+</code></pre>
+<p>Change a dialer: <code>xema dialer set Renewals pace=3</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The dialer, by name, then field=value.</li>
+</ul>
+<h3 id="dialer-remove"><code>dialer remove</code></h3>
+<pre><code>xema dialer remove &lt;dialer&gt;
+</code></pre>
+<p>Remove a dialer.</p>
+<ul>
+<li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="dialer-fields"><code>dialer fields</code></h3>
+<pre><code>xema dialer fields
+</code></pre>
+<p>What can be set on a dialer.</p>
+<h3 id="dialer-start"><code>dialer start</code></h3>
+<pre><code>xema dialer start &lt;dialer&gt;
+</code></pre>
+<p>Start a dialer: <code>xema dialer start Renewals</code>, or <code>--process Collections</code> for one processes share.</p>
+<ul>
+<li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
+<li><code>--process &lt;process&gt;</code>: The process, by name, to start a dialer several processes share for; its calls are that process's.</li>
+</ul>
+<h3 id="dialer-stop"><code>dialer stop</code></h3>
+<pre><code>xema dialer stop &lt;dialer&gt;
+</code></pre>
+<p>Stop a dialer: <code>xema dialer stop Renewals</code>.</p>
+<ul>
+<li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
+</ul>
+<h3 id="dialer-refresh"><code>dialer refresh</code></h3>
+<pre><code>xema dialer refresh &lt;dialer&gt;
+</code></pre>
+<p>Re-read a dialer's datasets, so rows added since are dialled: <code>xema dialer refresh Renewals</code>.</p>
+<ul>
+<li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
+</ul>
+<h3 id="datasets"><code>datasets</code></h3>
+<pre><code>xema datasets
+</code></pre>
+<p>The datasets and their rows: <code>xema datasets</code>.</p>
+<h3 id="dataset-show"><code>dataset show</code></h3>
+<pre><code>xema dataset show &lt;dataset&gt;
+</code></pre>
+<p>One dataset, every field: <code>xema dataset show Leads</code>.</p>
+<ul>
+<li><code>&lt;dataset&gt;</code>: The dataset, by name.</li>
+</ul>
+<h3 id="dataset-add"><code>dataset add</code></h3>
+<pre><code>xema dataset add [&lt;words&gt;…]
+</code></pre>
+<p>Make a dataset from a CSV, mapping its columns to the dataset's: <code>xema dataset add Leads leads.csv --map mobile=Number,name=Text1,city=Text2</code>. A column is named by its header, or by its number from 1 with <code>--no-headers</code>. One must be the <code>Number</code>. <code>--process</code> puts the dataset in a process.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The dataset's name, the file, <code>--map</code> with column=Slot pairs, and optionally <code>--no-headers</code>, <code>--process</code> with a process's name, <code>--check-duplicates</code>, and <code>--date-format column=format</code> for a date column.</li>
+</ul>
+<h3 id="dataset-upload"><code>dataset upload</code></h3>
+<pre><code>xema dataset upload &lt;dataset&gt; &lt;file&gt;
+</code></pre>
+<p>Load another file into a dataset, read with the mapping its first file set: <code>xema dataset upload Leads more.csv</code>.</p>
+<ul>
+<li><code>&lt;dataset&gt;</code>: The dataset, by name.</li>
+<li><code>&lt;file&gt;</code>: The CSV on this machine.</li>
+<li><code>--description &lt;description&gt;</code>: What this batch is, as the console lists it.</li>
+</ul>
+<h3 id="dialouts"><code>dialouts</code></h3>
+<pre><code>xema dialouts
+</code></pre>
+<p>The dial-outs: <code>xema dialouts</code>.</p>
+<h3 id="dialout-show"><code>dialout show</code></h3>
+<pre><code>xema dialout show &lt;dialout&gt;
+</code></pre>
+<p>One dial-out, every field: <code>xema dialout show Welcome</code>.</p>
+<ul>
+<li><code>&lt;dialout&gt;</code>: The dial-out, by name.</li>
+</ul>
+<h3 id="dialout-add"><code>dialout add</code></h3>
+<pre><code>xema dialout add [&lt;words&gt;…]
+</code></pre>
+<p>Add a dial-out: <code>xema dialout add Welcome trunk=9001</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema dialout fields</code> lists the fields.</li>
+</ul>
+<h3 id="dialout-set"><code>dialout set</code></h3>
+<pre><code>xema dialout set [&lt;words&gt;…]
+</code></pre>
+<p>Change a dial-out: <code>xema dialout set Welcome description="Updated"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The dial-out, by name, then field=value.</li>
+</ul>
+<h3 id="dialout-remove"><code>dialout remove</code></h3>
+<pre><code>xema dialout remove &lt;dialout&gt;
+</code></pre>
+<p>Remove a dial-out.</p>
+<ul>
+<li><code>&lt;dialout&gt;</code>: The dial-out, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="dialout-fields"><code>dialout fields</code></h3>
+<pre><code>xema dialout fields
+</code></pre>
+<p>What can be set on a dial-out.</p>
+<h3 id="callerflows"><code>callerflows</code></h3>
+<pre><code>xema callerflows &lt;queue&gt;
+</code></pre>
+<p>The keys a queue's waiting callers can press: <code>xema callerflows Sales</code>.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+</ul>
+<h3 id="callerflow-show"><code>callerflow show</code></h3>
+<pre><code>xema callerflow show [&lt;words&gt;…]
+</code></pre>
+<p>One key: <code>xema callerflow show Sales 1</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the key pattern.</li>
+</ul>
+<h3 id="callerflow-add"><code>callerflow add</code></h3>
+<pre><code>xema callerflow add [&lt;words&gt;…]
+</code></pre>
+<p>A key that switches a waiting caller into a flow: <code>xema callerflow add Sales 1 flow=Callback enabled=on startAtFirstBlock=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, then field=value; <code>xema callerflow fields</code> lists them.</li>
+</ul>
+<h3 id="callerflow-set"><code>callerflow set</code></h3>
+<pre><code>xema callerflow set [&lt;words&gt;…]
+</code></pre>
+<p>Change a key: <code>xema callerflow set Sales 1 enabled=off</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, then field=value.</li>
+</ul>
+<h3 id="callerflow-remove"><code>callerflow remove</code></h3>
+<pre><code>xema callerflow remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove a key.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the key pattern; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="callerflow-fields"><code>callerflow fields</code></h3>
+<pre><code>xema callerflow fields
+</code></pre>
+<p>What can be set on a key.</p>
+<h3 id="agentflows"><code>agentflows</code></h3>
+<pre><code>xema agentflows &lt;queue&gt;
+</code></pre>
+<p>A queue's switch-to-flow actions: <code>xema agentflows Sales</code>.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+</ul>
+<h3 id="agentflow-show"><code>agentflow show</code></h3>
+<pre><code>xema agentflow show [&lt;words&gt;…]
+</code></pre>
+<p>One switch-to-flow action: <code>xema agentflow show Sales Survey</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name.</li>
+</ul>
+<h3 id="agentflow-add"><code>agentflow add</code></h3>
+<pre><code>xema agentflow add [&lt;words&gt;…]
+</code></pre>
+<p>An action that switches the call into a flow: <code>xema agentflow add Sales Survey flow=CSAT</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value; <code>xema agentflow fields</code> lists them.</li>
+</ul>
+<h3 id="agentflow-set"><code>agentflow set</code></h3>
+<pre><code>xema agentflow set [&lt;words&gt;…]
+</code></pre>
+<p>Change a switch-to-flow action: <code>xema agentflow set Sales Survey flow=NPS</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value.</li>
+</ul>
+<h3 id="agentflow-remove"><code>agentflow remove</code></h3>
+<pre><code>xema agentflow remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove a switch-to-flow action.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="agentflow-fields"><code>agentflow fields</code></h3>
+<pre><code>xema agentflow fields
+</code></pre>
+<p>What can be set on a switch-to-flow action.</p>
+<h3 id="agentphones"><code>agentphones</code></h3>
+<pre><code>xema agentphones &lt;queue&gt;
+</code></pre>
+<p>A queue's transfer-to-phone actions: <code>xema agentphones Sales</code>.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+</ul>
+<h3 id="agentphone-show"><code>agentphone show</code></h3>
+<pre><code>xema agentphone show [&lt;words&gt;…]
+</code></pre>
+<p>One transfer-to-phone action: <code>xema agentphone show Sales Escalate</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name.</li>
+</ul>
+<h3 id="agentphone-add"><code>agentphone add</code></h3>
+<pre><code>xema agentphone add [&lt;words&gt;…]
+</code></pre>
+<p>An action that transfers the call to a phone: <code>xema agentphone add Sales Escalate phoneId=1006</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value; <code>xema agentphone fields</code> lists them.</li>
+</ul>
+<h3 id="agentphone-set"><code>agentphone set</code></h3>
+<pre><code>xema agentphone set [&lt;words&gt;…]
+</code></pre>
+<p>Change a transfer-to-phone action: <code>xema agentphone set Sales Escalate promptAgent=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value.</li>
+</ul>
+<h3 id="agentphone-remove"><code>agentphone remove</code></h3>
+<pre><code>xema agentphone remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove a transfer-to-phone action.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="agentphone-fields"><code>agentphone fields</code></h3>
+<pre><code>xema agentphone fields
+</code></pre>
+<p>What can be set on a transfer-to-phone action.</p>
+<h3 id="audios"><code>audios</code></h3>
+<pre><code>xema audios
+</code></pre>
+<p>The prompts and the languages each is recorded in: <code>xema audios</code>.</p>
+<h3 id="audio-show"><code>audio show</code></h3>
+<pre><code>xema audio show &lt;audio&gt;
+</code></pre>
+<p>One prompt, every field: <code>xema audio show Welcome</code>.</p>
+<ul>
+<li><code>&lt;audio&gt;</code>: The prompt, by name.</li>
+</ul>
+<h3 id="audio-add"><code>audio add</code></h3>
+<pre><code>xema audio add [&lt;words&gt;…]
+</code></pre>
+<p>Add a prompt: <code>xema audio add Welcome description="Front-door greeting"</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema audio fields</code> lists the fields.</li>
+</ul>
+<h3 id="audio-remove"><code>audio remove</code></h3>
+<pre><code>xema audio remove &lt;audio&gt;
+</code></pre>
+<p>Remove a prompt.</p>
+<ul>
+<li><code>&lt;audio&gt;</code>: The prompt, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="audio-fields"><code>audio fields</code></h3>
+<pre><code>xema audio fields
+</code></pre>
+<p>What can be set on a prompt.</p>
+<h3 id="audio-record"><code>audio record</code></h3>
+<pre><code>xema audio record &lt;prompt&gt; &lt;language&gt; &lt;file&gt;
+</code></pre>
+<p>Record a prompt in a language: <code>xema audio record Welcome hi welcome-hindi.wav</code>. A recording already there in that language is replaced.</p>
+<ul>
+<li><code>&lt;prompt&gt;</code>: The prompt, by name.</li>
+<li><code>&lt;language&gt;</code>: The language, by its code, as <code>xema languages</code> shows it.</li>
+<li><code>&lt;file&gt;</code>: The recording on this machine.</li>
+</ul>
+<h3 id="music-list"><code>music list</code></h3>
+<pre><code>xema music list
+</code></pre>
+<p>The music-on-hold classes: <code>xema music list</code>.</p>
+<h3 id="music-show"><code>music show</code></h3>
+<pre><code>xema music show &lt;music&gt;
+</code></pre>
+<p>One music class, every field: <code>xema music show Default</code>.</p>
+<ul>
+<li><code>&lt;music&gt;</code>: The music class, by name.</li>
+</ul>
+<h3 id="music-add"><code>music add</code></h3>
+<pre><code>xema music add [&lt;words&gt;…]
+</code></pre>
+<p>Add a music class: <code>xema music add Default description="Hold music"</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema music fields</code> lists the fields.</li>
+</ul>
+<h3 id="music-set"><code>music set</code></h3>
+<pre><code>xema music set [&lt;words&gt;…]
+</code></pre>
+<p>Change a music class: <code>xema music set Default description="Hold music"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The music class, by name, then field=value.</li>
+</ul>
+<h3 id="music-remove"><code>music remove</code></h3>
+<pre><code>xema music remove &lt;music&gt;
+</code></pre>
+<p>Remove a music class.</p>
+<ul>
+<li><code>&lt;music&gt;</code>: The music class, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="music-fields"><code>music fields</code></h3>
+<pre><code>xema music fields
+</code></pre>
+<p>What can be set on a music class.</p>
+<h3 id="music-track-add"><code>music track-add</code></h3>
+<pre><code>xema music track-add [&lt;words&gt;…]
+</code></pre>
+<p>Add tracks to a music-on-hold class, played after the ones it has: <code>xema music track-add Hold calm.mp3 bright.mp3</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The class, by name, then the files on this machine.</li>
+</ul>
+<h3 id="music-track-remove"><code>music track-remove</code></h3>
+<pre><code>xema music track-remove &lt;music&gt; &lt;track&gt;
+</code></pre>
+<p>Take a track out of a music-on-hold class: <code>xema music track-remove Hold calm.mp3</code>.</p>
+<ul>
+<li><code>&lt;music&gt;</code>: The class, by name.</li>
+<li><code>&lt;track&gt;</code>: The track, by name, as <code>xema music show</code> lists it.</li>
+</ul>
+<h3 id="languages"><code>languages</code></h3>
+<pre><code>xema languages
+</code></pre>
+<p>The languages and how many prompts each holds: <code>xema languages</code>.</p>
+<h3 id="language-show"><code>language show</code></h3>
+<pre><code>xema language show &lt;language&gt;
+</code></pre>
+<p>One language, every field: <code>xema language show Hindi</code>.</p>
+<ul>
+<li><code>&lt;language&gt;</code>: The language, by name.</li>
+</ul>
+<h3 id="language-add"><code>language add</code></h3>
+<pre><code>xema language add [&lt;words&gt;…]
+</code></pre>
+<p>Add a language: <code>xema language add Hindi langCode=hi</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema language fields</code> lists the fields.</li>
+</ul>
+<h3 id="language-set"><code>language set</code></h3>
+<pre><code>xema language set [&lt;words&gt;…]
+</code></pre>
+<p>Change a language: <code>xema language set Hindi name=Hindi</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The language, by name, then field=value.</li>
+</ul>
+<h3 id="language-remove"><code>language remove</code></h3>
+<pre><code>xema language remove &lt;language&gt;
+</code></pre>
+<p>Remove a language.</p>
+<ul>
+<li><code>&lt;language&gt;</code>: The language, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="language-fields"><code>language fields</code></h3>
+<pre><code>xema language fields
+</code></pre>
+<p>What can be set on a language.</p>
+<h2 id="integrations-and-ai">Integrations and AI</h2>
+<p>Webhooks, CRMs, lookups and the other apps a call can reach, and the AI behind them.</p>
+<h3 id="webhooks"><code>webhooks</code></h3>
+<pre><code>xema webhooks
+</code></pre>
+<p>The webhooks: <code>xema webhooks</code>.</p>
+<h3 id="webhook-show"><code>webhook show</code></h3>
+<pre><code>xema webhook show &lt;webhook&gt;
+</code></pre>
+<p>One webhook, every field: <code>xema webhook show crm-push</code>.</p>
+<ul>
+<li><code>&lt;webhook&gt;</code>: The webhook, by name.</li>
+</ul>
+<h3 id="webhook-add"><code>webhook add</code></h3>
+<pre><code>xema webhook add [&lt;words&gt;…]
+</code></pre>
+<p>Add a webhook: <code>xema webhook add crm-push verb=post url=https://crm.example/hook</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema webhook fields</code> lists the fields.</li>
+</ul>
+<h3 id="webhook-set"><code>webhook set</code></h3>
+<pre><code>xema webhook set [&lt;words&gt;…]
+</code></pre>
+<p>Change a webhook: <code>xema webhook set crm-push url=https://crm.example/v2</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The webhook, by name, then field=value.</li>
+</ul>
+<h3 id="webhook-remove"><code>webhook remove</code></h3>
+<pre><code>xema webhook remove &lt;webhook&gt;
+</code></pre>
+<p>Remove a webhook.</p>
+<ul>
+<li><code>&lt;webhook&gt;</code>: The webhook, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="webhook-fields"><code>webhook fields</code></h3>
+<pre><code>xema webhook fields
+</code></pre>
+<p>What can be set on a webhook.</p>
+<h3 id="webhook-enable"><code>webhook enable</code></h3>
+<pre><code>xema webhook enable &lt;webhook&gt;
+</code></pre>
+<p>Turn a webhook on: <code>xema webhook enable crm-push</code>.</p>
+<ul>
+<li><code>&lt;webhook&gt;</code>: The webhook, by name.</li>
+</ul>
+<h3 id="webhook-disable"><code>webhook disable</code></h3>
+<pre><code>xema webhook disable &lt;webhook&gt;
+</code></pre>
+<p>Turn a webhook off: <code>xema webhook disable crm-push</code>.</p>
+<ul>
+<li><code>&lt;webhook&gt;</code>: The webhook, by name.</li>
+</ul>
+<h3 id="crms"><code>crms</code></h3>
+<pre><code>xema crms &lt;queue&gt;
+</code></pre>
+<p>A queue's CRM pages: <code>xema crms Sales</code>.</p>
+<ul>
+<li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+</ul>
+<h3 id="crm-show"><code>crm show</code></h3>
+<pre><code>xema crm show [&lt;words&gt;…]
+</code></pre>
+<p>One CRM page: <code>xema crm show Sales Lookup</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the page's name.</li>
+</ul>
+<h3 id="crm-add"><code>crm add</code></h3>
+<pre><code>xema crm add [&lt;words&gt;…]
+</code></pre>
+<p>A CRM page a queue's agents open: <code>xema crm add Sales Lookup url=https://crm.example/?n={caller}</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, then field=value; <code>xema crm fields</code> lists them.</li>
+</ul>
+<h3 id="crm-set"><code>crm set</code></h3>
+<pre><code>xema crm set [&lt;words&gt;…]
+</code></pre>
+<p>Change a CRM page: <code>xema crm set Sales Lookup reuseTab=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, then field=value.</li>
+</ul>
+<h3 id="crm-remove"><code>crm remove</code></h3>
+<pre><code>xema crm remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove a CRM page: <code>xema crm remove Sales Lookup</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The queue, then the page's name; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="crm-fields"><code>crm fields</code></h3>
+<pre><code>xema crm fields
+</code></pre>
+<p>What can be set on a CRM page.</p>
+<h3 id="lookups"><code>lookups</code></h3>
+<pre><code>xema lookups
+</code></pre>
+<p>The dataset lookups: <code>xema lookups</code>.</p>
+<h3 id="lookup-show"><code>lookup show</code></h3>
+<pre><code>xema lookup show &lt;lookup&gt;
+</code></pre>
+<p>One dataset lookup, every field: <code>xema lookup show Welcome</code>.</p>
+<ul>
+<li><code>&lt;lookup&gt;</code>: The dataset lookup, by name.</li>
+</ul>
+<h3 id="lookup-add"><code>lookup add</code></h3>
+<pre><code>xema lookup add [&lt;words&gt;…]
+</code></pre>
+<p>Add a dataset lookup: <code>xema lookup add Welcome dataset=Leads noOfDigitsToMatch=10</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema lookup fields</code> lists the fields.</li>
+</ul>
+<h3 id="lookup-set"><code>lookup set</code></h3>
+<pre><code>xema lookup set [&lt;words&gt;…]
+</code></pre>
+<p>Change a dataset lookup: <code>xema lookup set Welcome description="Updated"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The dataset lookup, by name, then field=value.</li>
+</ul>
+<h3 id="lookup-remove"><code>lookup remove</code></h3>
+<pre><code>xema lookup remove &lt;lookup&gt;
+</code></pre>
+<p>Remove a dataset lookup.</p>
+<ul>
+<li><code>&lt;lookup&gt;</code>: The dataset lookup, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="lookup-fields"><code>lookup fields</code></h3>
+<pre><code>xema lookup fields
+</code></pre>
+<p>What can be set on a dataset lookup.</p>
+<h3 id="jsonapis"><code>jsonapis</code></h3>
+<pre><code>xema jsonapis
+</code></pre>
+<p>The JSON API calls: <code>xema jsonapis</code>.</p>
+<h3 id="jsonapi-show"><code>jsonapi show</code></h3>
+<pre><code>xema jsonapi show &lt;jsonapi&gt;
+</code></pre>
+<p>One JSON API call, every field: <code>xema jsonapi show Welcome</code>.</p>
+<ul>
+<li><code>&lt;jsonapi&gt;</code>: The JSON API call, by name.</li>
+</ul>
+<h3 id="jsonapi-add"><code>jsonapi add</code></h3>
+<pre><code>xema jsonapi add [&lt;words&gt;…]
+</code></pre>
+<p>Add a JSON API call: <code>xema jsonapi add Welcome verb=get url=https://crm.example/lookup</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema jsonapi fields</code> lists the fields.</li>
+</ul>
+<h3 id="jsonapi-set"><code>jsonapi set</code></h3>
+<pre><code>xema jsonapi set [&lt;words&gt;…]
+</code></pre>
+<p>Change a JSON API call: <code>xema jsonapi set Welcome description="Updated"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The JSON API call, by name, then field=value.</li>
+</ul>
+<h3 id="jsonapi-remove"><code>jsonapi remove</code></h3>
+<pre><code>xema jsonapi remove &lt;jsonapi&gt;
+</code></pre>
+<p>Remove a JSON API call.</p>
+<ul>
+<li><code>&lt;jsonapi&gt;</code>: The JSON API call, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="jsonapi-fields"><code>jsonapi fields</code></h3>
+<pre><code>xema jsonapi fields
+</code></pre>
+<p>What can be set on a JSON API call.</p>
+<h3 id="customapps"><code>customapps</code></h3>
+<pre><code>xema customapps
+</code></pre>
+<p>The custom apps: <code>xema customapps</code>.</p>
+<h3 id="customapp-show"><code>customapp show</code></h3>
+<pre><code>xema customapp show &lt;customapp&gt;
+</code></pre>
+<p>One custom app, every field: <code>xema customapp show Welcome</code>.</p>
+<ul>
+<li><code>&lt;customapp&gt;</code>: The custom app, by name.</li>
+</ul>
+<h3 id="customapp-add"><code>customapp add</code></h3>
+<pre><code>xema customapp add [&lt;words&gt;…]
+</code></pre>
+<p>Add a custom app: <code>xema customapp add Welcome contextName=my-context</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema customapp fields</code> lists the fields.</li>
+</ul>
+<h3 id="customapp-set"><code>customapp set</code></h3>
+<pre><code>xema customapp set [&lt;words&gt;…]
+</code></pre>
+<p>Change a custom app: <code>xema customapp set Welcome description="Updated"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The custom app, by name, then field=value.</li>
+</ul>
+<h3 id="customapp-remove"><code>customapp remove</code></h3>
+<pre><code>xema customapp remove &lt;customapp&gt;
+</code></pre>
+<p>Remove a custom app.</p>
+<ul>
+<li><code>&lt;customapp&gt;</code>: The custom app, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="customapp-fields"><code>customapp fields</code></h3>
+<pre><code>xema customapp fields
+</code></pre>
+<p>What can be set on a custom app.</p>
+<h3 id="callcounters"><code>callcounters</code></h3>
+<pre><code>xema callcounters
+</code></pre>
+<p>The call counters: <code>xema callcounters</code>.</p>
+<h3 id="callcounter-show"><code>callcounter show</code></h3>
+<pre><code>xema callcounter show &lt;callcounter&gt;
+</code></pre>
+<p>One call counter, every field: <code>xema callcounter show Welcome</code>.</p>
+<ul>
+<li><code>&lt;callcounter&gt;</code>: The call counter, by name.</li>
+</ul>
+<h3 id="callcounter-add"><code>callcounter add</code></h3>
+<pre><code>xema callcounter add [&lt;words&gt;…]
+</code></pre>
+<p>Add a call counter: <code>xema callcounter add Welcome dataset=Leads noOfDigitsToMatch=10</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema callcounter fields</code> lists the fields.</li>
+</ul>
+<h3 id="callcounter-set"><code>callcounter set</code></h3>
+<pre><code>xema callcounter set [&lt;words&gt;…]
+</code></pre>
+<p>Change a call counter: <code>xema callcounter set Welcome description="Updated"</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The call counter, by name, then field=value.</li>
+</ul>
+<h3 id="callcounter-remove"><code>callcounter remove</code></h3>
+<pre><code>xema callcounter remove &lt;callcounter&gt;
+</code></pre>
+<p>Remove a call counter.</p>
+<ul>
+<li><code>&lt;callcounter&gt;</code>: The call counter, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="callcounter-fields"><code>callcounter fields</code></h3>
+<pre><code>xema callcounter fields
+</code></pre>
+<p>What can be set on a call counter.</p>
+<h3 id="xapps"><code>xapps</code></h3>
+<pre><code>xema xapps
+</code></pre>
+<p>The XApps, by kind: <code>xema xapps</code>.</p>
+<h3 id="xapp-show"><code>xapp show</code></h3>
+<pre><code>xema xapp show &lt;xapp&gt;
+</code></pre>
+<p>One XApp, every field: <code>xema xapp show Welcome</code>.</p>
+<ul>
+<li><code>&lt;xapp&gt;</code>: The XApp, by name.</li>
+</ul>
+<h3 id="aiproviders"><code>aiproviders</code></h3>
+<pre><code>xema aiproviders
+</code></pre>
+<p>The AI providers and whether each has a key: <code>xema aiproviders</code>.</p>
+<h3 id="aiprovider-show"><code>aiprovider show</code></h3>
+<pre><code>xema aiprovider show &lt;kind&gt;
+</code></pre>
+<p>One AI provider, every field: <code>xema aiprovider show OpenAI</code>.</p>
+<ul>
+<li><code>&lt;kind&gt;</code>: The AI provider, by name.</li>
+</ul>
+<h3 id="aiprovider-add"><code>aiprovider add</code></h3>
+<pre><code>xema aiprovider add [&lt;words&gt;…]
+</code></pre>
+<p>Add a AI provider: <code>xema aiprovider add OpenAI settings='{"model":"gpt-4o"}'</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema aiprovider fields</code> lists the fields.</li>
+</ul>
+<h3 id="aiprovider-set"><code>aiprovider set</code></h3>
+<pre><code>xema aiprovider set [&lt;words&gt;…]
+</code></pre>
+<p>Change a AI provider: <code>xema aiprovider set OpenAI description=Primary</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The AI provider, by name, then field=value.</li>
+</ul>
+<h3 id="aiprovider-remove"><code>aiprovider remove</code></h3>
+<pre><code>xema aiprovider remove &lt;kind&gt;
+</code></pre>
+<p>Remove a AI provider.</p>
+<ul>
+<li><code>&lt;kind&gt;</code>: The AI provider, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="aiprovider-fields"><code>aiprovider fields</code></h3>
+<pre><code>xema aiprovider fields
+</code></pre>
+<p>What can be set on a AI provider.</p>
+<h3 id="aiprovider-key"><code>aiprovider key</code></h3>
+<pre><code>xema aiprovider key &lt;kind&gt;
+</code></pre>
+<p>Set an AI provider's API key: <code>xema aiprovider key OpenAI</code>, typed unseen, or read from standard input with <code>--key-stdin</code>. Kept by Manager as a secret and never shown again.</p>
+<ul>
+<li><code>&lt;kind&gt;</code>: The provider, by kind.</li>
+<li><code>--key-stdin</code>: Read the key from the first line of standard input rather than asking for it.</li>
+</ul>
+<h3 id="aiinputs"><code>aiinputs</code></h3>
+<pre><code>xema aiinputs
+</code></pre>
+<p>The AI input agents: <code>xema aiinputs</code>.</p>
+<h3 id="aiinput-show"><code>aiinput show</code></h3>
+<pre><code>xema aiinput show &lt;aiinput&gt;
+</code></pre>
+<p>One AI input agent, every field: <code>xema aiinput show CaptureReason</code>.</p>
+<ul>
+<li><code>&lt;aiinput&gt;</code>: The AI input agent, by name.</li>
+</ul>
+<h3 id="aiinput-add"><code>aiinput add</code></h3>
+<pre><code>xema aiinput add [&lt;words&gt;…]
+</code></pre>
+<p>Add a AI input agent: <code>xema aiinput add CaptureReason aiProvider=OpenAI settings='{"systemPrompt":"Ask why they called"}'</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema aiinput fields</code> lists the fields.</li>
+</ul>
+<h3 id="aiinput-set"><code>aiinput set</code></h3>
+<pre><code>xema aiinput set [&lt;words&gt;…]
+</code></pre>
+<p>Change a AI input agent: <code>xema aiinput set CaptureReason description=Reason</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The AI input agent, by name, then field=value.</li>
+</ul>
+<h3 id="aiinput-remove"><code>aiinput remove</code></h3>
+<pre><code>xema aiinput remove &lt;aiinput&gt;
+</code></pre>
+<p>Remove a AI input agent.</p>
+<ul>
+<li><code>&lt;aiinput&gt;</code>: The AI input agent, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="aiinput-fields"><code>aiinput fields</code></h3>
+<pre><code>xema aiinput fields
+</code></pre>
+<p>What can be set on a AI input agent.</p>
+<h3 id="aiagents"><code>aiagents</code></h3>
+<pre><code>xema aiagents
+</code></pre>
+<p>The AI conversation agents: <code>xema aiagents</code>.</p>
+<h3 id="aiagent-show"><code>aiagent show</code></h3>
+<pre><code>xema aiagent show &lt;aiagent&gt;
+</code></pre>
+<p>One AI conversation agent, every field: <code>xema aiagent show Receptionist</code>.</p>
+<ul>
+<li><code>&lt;aiagent&gt;</code>: The AI conversation agent, by name.</li>
+</ul>
+<h3 id="aiagent-add"><code>aiagent add</code></h3>
+<pre><code>xema aiagent add [&lt;words&gt;…]
+</code></pre>
+<p>Add a AI conversation agent: <code>xema aiagent add Receptionist aiProvider=OpenAI settings='{"systemPrompt":"Greet and route"}'</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema aiagent fields</code> lists the fields.</li>
+</ul>
+<h3 id="aiagent-set"><code>aiagent set</code></h3>
+<pre><code>xema aiagent set [&lt;words&gt;…]
+</code></pre>
+<p>Change a AI conversation agent: <code>xema aiagent set Receptionist description=Front desk</code>. What is not named is kept.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The AI conversation agent, by name, then field=value.</li>
+</ul>
+<h3 id="aiagent-remove"><code>aiagent remove</code></h3>
+<pre><code>xema aiagent remove &lt;aiagent&gt;
+</code></pre>
+<p>Remove a AI conversation agent.</p>
+<ul>
+<li><code>&lt;aiagent&gt;</code>: The AI conversation agent, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="aiagent-fields"><code>aiagent fields</code></h3>
+<pre><code>xema aiagent fields
+</code></pre>
+<p>What can be set on a AI conversation agent.</p>
+<h2 id="reports-and-live-view">Reports and Live View</h2>
+<p>Reports, who they are shared with, and Live View's presets.</p>
+<h3 id="reports"><code>reports</code></h3>
+<pre><code>xema reports
+</code></pre>
+<p>The reports, their groups and who each is shared with: <code>xema reports</code>.</p>
+<h3 id="report-show"><code>report show</code></h3>
+<pre><code>xema report show &lt;report&gt;
+</code></pre>
+<p>One report's definition, its query among it: <code>xema report show "Agent summary"</code>.</p>
+<ul>
+<li><code>&lt;report&gt;</code>: The report, by name.</li>
+</ul>
+<h3 id="report-add"><code>report add</code></h3>
+<pre><code>xema report add [&lt;words&gt;…]
+</code></pre>
+<p>Add a report: <code>xema report add "Calls by hour" reportGroup=Calls template=generic queryText="select ..."</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then field=value; <code>xema report fields</code> lists them.</li>
+</ul>
+<h3 id="report-set"><code>report set</code></h3>
+<pre><code>xema report set [&lt;words&gt;…]
+</code></pre>
+<p>Change a report: <code>xema report set "Calls by hour" filterOptions="from-date;to-date"</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The report, by name, then field=value.</li>
+</ul>
+<h3 id="report-remove"><code>report remove</code></h3>
+<pre><code>xema report remove &lt;report&gt;
+</code></pre>
+<p>Remove a report.</p>
+<ul>
+<li><code>&lt;report&gt;</code>: The report, by name.</li>
+<li><code>--yes</code>: Answer yes to the confirmation up front.</li>
+</ul>
+<h3 id="report-fields"><code>report fields</code></h3>
+<pre><code>xema report fields
+</code></pre>
+<p>What can be set on a report.</p>
+<h3 id="report-run"><code>report run</code></h3>
+<pre><code>xema report run &lt;report&gt;
+</code></pre>
+<p>Run a report: <code>xema report run "Agent summary" --from 2026-10-01 --to 2026-10-15</code>, shown as a table, or written to a file with <code>--csv calls.csv</code>. Each filter is the one its definition offers.</p>
+<ul>
+<li><code>&lt;report&gt;</code>: The report, by name.</li>
+<li><code>--from &lt;from&gt;</code>: The first day, as a date.</li>
+<li><code>--to &lt;to&gt;</code>: The last day, as a date.</li>
+<li><code>--agent &lt;agent&gt;</code>: Only this agent, by username.</li>
+<li><code>--phone &lt;phone&gt;</code>: Only this phone.</li>
+<li><code>--ani &lt;ani&gt;</code>: Only calls from this number.</li>
+<li><code>--dni &lt;dni&gt;</code>: Only calls to this number.</li>
+<li><code>--csv &lt;csv&gt;</code>: Write the rows to this file as CSV rather than show them.</li>
+</ul>
+<h3 id="report-grant"><code>report grant</code></h3>
+<pre><code>xema report grant &lt;report&gt; &lt;scope&gt; &lt;who&gt;
+</code></pre>
+<p>Share a report with a user or a role: <code>xema report grant "Agent summary" role Supervisor</code>.</p>
+<ul>
+<li><code>&lt;report&gt;</code>: The report, by name.</li>
+<li><code>&lt;scope&gt;</code>: <code>user</code> or <code>role</code>.</li>
+<li><code>&lt;who&gt;</code>: The username, or the role's name.</li>
+</ul>
+<h3 id="report-revoke"><code>report revoke</code></h3>
+<pre><code>xema report revoke &lt;report&gt; &lt;scope&gt; &lt;who&gt;
+</code></pre>
+<p>Stop sharing a report with a user or a role: <code>xema report revoke "Agent summary" user asha</code>.</p>
+<ul>
+<li><code>&lt;report&gt;</code>: The report, by name.</li>
+<li><code>&lt;scope&gt;</code>: <code>user</code> or <code>role</code>.</li>
+<li><code>&lt;who&gt;</code>: The username, or the role's name.</li>
+</ul>
+<h3 id="presets"><code>presets</code></h3>
+<pre><code>xema presets
+</code></pre>
+<p>Each subject's default range, and the ranges there are: <code>xema presets</code>.</p>
+<h3 id="preset-set"><code>preset set</code></h3>
+<pre><code>xema preset set &lt;subject&gt; &lt;preset&gt;
+</code></pre>
+<p>Set the range a subject opens on: <code>xema preset set queues Today</code>.</p>
+<ul>
+<li><code>&lt;subject&gt;</code>: The subject, as <code>xema presets</code> names it.</li>
+<li><code>&lt;preset&gt;</code>: The range, as <code>xema presets</code> names them.</li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>
