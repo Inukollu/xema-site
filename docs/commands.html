@@ -32,12 +32,13 @@
     <a href="from-v1.html">Moving a V1 server to V2</a>
     <a href="backups.html">Backups</a>
     <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
     <a href="commands.html" aria-current="page">Commands</a>
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
 <p>Every <code>xema</code> command, 331 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
-<p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
+<p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
 <h3 id="init"><code>init</code></h3>
@@ -583,6 +584,23 @@
 <ul>
 <li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
 </ul>
+<h2 id="switches">Switches</h2>
+<p>Cluster-wide behaviour that is off until turned on; docs/switches.html says what each does.</p>
+<h3 id="flags"><code>flags</code></h3>
+<pre><code>xema flags
+</code></pre>
+<p>Every switch, and whether it is on: <code>xema flags</code>.</p>
+<h3 id="flags-set"><code>flags set</code></h3>
+<pre><code>xema flags set [&lt;words&gt;…]
+</code></pre>
+<p>Turn switches on or off: <code>xema flags set requeueOrphans=on myDay=off</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: switch=on|off; <code>xema flags fields</code> lists them.</li>
+</ul>
+<h3 id="flags-fields"><code>flags fields</code></h3>
+<pre><code>xema flags fields
+</code></pre>
+<p>Every switch that can be set: <code>xema flags fields</code>.</p>
 <h2 id="running-services">Running services</h2>
 <p>Start and stop Xema's services, and read what they log.</p>
 <h3 id="start"><code>start</code></h3>
@@ -1156,21 +1174,6 @@
 <pre><code>xema schedule fields
 </code></pre>
 <p>What can be set on a schedule.</p>
-<h3 id="agentfeatures"><code>agentfeatures</code></h3>
-<pre><code>xema agentfeatures
-</code></pre>
-<p>What every Agent UI offers its agents: <code>xema agentfeatures</code>.</p>
-<h3 id="agentfeatures-set"><code>agentfeatures set</code></h3>
-<pre><code>xema agentfeatures set [&lt;words&gt;…]
-</code></pre>
-<p>Change what Agent UIs offer: <code>xema agentfeatures set callHistory=on myDay=off</code>.</p>
-<ul>
-<li><code>[&lt;words&gt;…]</code>: field=value; <code>xema agentfeatures fields</code> lists them.</li>
-</ul>
-<h3 id="agentfeatures-fields"><code>agentfeatures fields</code></h3>
-<pre><code>xema agentfeatures fields
-</code></pre>
-<p>What can be set.</p>
 <h3 id="busyhours"><code>busyhours</code></h3>
 <pre><code>xema busyhours
 </code></pre>

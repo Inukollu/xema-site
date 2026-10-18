@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Switches — Xema docs</title>
+<meta name="description" content="Some of Xema's behaviour is switched on or off for the whole cluster.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html" aria-current="page">Switches</a>
+    <a href="commands.html">Commands</a>
+  </aside>
+  <article class="prose">
+<h1 id="switches">Switches</h1>
+<p>Some of Xema's behaviour is switched on or off for the whole cluster. Each switch is off until someone turns it on,
+and each is set from any server in the cluster with the <code>xema</code> command. A change takes effect within seconds, on every
+server, without restarting anything.</p>
+<p>They are all under one command:</p>
+<pre><code>xema flags                       # every switch, and whether it is on
+xema flags fields                # the switches that can be set
+xema flags set &lt;switch&gt;=on       # turn one on (off, true, false, yes and no also work)
+</code></pre>
+<p>More than one switch can be set at once: <code>xema flags set callHistory=on missedCalls=on</code>.</p>
+<p><strong>Upgrading from a release before <code>xema flags</code>:</strong> a switch that was turned on before is off after the upgrade, and is
+turned on again with <code>xema flags set</code>. Run <code>xema flags</code> before upgrading and note what is on.</p>
+<h2 id="queue-recovery">Queue recovery</h2>
+<p>What happens to callers who are waiting in a queue when the queue service restarts: during an upgrade, after a crash,
+or when its connection to the phone system drops and comes back.</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>Off (the default)</th>
+<th>On</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>requeueOrphans</code></td>
+<td>Each waiting caller is sent back to the call flow that put them in the queue, which carries on from the step after the queue. In most flows that ends the call.</td>
+<td>Each waiting caller goes back into the queue they were in, in the place they had, and their waiting time carries on from when they first joined.</td>
+</tr>
+</tbody>
+</table>
+<p>With <code>requeueOrphans</code> on, a caller still goes back to their flow when Xema cannot tell which queue they were in, or
+when their queue is no longer run on that server. A caller whose call an agent had already answered is left to be
+connected to that agent.</p>
+<p>A caller put back into their queue is not counted as a second arrival: queue reports and call records show one wait.</p>
+<pre><code>xema flags set requeueOrphans=on
+</code></pre>
+<p><strong>When to turn it on:</strong> on any cluster where a queue may restart while callers are waiting, which includes every
+upgrade of the queue service. Try it on a test server first: put a caller in a queue, restart the queue service with
+<code>xema restart queue</code>, and check that the caller is still waiting in the same place.</p>
+<h2 id="agent-features">Agent features</h2>
+<p>Which optional parts of the agent's screen the cluster offers, and one rule for agents' phones.</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>When on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>crmDashboard</code></td>
+<td>The agent's screen shows the CRM dashboard panel.</td>
+</tr>
+<tr>
+<td><code>callHistory</code></td>
+<td>Agents can see their own call history.</td>
+</tr>
+<tr>
+<td><code>missedCalls</code></td>
+<td>Agents are shown the calls they did not answer.</td>
+</tr>
+<tr>
+<td><code>myDay</code></td>
+<td>Agents are shown a summary of their day so far.</td>
+</tr>
+<tr>
+<td><code>demoContent</code></td>
+<td>Content marked as demonstration material is shown, across the cluster.</td>
+</tr>
+<tr>
+<td><code>requirePhoneOnAgentAddress</code></td>
+<td>A phone that registered from a different address from the one the agent signed in from is refused.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>xema flags set myDay=on
+</code></pre>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>
