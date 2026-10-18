@@ -742,30 +742,30 @@
 <pre><code>xema cdr
 </code></pre>
 <p>Show what this node is set to connect to for the CDR. Never the password.</p>
-<h3 id="cdr-connect"><code>cdr connect</code></h3>
-<pre><code>xema cdr connect
+<h3 id="cdr-setup"><code>cdr setup</code></h3>
+<pre><code>xema cdr setup
 </code></pre>
-<p>Record which database server this node's call record is kept on, and check it works.</p>
+<p>Set up this node's call record — the primary, or the ha or dr copy — on a database server, and check it works. It records from then on; an ha or dr copy's earlier history is <code>xema cdr fill</code>'s, a separate step.</p>
 <ul>
 <li><code>--server &lt;server&gt;</code>: The server the CDR is on. Left out, this records this node's own database.</li>
 <li><code>--user &lt;user&gt;</code>: The MariaDB user SimpleCdr connects as.</li>
 <li><code>--pass &lt;pass&gt;</code>: Its password. Prompted for if left out, which keeps it out of shell history.</li>
-<li><code>--role &lt;role&gt;</code>: Which copy of the call record this node's recorder keeps: primary, ha or dr. One node each.</li>
+<li><code>--role &lt;role&gt;</code>: Which call record this node's recorder keeps: primary, ha or dr. One node each.</li>
 <li><code>--allow-narrowing</code>: Also apply schema changes that shorten columns, as <code>xema database upgrade</code> allows. A value that does not fit fails the change.</li>
 </ul>
 <h3 id="cdr-backup"><code>cdr backup</code></h3>
 <pre><code>xema cdr backup
 </code></pre>
 <p>Copy the call record, which the conversion changes and <code>database backup</code> does not cover.</p>
-<h3 id="cdr-copy"><code>cdr copy</code></h3>
-<pre><code>xema cdr copy
+<h3 id="cdr-fill"><code>cdr fill</code></h3>
+<pre><code>xema cdr fill
 </code></pre>
-<p>Copy the call record's history from another copy into this node's: for a new ha or dr copy, once its recorder is running. Rows it already has are skipped. Run as root.</p>
+<p>Fill this node's ha or dr call record with the history from the primary: what was recorded before the copy was set up. Separate from <code>xema cdr setup</code>, after which the copy records from then on. Rows it already has are kept. Run as root.</p>
 <ul>
-<li><code>--from-server &lt;from-server&gt;</code>: The server the history is on. Defaults to the cluster's database server.</li>
+<li><code>--from-server &lt;from-server&gt;</code>: Where the primary's history is. Defaults to the cluster's database server.</li>
 <li><code>--from-user &lt;from-user&gt;</code>: Its MariaDB user. Defaults to this node's cluster user; with another, the password is asked for.</li>
-<li><code>--from-database &lt;from-database&gt;</code>: The database the history is in.</li>
-<li><code>--yes</code>: Do not ask before copying.</li>
+<li><code>--from-database &lt;from-database&gt;</code>: The database the primary's history is in.</li>
+<li><code>--yes</code>: Do not ask before filling.</li>
 </ul>
 <h3 id="cdr-columns"><code>cdr columns</code></h3>
 <pre><code>xema cdr columns
@@ -794,7 +794,7 @@
 <h3 id="v1cdr-migrate"><code>v1cdr migrate</code></h3>
 <pre><code>xema v1cdr migrate
 </code></pre>
-<p>Copy V1's call-record history into this build's tables, while V2 serves. Run as root.</p>
+<p>Copy V1's call-record history into this node's own call record, while V2 serves. Run as root.</p>
 <ul>
 <li><code>--from-start</code>: Read every table from its start again, trying each refused row once more: for after a refusal's cause is fixed. Rows already copied are written again as the same keys, which changes nothing.</li>
 </ul>
