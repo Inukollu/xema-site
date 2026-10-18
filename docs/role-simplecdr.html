@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call record — Xema docs</title>
+<meta name="description" content="The call record is the history of every call: who called, which queue and agent took it, and for how">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html" aria-current="page">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="call-record">Call record</h1>
+<p>The <strong>call record</strong> is the history of every call: who called, which queue and agent took it, and for how
+long. The recorder, role <code>simplecdr</code>, writes it. A cluster keeps up to three copies of it, each written by its own recorder on its own node:</p>
+<table>
+<thead>
+<tr>
+<th>Copy</th>
+<th>Where</th>
+<th>Set up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary</strong></td>
+<td>the server that holds the database</td>
+<td>by <code>xema init</code>, always</td>
+</tr>
+<tr>
+<td><strong>HA</strong></td>
+<td>a second server at the same place</td>
+<td>when you want one</td>
+</tr>
+<tr>
+<td><strong>DR</strong></td>
+<td>a server at a disaster-recovery location</td>
+<td>when you want one</td>
+</tr>
+</tbody>
+</table>
+<p>Every call reaches every copy, so each one is complete from the moment its recorder starts.
+Each copy is held by one node, and each node holds at most one copy.</p>
+<h2 id="the-primary">The primary</h2>
+<p>There is nothing to do. <code>xema init</code> sets up the primary on the first server's own database, and the
+reports read it.</p>
+<p>To keep it on a different database server, say so before <code>init</code>:</p>
+<pre><code class="language-bash">sudo xema cdr setup --server &lt;host&gt; --user &lt;user&gt;
+sudo xema init
+</code></pre>
+<p>The password is asked for rather than typed on the command line.</p>
+<h2 id="an-ha-or-dr-copy">An HA or DR copy</h2>
+<p>On the server that will keep the copy, once it has joined the cluster:</p>
+<ol>
+<li><strong>Give it a recorder.</strong> Skip this if it joined with <code>simplecdr</code> among its roles.</li>
+</ol>
+<p><code>bash
+   sudo xema node role add simplecdr
+   sudo xema component install simplecdr   # if `xema component list` shows it is not here
+   sudo xema node apply</code></p>
+<ol start="2">
+<li><strong>Set up the copy.</strong> By default the copy is kept on this server's own database:</li>
+</ol>
+<p><code>bash
+   sudo xema cdr setup --role ha      # or --role dr</code></p>
+<p>To keep it on another database server, add <code>--server &lt;host&gt; --user &lt;user&gt;</code>. This creates the
+   copy's database and its tables there.</p>
+<ol start="3">
+<li><strong>Start recording.</strong></li>
+</ol>
+<p><code>bash
+   sudo xema restart simplecdr</code></p>
+<p>The copy records every call from this moment on. It does not yet hold the calls from before.</p>
+<h3 id="filling-it-with-earlier-calls">Filling it with earlier calls</h3>
+<pre><code class="language-bash">sudo xema cdr fill
+</code></pre>
+<p>This copies the history the primary already holds into this server's copy. It runs while calls go
+on. Calls the copy already has are kept rather than copied twice, so it can be stopped and run
+again. It is a separate step on purpose: a copy that only needs to record from today on never
+needs it.</p>
+<p>By default it reads the primary from the cluster's database server. <code>--from-server</code> and
+<code>--from-user</code> name another one.</p>
+<h2 id="checking-the-copies">Checking the copies</h2>
+<pre><code class="language-bash">xema cdr
+</code></pre>
+<p>This shows where this node's copy is kept and which role it has. Below that is a table of every copy
+in the cluster: the node holding it and how it stands.</p>
+<table>
+<thead>
+<tr>
+<th>It says</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>up to date</td>
+<td>the recorder is keeping up</td>
+</tr>
+<tr>
+<td>call events waiting</td>
+<td>the recorder is behind, or catching up after a restart</td>
+</tr>
+<tr>
+<td>nobody reading</td>
+<td>the recorder on that node is not running</td>
+</tr>
+<tr>
+<td>readers are splitting its stream</td>
+<td>two recorders read one copy's calls, so each keeps half; stop one</td>
+</tr>
+<tr>
+<td>no node holds it</td>
+<td>that copy is not set up</td>
+</tr>
+</tbody>
+</table>
+<h2 id="moving-a-copy-to-another-server">Moving a copy to another server</h2>
+<p>Each role is held by one node, so the old node lets go of it first. On the node giving it up:</p>
+<pre><code class="language-bash">sudo xema cdr setup --role &lt;another role&gt;
+</code></pre>
+<p>Then, on the node taking it:</p>
+<pre><code class="language-bash">sudo xema cdr setup --role &lt;the role&gt;
+sudo xema restart simplecdr
+</code></pre>
+<p>A copy moved to a new server starts empty. Run <code>xema cdr fill</code> on that server to bring its
+history across.</p>
+<h2 id="servers-moved-from-v1">Servers moved from V1</h2>
+<p>A server <a href="from-v1.html">moved from V1</a> also holds V1's call history. The move itself does not copy
+that history, so the move stays short. Once V2 is running and has been checked, carry it into this
+node's copy:</p>
+<pre><code class="language-bash">sudo xema v1cdr migrate
+</code></pre>
+<p>It runs while V2 serves, and it can be stopped and run again. Calls already carried are skipped.</p>
+<ul>
+<li><strong>On the server that holds the database</strong>, it carries into the primary.</li>
+<li><strong>On any other server</strong>, it carries only into an HA or DR copy set up on it. Without one there is
+  nowhere to carry to, and the command says how to set one up.</li>
+</ul>
+<p><code>xema upgrade</code> mentions V1 history that has not been carried yet, but it never waits for it.</p>
+<h2 id="checking-and-restarting-the-recorder">Checking and restarting the recorder</h2>
+<pre><code class="language-bash">xema logs simplecdr
+sudo xema restart simplecdr                       # on this server
+sudo xema node restart simplecdr --node &lt;server&gt;  # on another one
+</code></pre>
+<p>A recorder that is stopped loses nothing: its calls wait in its queue until it starts again.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

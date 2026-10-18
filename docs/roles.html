@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roles — Xema docs</title>
+<meta name="description" content="A role is one part of the platform a server runs.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html" aria-current="page">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="roles">Roles</h1>
+<p>A <strong>role</strong> is one part of the platform a server runs. Every server in a cluster holds some of them, and
+each role has a page of its own on how to put it on a server, take it off, check it and move it.</p>
+<pre><code class="language-bash">xema node roles      # what this server should run, beside what it runs
+</code></pre>
+<h2 id="how-a-role-is-placed">How a role is placed</h2>
+<ul>
+<li><strong>Services</strong> are started and stopped for you. <code>xema node role add &lt;role&gt;</code> records that a server should run
+  one, and <code>xema node apply</code> makes it so.</li>
+<li><strong>Infrastructure</strong> is recorded only. Moving it moves data with it, so <code>xema node apply</code> never starts, stops
+  or moves it.</li>
+<li><strong>Some are given automatically.</strong> A cluster always has a Manager and a BFF, and a server that carries a trunk
+  is given what such a server runs.</li>
+</ul>
+<h2 id="services">Services</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="role-manager.html">Manager</a> <code>manager</code></td>
+<td>the Admin UI and the cluster's administration; one per cluster, always held</td>
+</tr>
+<tr>
+<td><a href="role-bff.html">BFF</a> <code>bff</code></td>
+<td>what the apps connect to; several can run, one is active</td>
+</tr>
+<tr>
+<td><a href="role-queue.html">Queue</a> <code>queue</code></td>
+<td>callers waiting for an agent</td>
+</tr>
+<tr>
+<td><a href="role-bridge.html">Bridge</a> <code>bridge</code></td>
+<td>a call once it is answered</td>
+</tr>
+<tr>
+<td><a href="role-park.html">Park</a> <code>park</code></td>
+<td>callers waiting for something other than an agent</td>
+</tr>
+<tr>
+<td><a href="role-recorder.html">Recorder</a> <code>recorder</code></td>
+<td>captures calls</td>
+</tr>
+<tr>
+<td><a href="role-tone.html">Tone</a> <code>tone</code></td>
+<td>answers a desk phone</td>
+</tr>
+<tr>
+<td><a href="role-astermq.html">AsterMQ</a> <code>astermq</code></td>
+<td>carries the phone system's events out</td>
+</tr>
+<tr>
+<td><a href="role-fastlane.html">Fastlane</a> <code>fastlane</code></td>
+<td>carries the cluster's actions on calls in</td>
+</tr>
+<tr>
+<td><a href="role-fastagi.html">FastAGI</a> <code>fastagi</code></td>
+<td>runs a caller flow's steps</td>
+</tr>
+<tr>
+<td><a href="role-sipper.html">Sipper</a> <code>sipper</code></td>
+<td>captures SIP traffic</td>
+</tr>
+<tr>
+<td><a href="role-dialer.html">Dialer</a> <code>dialer</code></td>
+<td>outbound calls</td>
+</tr>
+<tr>
+<td><a href="role-simplecdr.html">Call record</a> <code>simplecdr</code></td>
+<td>writes the call record: the primary, HA and DR copies</td>
+</tr>
+<tr>
+<td><a href="role-metrics.html">Metrics</a> <code>metrics</code></td>
+<td>the numbers and their history</td>
+</tr>
+<tr>
+<td><a href="role-integrations.html">Integrations</a> <code>integrations</code></td>
+<td>other systems; one acts</td>
+</tr>
+<tr>
+<td><a href="role-ava.html">Ava</a> <code>ava</code></td>
+<td>the AI voice agent; only where named</td>
+</tr>
+</tbody>
+</table>
+<h2 id="infrastructure">Infrastructure</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="role-database.html">Database</a> <code>database</code></td>
+<td>the cluster's configuration and history</td>
+</tr>
+<tr>
+<td><a href="role-broker.html">Broker</a> <code>broker</code></td>
+<td>events between the services</td>
+</tr>
+<tr>
+<td><a href="role-redis.html">Cache</a> <code>redis</code></td>
+<td>what the services share while they run</td>
+</tr>
+<tr>
+<td><a href="role-asterisk.html">Phone system</a> <code>asterisk</code></td>
+<td>the calls, trunks and phones on a server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="every-server">Every server</h2>
+<p><a href="role-host.html">Host</a> is on every server, and is not a role you add or remove.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

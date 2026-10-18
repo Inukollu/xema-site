@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Park — Xema docs</title>
+<meta name="description" content="Park keeps a caller waiting for something other than an agent search: a callback that is due, a named">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html" aria-current="page">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="park">Park</h1>
+<p>Park keeps a caller waiting for something other than an agent search: a callback that is due, a named
+agent to come free, a colleague to pick up. A caller in it is not lost if it stops; the call goes back to
+the flow it came from.</p>
+<p><strong>Given automatically to a server that carries a trunk.</strong> When a trunk is assigned to a server
+(<code>sudo xema trunk assign &lt;trunk&gt; --node &lt;server&gt;</code>), that server is given every service a phone system's
+server runs, this one among them. It is given once and kept: unassigning the server's last trunk does not take
+it away again. <code>xema node role remove</code> does.</p>
+<h2 id="putting-it-on-a-server">Putting it on a server</h2>
+<pre><code class="language-bash">sudo xema node role add park
+sudo xema node apply
+</code></pre>
+<p><code>node role add</code> records that this server should run it, and <code>node apply</code> starts it. If <code>xema component list</code>
+shows it is not installed here, install it between the two:</p>
+<pre><code class="language-bash">sudo xema component install park
+</code></pre>
+<p>A server can also be given it as it joins: <code>sudo xema join ... --roles park,...</code>.</p>
+<h2 id="taking-it-off">Taking it off</h2>
+<pre><code class="language-bash">sudo xema node role remove park
+sudo xema node apply
+</code></pre>
+<h2 id="checking-it">Checking it</h2>
+<pre><code class="language-bash">xema node roles          # what this server should run, beside what it runs
+xema status              # every service on this server, running or not
+xema logs park
+</code></pre>
+<h2 id="restarting-it">Restarting it</h2>
+<pre><code class="language-bash">sudo xema restart park                       # on this server
+sudo xema node restart park --node &lt;server&gt;  # on another one
+</code></pre>
+<p>Restarting drops the calls it is carrying.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

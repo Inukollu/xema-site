@@ -29,11 +29,34 @@
     <a href="./">Overview</a>
     <a href="first-server.html">Your first server</a>
     <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
     <a href="from-v1.html" aria-current="page">Moving a V1 server to V2</a>
     <a href="backups.html">Backups</a>
     <a href="dev-builds.html">Dev builds</a>
     <a href="switches.html">Switches</a>
     <a href="commands.html">Commands</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
   </aside>
   <article class="prose">
 <h1 id="moving-a-v1-server-to-v2">Moving a V1 server to V2</h1>
@@ -80,7 +103,7 @@ any step fails, the run stops there and V1 is still serving.</p>
 <p>Then the switch:</p>
 <ol start="6">
 <li>stops V1;</li>
-<li>carries V1's call history across;</li>
+<li>begins carrying V1's call history, which is copied later, once V2 is running (see below);</li>
 <li>makes the server a cluster of one, gives it its own passwords for the phone system, writes its
    files and starts V2.</li>
 </ol>
@@ -88,8 +111,9 @@ any step fails, the run stops there and V1 is still serving.</p>
 <h2 id="a-second-v1-server">A second V1 server</h2>
 <p>To add another V1 server to a cluster that is already running V2, join it as in
 <a href="multi-site.html#on-every-other-server">clusters</a>. It is backed up and V1 is stopped as above, but
-its accounts, call lists and call history are not carried into the cluster; they stay on that
-server and in its backup.</p>
+its accounts and call lists are not carried into the cluster; they stay on that server and in its
+backup. Its call history can be carried into an HA or DR copy kept on it, as in
+<a href="role-simplecdr.html#servers-moved-from-v1">call record</a>.</p>
 <h2 id="if-it-stops-partway">If it stops partway</h2>
 <p>Run the same command again. Every step checks what is already done; nothing is repeated and
 nothing is overwritten.</p>
@@ -104,6 +128,8 @@ nothing is overwritten.</p>
 command itself, whenever the channel's is newer) and then <code>sudo xema upgrade</code> (Xema's components and
 the release's database changes, within the installed version) — see <a href="first-server.html#upgrading">upgrading</a>.
 <code>xema migrate</code> is only ever for another version.</p>
+<p>V1's call history is copied after the move, while V2 serves: <code>sudo xema v1cdr migrate</code>, as in
+<a href="role-simplecdr.html#servers-moved-from-v1">call record</a>.</p>
   </article>
 </main>
 <footer>
