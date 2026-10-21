@@ -61,7 +61,7 @@
   <article class="prose">
 <h1 id="switches">Switches</h1>
 <p>Some of Xema's behaviour is switched on or off for the whole cluster. Each switch is off until someone turns it on,
-and each is set from any server in the cluster with the <code>xema</code> command. A change takes effect within seconds, on every
+except <code>crmDashboard</code>, which is on until someone turns it off. Each is set from any server in the cluster with the <code>xema</code> command. A change takes effect within seconds, on every
 server, without restarting anything.</p>
 <p>They are all under one command:</p>
 <pre><code>xema flags                       # every switch, and whether it is on
@@ -111,7 +111,7 @@ upgrade of the queue service. Try it on a test server first: put a caller in a q
 <tbody>
 <tr>
 <td><code>crmDashboard</code></td>
-<td>The agent's screen shows the CRM dashboard panel.</td>
+<td>Calls reach agents with their queue's CRM pages. <strong>On by default.</strong> Off, a call carries none, whatever its queue has. A change applies from the next call.</td>
 </tr>
 <tr>
 <td><code>callHistory</code></td>

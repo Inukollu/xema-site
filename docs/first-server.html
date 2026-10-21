@@ -196,6 +196,18 @@ to. <code>upgrade</code> refuses a release of another version rather than instal
 asks whether the channel's <code>xema</code> is newer. Both check every file they download and say what they change from and
 to. <code>--dry-run</code> lists it without changing anything, and
 <code>xema status</code> shows the version each part of Xema is on.</p>
+<h3 id="preparing-for-the-window">Preparing for the window</h3>
+<pre><code class="language-bash">sudo xema update
+sudo xema upgrade --prepare                 # within 12 hours of the window
+sudo xema upgrade                           # in the window
+</code></pre>
+<p><code>--prepare</code> does what can be done before the window and touches nothing that runs: on the server with the database
+it takes the backup the upgrade would take, and on every server it downloads and checks each part that changes and
+unpacks it beside the one it replaces. In the window, <code>upgrade</code> uses that backup while it is under 12 hours old,
+applies the release's schema changes, and stops each part, moves its prepared files into place and starts it, rather
+than unpacking it while it is stopped. What is written after the backup is not in it.</p>
+<p>Preparing twice takes one backup: one under 12 hours old is used. <code>--prepare --fresh-backup</code> takes it again, for a
+window the last one would be too old for by the time it comes.</p>
 <p><code>upgrade</code> takes a backup on the server that holds the database, applies the release's changes to
 the database, then replaces what changed. A part that did not change is left running, and only the
 services that need it are restarted. On a cluster, upgrade the server with the database first; the
