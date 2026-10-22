@@ -918,6 +918,9 @@
 <pre><code>xema teams
 </code></pre>
 <p>The teams, their leads and how many agents each has: <code>xema teams</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="team-show"><code>team show</code></h3>
 <pre><code>xema team show &lt;team&gt;
 </code></pre>
@@ -937,7 +940,7 @@
 </code></pre>
 <p>Change a team: <code>xema team set Sales enableBarging=on breakPolicy=Suspended</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The team, by name, then field=value; <code>xema team fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: The team, by name, or several, or <code>--all</code>, then field=value; <code>xema team fields</code> lists them; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="team-remove"><code>team remove</code></h3>
 <pre><code>xema team remove [&lt;words&gt;…]
@@ -954,6 +957,9 @@
 <pre><code>xema skills
 </code></pre>
 <p>The skills, and how many agents hold each: <code>xema skills</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="skill-show"><code>skill show</code></h3>
 <pre><code>xema skill show &lt;skill&gt;
 </code></pre>
@@ -973,7 +979,7 @@
 </code></pre>
 <p>Change a skill: <code>xema skill set English name=Hindi</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The skill, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The skill, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="skill-remove"><code>skill remove</code></h3>
 <pre><code>xema skill remove [&lt;words&gt;…]
@@ -990,6 +996,9 @@
 <pre><code>xema roles
 </code></pre>
 <p>The roles and what each grants: <code>xema roles</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="role-show"><code>role show</code></h3>
 <pre><code>xema role show &lt;role&gt;
 </code></pre>
@@ -1009,7 +1018,7 @@
 </code></pre>
 <p>Change a role: <code>xema role set Supervisor permissions=queues.view</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The role, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The role, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="role-remove"><code>role remove</code></h3>
 <pre><code>xema role remove [&lt;words&gt;…]
@@ -1030,6 +1039,9 @@
 <pre><code>xema processes
 </code></pre>
 <p>The processes: <code>xema processes</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="process-show"><code>process show</code></h3>
 <pre><code>xema process show &lt;process&gt;
 </code></pre>
@@ -1049,7 +1061,7 @@
 </code></pre>
 <p>Change a process: <code>xema process set Renewals allowListening=on</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The process, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The process, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="process-remove"><code>process remove</code></h3>
 <pre><code>xema process remove [&lt;words&gt;…]
@@ -1142,6 +1154,9 @@
 <pre><code>xema breaks
 </code></pre>
 <p>The break types: <code>xema breaks</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="break-show"><code>break show</code></h3>
 <pre><code>xema break show &lt;name&gt;
 </code></pre>
@@ -1161,7 +1176,7 @@
 </code></pre>
 <p>Change a break: <code>xema break set Lunch mandatory=on</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The break, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The break, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="break-remove"><code>break remove</code></h3>
 <pre><code>xema break remove [&lt;words&gt;…]
@@ -1178,6 +1193,9 @@
 <pre><code>xema schedules
 </code></pre>
 <p>The calling schedules and the dialers on each: <code>xema schedules</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="schedule-show"><code>schedule show</code></h3>
 <pre><code>xema schedule show &lt;schedule&gt;
 </code></pre>
@@ -1197,7 +1215,7 @@
 </code></pre>
 <p>Change a schedule: <code>xema schedule set "Business hours" description=Weekdays</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The schedule, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The schedule, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="schedule-remove"><code>schedule remove</code></h3>
 <pre><code>xema schedule remove [&lt;words&gt;…]
@@ -1353,7 +1371,7 @@
 </code></pre>
 <p>Change a trunk: <code>xema trunk set 9001 codecs=alaw,ulaw</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The trunk, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="trunk-remove"><code>trunk remove</code></h3>
 <pre><code>xema trunk remove [&lt;words&gt;…]
@@ -1372,6 +1390,7 @@
 <p>The numbers a trunk answers and what each starts: <code>xema numbers 9001</code>.</p>
 <ul>
 <li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
 </ul>
 <h3 id="number-show"><code>number show</code></h3>
 <pre><code>xema number show [&lt;words&gt;…]
@@ -1392,7 +1411,7 @@
 </code></pre>
 <p>Change a number: <code>xema number set 9001 4000 xApp=Sales</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The trunk, by name, the number, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The trunk, by name, the number, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="number-remove"><code>number remove</code></h3>
 <pre><code>xema number remove [&lt;words&gt;…]
@@ -1409,6 +1428,9 @@
 <pre><code>xema phonegroups
 </code></pre>
 <p>The phone groups: <code>xema phonegroups</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="phonegroup-show"><code>phonegroup show</code></h3>
 <pre><code>xema phonegroup show &lt;group&gt;
 </code></pre>
@@ -1428,7 +1450,7 @@
 </code></pre>
 <p>Change a phone group: <code>xema phonegroup set Reception enableRecording=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The group, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The group, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="phonegroup-remove"><code>phonegroup remove</code></h3>
 <pre><code>xema phonegroup remove [&lt;words&gt;…]
@@ -1445,6 +1467,9 @@
 <pre><code>xema queues
 </code></pre>
 <p>The call queues and the skills they offer calls to: <code>xema queues</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="queue-show"><code>queue show</code></h3>
 <pre><code>xema queue show &lt;queue&gt;
 </code></pre>
@@ -1464,7 +1489,7 @@
 </code></pre>
 <p>Change a queue: <code>xema queue set Sales weight=2 skills=English</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="queue-remove"><code>queue remove</code></h3>
 <pre><code>xema queue remove [&lt;words&gt;…]
@@ -1481,6 +1506,9 @@
 <pre><code>xema dialers
 </code></pre>
 <p>The dialers and whether each is running: <code>xema dialers</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="dialer-show"><code>dialer show</code></h3>
 <pre><code>xema dialer show &lt;dialer&gt;
 </code></pre>
@@ -1500,7 +1528,7 @@
 </code></pre>
 <p>Change a dialer: <code>xema dialer set Renewals pace=3</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The dialer, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The dialer, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="dialer-remove"><code>dialer remove</code></h3>
 <pre><code>xema dialer remove [&lt;words&gt;…]
@@ -1546,6 +1574,9 @@
 <pre><code>xema datasets
 </code></pre>
 <p>The datasets and their rows: <code>xema datasets</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="dataset-show"><code>dataset show</code></h3>
 <pre><code>xema dataset show &lt;dataset&gt;
 </code></pre>
@@ -1558,7 +1589,7 @@
 </code></pre>
 <p>Change a dataset's name, description or duplicate check: <code>xema dataset set Leads checkDuplicates=on</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The dataset, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The dataset, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="dataset-fields"><code>dataset fields</code></h3>
 <pre><code>xema dataset fields
@@ -1599,6 +1630,9 @@
 <pre><code>xema dialouts
 </code></pre>
 <p>The dial-outs: <code>xema dialouts</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="dialout-show"><code>dialout show</code></h3>
 <pre><code>xema dialout show &lt;dialout&gt;
 </code></pre>
@@ -1618,7 +1652,7 @@
 </code></pre>
 <p>Change a dial-out: <code>xema dialout set Welcome description="Updated"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The dial-out, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The dial-out, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="dialout-remove"><code>dialout remove</code></h3>
 <pre><code>xema dialout remove [&lt;words&gt;…]
@@ -1637,6 +1671,7 @@
 <p>The keys a queue's waiting callers can press: <code>xema callerflows Sales</code>.</p>
 <ul>
 <li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
 </ul>
 <h3 id="callerflow-show"><code>callerflow show</code></h3>
 <pre><code>xema callerflow show [&lt;words&gt;…]
@@ -1657,7 +1692,7 @@
 </code></pre>
 <p>Change a key: <code>xema callerflow set Sales 1 enabled=off</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="callerflow-remove"><code>callerflow remove</code></h3>
 <pre><code>xema callerflow remove [&lt;words&gt;…]
@@ -1676,6 +1711,7 @@
 <p>A queue's switch-to-flow actions: <code>xema agentflows Sales</code>.</p>
 <ul>
 <li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
 </ul>
 <h3 id="agentflow-show"><code>agentflow show</code></h3>
 <pre><code>xema agentflow show [&lt;words&gt;…]
@@ -1696,7 +1732,7 @@
 </code></pre>
 <p>Change a switch-to-flow action: <code>xema agentflow set Sales Survey flow=NPS</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentflow-remove"><code>agentflow remove</code></h3>
 <pre><code>xema agentflow remove [&lt;words&gt;…]
@@ -1715,6 +1751,7 @@
 <p>A queue's transfer-to-phone actions: <code>xema agentphones Sales</code>.</p>
 <ul>
 <li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
 </ul>
 <h3 id="agentphone-show"><code>agentphone show</code></h3>
 <pre><code>xema agentphone show [&lt;words&gt;…]
@@ -1735,7 +1772,7 @@
 </code></pre>
 <p>Change a transfer-to-phone action: <code>xema agentphone set Sales Escalate promptAgent=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentphone-remove"><code>agentphone remove</code></h3>
 <pre><code>xema agentphone remove [&lt;words&gt;…]
@@ -1752,6 +1789,9 @@
 <pre><code>xema audios
 </code></pre>
 <p>The prompts and the languages each is recorded in: <code>xema audios</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="audio-show"><code>audio show</code></h3>
 <pre><code>xema audio show &lt;audio&gt;
 </code></pre>
@@ -1797,6 +1837,9 @@
 <pre><code>xema music list
 </code></pre>
 <p>The music-on-hold classes: <code>xema music list</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="music-show"><code>music show</code></h3>
 <pre><code>xema music show &lt;music&gt;
 </code></pre>
@@ -1816,7 +1859,7 @@
 </code></pre>
 <p>Change a music class: <code>xema music set Default description="Hold music"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The music class, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The music class, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="music-remove"><code>music remove</code></h3>
 <pre><code>xema music remove [&lt;words&gt;…]
@@ -1848,6 +1891,9 @@
 <pre><code>xema languages
 </code></pre>
 <p>The languages and how many prompts each holds: <code>xema languages</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="language-show"><code>language show</code></h3>
 <pre><code>xema language show &lt;language&gt;
 </code></pre>
@@ -1867,7 +1913,7 @@
 </code></pre>
 <p>Change a language: <code>xema language set Hindi name=Hindi</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The language, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The language, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="language-remove"><code>language remove</code></h3>
 <pre><code>xema language remove [&lt;words&gt;…]
@@ -1886,6 +1932,9 @@
 <pre><code>xema webhooks
 </code></pre>
 <p>The webhooks: <code>xema webhooks</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="webhook-show"><code>webhook show</code></h3>
 <pre><code>xema webhook show &lt;webhook&gt;
 </code></pre>
@@ -1905,7 +1954,7 @@
 </code></pre>
 <p>Change a webhook: <code>xema webhook set crm-push url=https://crm.example/v2</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The webhook, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The webhook, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="webhook-remove"><code>webhook remove</code></h3>
 <pre><code>xema webhook remove [&lt;words&gt;…]
@@ -1938,6 +1987,7 @@
 <p>A queue's CRM pages: <code>xema crms Sales</code>.</p>
 <ul>
 <li><code>&lt;queue&gt;</code>: The queue, by name.</li>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
 </ul>
 <h3 id="crm-show"><code>crm show</code></h3>
 <pre><code>xema crm show [&lt;words&gt;…]
@@ -1958,7 +2008,7 @@
 </code></pre>
 <p>Change a CRM page: <code>xema crm set Sales Lookup reuseTab=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="crm-remove"><code>crm remove</code></h3>
 <pre><code>xema crm remove [&lt;words&gt;…]
@@ -1975,6 +2025,9 @@
 <pre><code>xema lookups
 </code></pre>
 <p>The dataset lookups: <code>xema lookups</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="lookup-show"><code>lookup show</code></h3>
 <pre><code>xema lookup show &lt;lookup&gt;
 </code></pre>
@@ -1994,7 +2047,7 @@
 </code></pre>
 <p>Change a dataset lookup: <code>xema lookup set Welcome description="Updated"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The dataset lookup, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The dataset lookup, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="lookup-remove"><code>lookup remove</code></h3>
 <pre><code>xema lookup remove [&lt;words&gt;…]
@@ -2011,6 +2064,9 @@
 <pre><code>xema jsonapis
 </code></pre>
 <p>The JSON API calls: <code>xema jsonapis</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="jsonapi-show"><code>jsonapi show</code></h3>
 <pre><code>xema jsonapi show &lt;jsonapi&gt;
 </code></pre>
@@ -2030,7 +2086,7 @@
 </code></pre>
 <p>Change a JSON API call: <code>xema jsonapi set Welcome description="Updated"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The JSON API call, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The JSON API call, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="jsonapi-remove"><code>jsonapi remove</code></h3>
 <pre><code>xema jsonapi remove [&lt;words&gt;…]
@@ -2047,6 +2103,9 @@
 <pre><code>xema customapps
 </code></pre>
 <p>The custom apps: <code>xema customapps</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="customapp-show"><code>customapp show</code></h3>
 <pre><code>xema customapp show &lt;customapp&gt;
 </code></pre>
@@ -2066,7 +2125,7 @@
 </code></pre>
 <p>Change a custom app: <code>xema customapp set Welcome description="Updated"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The custom app, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The custom app, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="customapp-remove"><code>customapp remove</code></h3>
 <pre><code>xema customapp remove [&lt;words&gt;…]
@@ -2083,6 +2142,9 @@
 <pre><code>xema callcounters
 </code></pre>
 <p>The call counters: <code>xema callcounters</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="callcounter-show"><code>callcounter show</code></h3>
 <pre><code>xema callcounter show &lt;callcounter&gt;
 </code></pre>
@@ -2102,7 +2164,7 @@
 </code></pre>
 <p>Change a call counter: <code>xema callcounter set Welcome description="Updated"</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The call counter, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The call counter, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="callcounter-remove"><code>callcounter remove</code></h3>
 <pre><code>xema callcounter remove [&lt;words&gt;…]
@@ -2119,6 +2181,9 @@
 <pre><code>xema xapps
 </code></pre>
 <p>The XApps, by kind: <code>xema xapps</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="xapp-show"><code>xapp show</code></h3>
 <pre><code>xema xapp show &lt;xapp&gt;
 </code></pre>
@@ -2130,6 +2195,9 @@
 <pre><code>xema aiproviders
 </code></pre>
 <p>The AI providers and whether each has a key: <code>xema aiproviders</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="aiprovider-show"><code>aiprovider show</code></h3>
 <pre><code>xema aiprovider show &lt;kind&gt;
 </code></pre>
@@ -2149,7 +2217,7 @@
 </code></pre>
 <p>Change a AI provider: <code>xema aiprovider set OpenAI description=Primary</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The AI provider, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The AI provider, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="aiprovider-remove"><code>aiprovider remove</code></h3>
 <pre><code>xema aiprovider remove [&lt;words&gt;…]
@@ -2174,6 +2242,9 @@
 <pre><code>xema aiinputs
 </code></pre>
 <p>The AI input agents: <code>xema aiinputs</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="aiinput-show"><code>aiinput show</code></h3>
 <pre><code>xema aiinput show &lt;aiinput&gt;
 </code></pre>
@@ -2193,7 +2264,7 @@
 </code></pre>
 <p>Change a AI input agent: <code>xema aiinput set CaptureReason description=Reason</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The AI input agent, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The AI input agent, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="aiinput-remove"><code>aiinput remove</code></h3>
 <pre><code>xema aiinput remove [&lt;words&gt;…]
@@ -2210,6 +2281,9 @@
 <pre><code>xema aiagents
 </code></pre>
 <p>The AI conversation agents: <code>xema aiagents</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="aiagent-show"><code>aiagent show</code></h3>
 <pre><code>xema aiagent show &lt;aiagent&gt;
 </code></pre>
@@ -2229,7 +2303,7 @@
 </code></pre>
 <p>Change a AI conversation agent: <code>xema aiagent set Receptionist description=Front desk</code>. What is not named is kept.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The AI conversation agent, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The AI conversation agent, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="aiagent-remove"><code>aiagent remove</code></h3>
 <pre><code>xema aiagent remove [&lt;words&gt;…]
@@ -2248,6 +2322,9 @@
 <pre><code>xema reports
 </code></pre>
 <p>The reports, their groups and who each is shared with: <code>xema reports</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
 <h3 id="report-show"><code>report show</code></h3>
 <pre><code>xema report show &lt;report&gt;
 </code></pre>
@@ -2267,7 +2344,7 @@
 </code></pre>
 <p>Change a report: <code>xema report set "Calls by hour" filterOptions="from-date;to-date"</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The report, by name, then field=value.</li>
+<li><code>[&lt;words&gt;…]</code>: The report, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="report-remove"><code>report remove</code></h3>
 <pre><code>xema report remove [&lt;words&gt;…]
