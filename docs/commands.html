@@ -1685,21 +1685,21 @@
 </code></pre>
 <p>A key that switches a waiting caller into a flow: <code>xema callerflow add Sales 1 flow=Callback enabled=on startAtFirstBlock=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, then field=value; <code>xema callerflow fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the key pattern, then field=value; <code>xema callerflow fields</code> lists them.</li>
 </ul>
 <h3 id="callerflow-set"><code>callerflow set</code></h3>
 <pre><code>xema callerflow set [&lt;words&gt;…]
 </code></pre>
 <p>Change a key: <code>xema callerflow set Sales 1 enabled=off</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the key pattern, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the key pattern, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="callerflow-remove"><code>callerflow remove</code></h3>
 <pre><code>xema callerflow remove [&lt;words&gt;…]
 </code></pre>
 <p>Remove a key. Several can be named after the queue, and each is removed in turn.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, then the key pattern, or several; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; then the key pattern, or several; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="callerflow-fields"><code>callerflow fields</code></h3>
 <pre><code>xema callerflow fields
@@ -1725,21 +1725,21 @@
 </code></pre>
 <p>An action that switches the call into a flow: <code>xema agentflow add Sales Survey flow=CSAT</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value; <code>xema agentflow fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the action's name, then field=value; <code>xema agentflow fields</code> lists them.</li>
 </ul>
 <h3 id="agentflow-set"><code>agentflow set</code></h3>
 <pre><code>xema agentflow set [&lt;words&gt;…]
 </code></pre>
 <p>Change a switch-to-flow action: <code>xema agentflow set Sales Survey flow=NPS</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentflow-remove"><code>agentflow remove</code></h3>
 <pre><code>xema agentflow remove [&lt;words&gt;…]
 </code></pre>
 <p>Remove a switch-to-flow action. Several can be named after the queue, and each is removed in turn.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name, or several; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; then the action's name, or several; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentflow-fields"><code>agentflow fields</code></h3>
 <pre><code>xema agentflow fields
@@ -1765,21 +1765,21 @@
 </code></pre>
 <p>An action that transfers the call to a phone: <code>xema agentphone add Sales Escalate phoneId=1006</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, then field=value; <code>xema agentphone fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the action's name, then field=value; <code>xema agentphone fields</code> lists them.</li>
 </ul>
 <h3 id="agentphone-set"><code>agentphone set</code></h3>
 <pre><code>xema agentphone set [&lt;words&gt;…]
 </code></pre>
 <p>Change a transfer-to-phone action: <code>xema agentphone set Sales Escalate promptAgent=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the action's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentphone-remove"><code>agentphone remove</code></h3>
 <pre><code>xema agentphone remove [&lt;words&gt;…]
 </code></pre>
 <p>Remove a transfer-to-phone action. Several can be named after the queue, and each is removed in turn.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, then the action's name, or several; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; then the action's name, or several; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="agentphone-fields"><code>agentphone fields</code></h3>
 <pre><code>xema agentphone fields
@@ -2001,21 +2001,21 @@
 </code></pre>
 <p>A CRM page a queue's agents open: <code>xema crm add Sales Lookup url=https://crm.example/?n={caller}</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, then field=value; <code>xema crm fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the page's name, then field=value; <code>xema crm fields</code> lists them.</li>
 </ul>
 <h3 id="crm-set"><code>crm set</code></h3>
 <pre><code>xema crm set [&lt;words&gt;…]
 </code></pre>
-<p>Change a CRM page: <code>xema crm set Sales Lookup reuseTab=on</code>.</p>
+<p>Change a CRM page: <code>xema crm set Sales Lookup reuseTab=on</code>, or on every queue that has it: <code>xema crm set --all-queues Lookup reuseTab=on</code>.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, the page's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; the page's name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="crm-remove"><code>crm remove</code></h3>
 <pre><code>xema crm remove [&lt;words&gt;…]
 </code></pre>
 <p>Remove a CRM page: <code>xema crm remove Sales Lookup</code>. Several can be named after the queue, and each is removed in turn.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The queue, then the page's name, or several; <code>--yes</code> answers the confirmation up front.</li>
+<li><code>[&lt;words&gt;…]</code>: The queue, or <code>--queues Sales,Support</code>, or <code>--all-queues</code>; then the page's name, or several; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="crm-fields"><code>crm fields</code></h3>
 <pre><code>xema crm fields
