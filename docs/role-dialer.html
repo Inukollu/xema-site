@@ -91,6 +91,14 @@ sudo xema dialer stop &lt;dialer&gt;
 sudo xema dialer refresh &lt;dialer&gt;     # read its datasets again, so rows added since are dialled
 sudo xema dialer test-call &lt;dialer&gt; &lt;number&gt;   # one test call from it to that number
 </code></pre>
+<h2 id="the-clusters-manual-dialer">The cluster's manual dialer</h2>
+<p>An agent's own calls need a manual dialer: desk dials, call backs and outside conference calls. Xema uses the one named
+on the agent's queue, then their team, then their process, then the cluster. With none named anywhere, those calls are
+refused. The upgrade names none, so name one after it:</p>
+<pre><code class="language-bash">sudo xema dialer manual                # which one the cluster names
+sudo xema dialer manual &lt;dialer&gt;       # name one; it must be a manual dialer
+sudo xema dialer manual --clear        # name none
+</code></pre>
   </article>
 </main>
 <footer>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 340 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 357 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 340 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 357 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -100,6 +100,8 @@
 <li><code>--roles &lt;roles&gt;</code>: Roles to give this node, comma separated. A cluster of one already holds every role.</li>
 <li><code>--dry-run</code>: Say what would happen, and change nothing.</li>
 <li><code>--yes</code>: Do not ask before writing.</li>
+<li><code>--country &lt;country&gt;</code>: The site's country, such as IN. Kept from the site's settings when set there, else the one the system's zone table gives the time zone.</li>
+<li><code>--time-zone &lt;time-zone&gt;</code>: The site's time zone, such as Asia/Kolkata. Kept from the site's settings when set there, else this machine's clock unless that is UTC.</li>
 </ul>
 <h3 id="update"><code>update</code></h3>
 <pre><code>xema update
@@ -205,7 +207,7 @@
 <li><code>&lt;kind&gt;</code>: The kind: agent, node, team, queue and the rest of the records the commands name.</li>
 </ul>
 <h2 id="the-cluster-and-its-nodes">The cluster and its nodes</h2>
-<p>What each server runs, how the servers reach each other, and what they hold.</p>
+<p>What each server runs, how the servers reach each other, what they hold, and the installation's settings.</p>
 <h3 id="status"><code>status</code></h3>
 <pre><code>xema status
 </code></pre>
@@ -616,18 +618,41 @@
 <ul>
 <li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
 </ul>
+<h3 id="settings"><code>settings</code></h3>
+<pre><code>xema settings
+</code></pre>
+<p>The installation's settings and what each is set to: <code>xema settings</code>.</p>
+<h3 id="setting-get"><code>setting get</code></h3>
+<pre><code>xema setting get
+</code></pre>
+<p>One setting's value: <code>xema setting get locale/country</code>.</p>
+<ul>
+<li><code>--setting &lt;setting&gt;</code>: The setting, as group/name.</li>
+</ul>
+<h3 id="setting-set"><code>setting set</code></h3>
+<pre><code>xema setting set
+</code></pre>
+<p>States a setting for the installation: <code>xema setting set locale/country IN</code>.</p>
+<ul>
+<li><code>--setting &lt;setting&gt;</code>: The setting, as group/name.</li>
+<li><code>--value &lt;value&gt;</code>: What it is set to, in the form the setting takes.</li>
+</ul>
 <h2 id="switches">Switches</h2>
 <p>Cluster-wide behaviour that is off until turned on; docs/switches.html says what each does.</p>
 <h3 id="flags"><code>flags</code></h3>
 <pre><code>xema flags
 </code></pre>
-<p>Every switch, and whether it is on: <code>xema flags</code>.</p>
+<p>Every switch, and whether it is on: <code>xema flags</code>, or for one agent, <code>xema flags --agent 20000900</code>.</p>
+<ul>
+<li><code>--agent &lt;agent&gt;</code>: An agent's user name: show the switches as they are for that agent, and which they state themselves.</li>
+</ul>
 <h3 id="flags-set"><code>flags set</code></h3>
 <pre><code>xema flags set [&lt;words&gt;…]
 </code></pre>
-<p>Turn switches on or off: <code>xema flags set requeueOrphans=on myDay=off</code>.</p>
+<p>Turn switches on or off: <code>xema flags set requeueOrphans=on myDay=off</code>. For one agent, whose own value wins over the cluster's: <code>xema flags set agentsUseTcpMedia=on --agent 20000900</code>, and <code>agentsUseTcpMedia=clear</code> drops it.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: switch=on|off; <code>xema flags fields</code> lists them.</li>
+<li><code>[&lt;words&gt;…]</code>: switch=on|off, or switch=clear with --agent; <code>xema flags fields</code> lists them.</li>
+<li><code>--agent &lt;agent&gt;</code>: An agent's user name: set the switches for that agent alone.</li>
 </ul>
 <h3 id="flags-fields"><code>flags fields</code></h3>
 <pre><code>xema flags fields
@@ -887,14 +912,20 @@
 <li><code>--role &lt;role&gt;</code>: Their roles, by name, comma-separated: these and no others. <code>xema roles</code> lists them.</li>
 <li><code>--add-role &lt;add-role&gt;</code>: Roles to give them, by name, comma-separated.</li>
 <li><code>--remove-role &lt;remove-role&gt;</code>: Roles to take away, by name, comma-separated.</li>
+<li><code>--yes</code>: With <code>--all</code>, don't ask before changing every agent.</li>
 </ul>
 <h3 id="agent-password"><code>agent password</code></h3>
-<pre><code>xema agent password &lt;user-name&gt;
+<pre><code>xema agent password [&lt;user-name&gt;]
 </code></pre>
-<p>Set an agent's password: <code>xema agent password vasu</code>.</p>
+<p>Set an agent's password: <code>xema agent password vasu</code>. Or every agent's, and the administrator says how: <code>--all --unique --file &lt;path&gt;</code> gives each their own, written to a new file only its owner can read, and <code>--all --same</code> gives them all one, asked for once, after saying what that risks.</p>
 <ul>
-<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
+<li><code>[&lt;user-name&gt;]</code>: The agent, by username.</li>
+<li><code>--all</code>: Every agent, with --unique or --same.</li>
+<li><code>--unique</code>: With --all: a new password for each, made here and written to --file.</li>
+<li><code>--same</code>: With --all: one password for them all, asked for or read with --password-stdin.</li>
+<li><code>--file &lt;file&gt;</code>: With --unique: a new file for their passwords, readable only by whoever runs this.</li>
 <li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+<li><code>--yes</code>: With --all: answer the confirmation up front.</li>
 </ul>
 <h3 id="agent-remove"><code>agent remove</code></h3>
 <pre><code>xema agent remove [&lt;words&gt;…]
@@ -1424,6 +1455,80 @@
 <pre><code>xema number fields
 </code></pre>
 <p>What can be set on a number.</p>
+<h3 id="anis"><code>anis</code></h3>
+<pre><code>xema anis
+</code></pre>
+<p>The range pools, their trunks and the dialers that present from each: <code>xema anis</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
+<h3 id="ani-show"><code>ani show</code></h3>
+<pre><code>xema ani show &lt;pool&gt;
+</code></pre>
+<p>One pool, its range, trunks and the dialers that present from it: <code>xema ani show North</code>.</p>
+<ul>
+<li><code>&lt;pool&gt;</code>: The pool, by name.</li>
+</ul>
+<h3 id="ani-add"><code>ani add</code></h3>
+<pre><code>xema ani add [&lt;words&gt;…]
+</code></pre>
+<p>Add a pool: <code>xema ani add North range=9180001000-9180001099 trunks=carrier1,carrier2</code>, or <code>range=9180001000</code> for one number. Digits only; a leading + is dropped. <code>trunks=</code> maps it to those trunks once it is made.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: Its name, then range= and trunks=, and field=value; <code>xema ani fields</code> lists the fields.</li>
+</ul>
+<h3 id="ani-set"><code>ani set</code></h3>
+<pre><code>xema ani set [&lt;words&gt;…]
+</code></pre>
+<p>Change a pool: <code>xema ani set North range=9180001000-9180001049 description="North region"</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The pool, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="ani-remove"><code>ani remove</code></h3>
+<pre><code>xema ani remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove a pool. Manager refuses one a dialer presents from, and names it.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The pool, by name, or several; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="ani-fields"><code>ani fields</code></h3>
+<pre><code>xema ani fields
+</code></pre>
+<p>What can be set on a pool.</p>
+<h3 id="ani-trunk"><code>ani trunk</code></h3>
+<pre><code>xema ani trunk [&lt;words&gt;…]
+</code></pre>
+<p>Use a pool on trunks: <code>xema ani trunk North carrier1 carrier2</code>. A trunk it is used on already is left as it is.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The pool, by name, then the trunks, by name.</li>
+</ul>
+<h3 id="ani-untrunk"><code>ani untrunk</code></h3>
+<pre><code>xema ani untrunk [&lt;words&gt;…]
+</code></pre>
+<p>Stop using a pool on trunks: <code>xema ani untrunk North carrier2</code>. Manager refuses while a dialer presents from it there.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The pool, by name, then the trunks, by name.</li>
+</ul>
+<h3 id="dnis"><code>dnis</code></h3>
+<pre><code>xema dnis
+</code></pre>
+<p>The inbound pools and the numbers each holds: <code>xema dnis</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
+<h3 id="dni-show"><code>dni show</code></h3>
+<pre><code>xema dni show &lt;pool&gt;
+</code></pre>
+<p>One inbound pool and its numbers: <code>xema dni show Sales</code>.</p>
+<ul>
+<li><code>&lt;pool&gt;</code>: The pool, by name.</li>
+</ul>
+<h3 id="dni-remove"><code>dni remove</code></h3>
+<pre><code>xema dni remove [&lt;words&gt;…]
+</code></pre>
+<p>Remove an inbound pool. Manager refuses one a number still belongs to.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The pool, by name, or several; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
 <h3 id="phonegroups"><code>phonegroups</code></h3>
 <pre><code>xema phonegroups
 </code></pre>
@@ -1519,21 +1624,21 @@
 <h3 id="dialer-add"><code>dialer add</code></h3>
 <pre><code>xema dialer add [&lt;words&gt;…]
 </code></pre>
-<p>Add a dialer: <code>xema dialer add Renewals kind=Progressive trunk=9001 dataset=Leads xApp=Renewals</code>.</p>
+<p>Add a dialer: <code>xema dialer add Renewals kind=Progressive trunks=carrier1:9001,carrier2 dataset=Leads xApp=Renewals</code>. <code>trunks</code> is the list in dialling order: each trunk by name, then optionally <code>:</code> its outbound caller id and <code>:</code> the most calls it carries, or <code>@</code> and an ANI pool to present from instead, <code>carrier1:@North</code>, with <code>anipick=</code> saying how; JSON as Manager takes it passes through.</p>
 <ul>
 <li><code>[&lt;words&gt;…]</code>: Its name, then field=value, and <code>--process</code> with a process's name; <code>xema dialer fields</code> lists the fields.</li>
 </ul>
 <h3 id="dialer-set"><code>dialer set</code></h3>
 <pre><code>xema dialer set [&lt;words&gt;…]
 </code></pre>
-<p>Change a dialer: <code>xema dialer set Renewals pace=3</code>. What is not named is kept.</p>
+<p>Change a dialer: <code>xema dialer set Renewals trunks=carrier2:9002</code>. What is not named is kept.</p>
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The dialer, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
 <h3 id="dialer-remove"><code>dialer remove</code></h3>
 <pre><code>xema dialer remove [&lt;words&gt;…]
 </code></pre>
-<p>Remove a dialer. Several can be named, and each is removed in turn.</p>
+<p>Remove a dialer. Several can be named, and each is removed in turn. Refused while it is dialling, and while a team, queue, process, phone group or the cluster names it as its manual dialer; Manager names which.</p>
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The dialer, by name, or several; <code>--yes</code> answers the confirmation up front.</li>
 </ul>
@@ -1570,6 +1675,39 @@
 <li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
 <li><code>&lt;number&gt;</code>: The number to call.</li>
 </ul>
+<h3 id="dialer-manual"><code>dialer manual</code></h3>
+<pre><code>xema dialer manual [&lt;dialer&gt;]
+</code></pre>
+<p>The cluster's manual dialer: <code>xema dialer manual</code> shows it, <code>xema dialer manual Desk</code> names it, <code>--clear</code> names none. It places an agent's own calls (desk dials, call backs, outside conference calls) when neither their queue, their team nor their process names one; with none anywhere, those calls are refused. Only a manual dialer can be named. The upgrade names none (Vasu, 2026-11-09: "dont convert, let the admin add").</p>
+<ul>
+<li><code>[&lt;dialer&gt;]</code>: The manual dialer to name, by name; none to show the one named.</li>
+<li><code>--clear</code>: Name no manual dialer for the cluster.</li>
+</ul>
+<h3 id="flows"><code>flows</code></h3>
+<pre><code>xema flows
+</code></pre>
+<p>The flows and whether their metrics are collected: <code>xema flows</code>.</p>
+<ul>
+<li><code>--fields &lt;fields&gt;</code>: Fields to show beside the name, comma-separated, in place of the usual columns: the names <code>show</code> prints.</li>
+</ul>
+<h3 id="flow-show"><code>flow show</code></h3>
+<pre><code>xema flow show &lt;flow&gt;
+</code></pre>
+<p>One flow, every field: <code>xema flow show Welcome</code>.</p>
+<ul>
+<li><code>&lt;flow&gt;</code>: The flow, by name.</li>
+</ul>
+<h3 id="flow-set"><code>flow set</code></h3>
+<pre><code>xema flow set [&lt;words&gt;…]
+</code></pre>
+<p>Switch a flow's metrics on or off: <code>xema flow set Welcome collectMetrics=on</code>.</p>
+<ul>
+<li><code>[&lt;words&gt;…]</code>: The flow, by name, or several, or <code>--all</code>, then field=value; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="flow-fields"><code>flow fields</code></h3>
+<pre><code>xema flow fields
+</code></pre>
+<p>What can be set on a flow.</p>
 <h3 id="datasets"><code>datasets</code></h3>
 <pre><code>xema datasets
 </code></pre>
@@ -1613,9 +1751,9 @@
 <h3 id="dataset-add"><code>dataset add</code></h3>
 <pre><code>xema dataset add [&lt;words&gt;…]
 </code></pre>
-<p>Make a dataset from a CSV, mapping its columns to the dataset's: <code>xema dataset add Leads leads.csv --map mobile=Number,name=Text1,city=Text2</code>. A column is named by its header, or by its number from 1 with <code>--no-headers</code>. One must be the <code>Number</code>. <code>--process</code> puts the dataset in a process.</p>
+<p>Make a dataset from a CSV, mapping its columns to the dataset's: <code>xema dataset add Leads leads.csv --map mobile=Number,name=Text1,city=Text2</code>. A column is named by its header, or by its number from 1 with <code>--no-headers</code>. One must be the <code>Number</code>. Each column's label, which names it on the desk's record card, is its header, or is given after the slot (<code>name=Text1:Customer</code>), as it must be with <code>--no-headers</code>. <code>--process</code> puts the dataset in a process.</p>
 <ul>
-<li><code>[&lt;words&gt;…]</code>: The dataset's name, the file, <code>--map</code> with column=Slot pairs, and optionally <code>--no-headers</code>, <code>--process</code> with a process's name, <code>--check-duplicates</code>, and <code>--date-format column=format</code> for a date column.</li>
+<li><code>[&lt;words&gt;…]</code>: The dataset's name, the file, <code>--map</code> with column=Slot or column=Slot:Label pairs, and optionally <code>--no-headers</code>, <code>--process</code> with a process's name, <code>--check-duplicates</code>, and <code>--date-format column=format</code> for a date column.</li>
 </ul>
 <h3 id="dataset-upload"><code>dataset upload</code></h3>
 <pre><code>xema dataset upload &lt;dataset&gt; &lt;file&gt;
@@ -1967,20 +2105,6 @@
 <pre><code>xema webhook fields
 </code></pre>
 <p>What can be set on a webhook.</p>
-<h3 id="webhook-enable"><code>webhook enable</code></h3>
-<pre><code>xema webhook enable [&lt;words&gt;…]
-</code></pre>
-<p>Turn a webhook on: <code>xema webhook enable crm-push</code>. Several can be named, and each is turned on in turn.</p>
-<ul>
-<li><code>[&lt;words&gt;…]</code>: The webhook, by name, or several; <code>--yes</code> answers the question several are asked with.</li>
-</ul>
-<h3 id="webhook-disable"><code>webhook disable</code></h3>
-<pre><code>xema webhook disable [&lt;words&gt;…]
-</code></pre>
-<p>Turn a webhook off: <code>xema webhook disable crm-push</code>. Several can be named, and each is turned off in turn.</p>
-<ul>
-<li><code>[&lt;words&gt;…]</code>: The webhook, by name, or several; <code>--yes</code> answers the question several are asked with.</li>
-</ul>
 <h3 id="crms"><code>crms</code></h3>
 <pre><code>xema crms &lt;queue&gt;
 </code></pre>
