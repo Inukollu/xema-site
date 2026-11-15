@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 357 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 369 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 357 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 369 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -280,6 +280,7 @@
 <li><code>--dry-run</code>: Print what would be written and write nothing.</li>
 <li><code>--yes</code>: Don't ask. Required when there is nobody to answer.</li>
 <li><code>--restart</code>: Restart this node's Xema services afterwards. Drops any calls it is carrying.</li>
+<li><code>--database &lt;database&gt;</code>: Read the cluster from the database at this address rather than the one this node's settings name: the main one, found by this node's agent when its own stopped being it.</li>
 </ul>
 <h3 id="node-files"><code>node files</code></h3>
 <pre><code>xema node files
@@ -459,6 +460,97 @@
 <p>Forget a recorded password. The nodes then connect without one.</p>
 <ul>
 <li><code>&lt;purpose&gt;</code>: redis or broker.</li>
+</ul>
+<h3 id="standby"><code>standby</code></h3>
+<pre><code>xema standby
+</code></pre>
+<p>Show every part, who holds it, and each standby with how far it is.</p>
+<ul>
+<li><code>--watch</code>: Keep the table up to date until Ctrl+C.</li>
+</ul>
+<h3 id="standby-prepare"><code>standby prepare</code></h3>
+<pre><code>xema standby prepare
+</code></pre>
+<p>Run once on the node holding the database: MariaDB keeps the change log a standby follows. Restarts MariaDB. A cluster made by <code>xema init</code> keeps one from the start.</p>
+<ul>
+<li><code>--yes</code>: Do not ask before restarting MariaDB.</li>
+</ul>
+<h3 id="standby-add"><code>standby add</code></h3>
+<pre><code>xema standby add &lt;part&gt;
+</code></pre>
+<p>Run on the server that should be a standby for one part: <code>xema standby add database</code>, <code>cache</code> or <code>broker</code>. The database's copy runs in the background; <code>xema standby</code> shows how far it is.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database, cache or broker.</li>
+<li><code>--dr</code>: A standby at the DR location: never takes over by itself.</li>
+<li><code>--limit &lt;limit&gt;</code>: For the database's copy: about this many MB a second at most.</li>
+<li><code>--yes</code>: Do not ask.</li>
+</ul>
+<h3 id="standby-remove"><code>standby remove</code></h3>
+<pre><code>xema standby remove &lt;part&gt;
+</code></pre>
+<p>Stop being a standby for one part: <code>xema standby remove database</code>. What this node copied stays.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database, cache or broker.</li>
+<li><code>--dr</code>: The DR standby, rather than the site's.</li>
+</ul>
+<h3 id="standby-copy"><code>standby copy</code></h3>
+<pre><code>xema standby copy &lt;part&gt;
+</code></pre>
+<p>Run in the background by <code>standby add database</code>, as its own unit: copies the database's files from the node that holds it, puts them in place and follows it. <code>journalctl -u xema-standby-database</code> is its log.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database: the one part copied in the background.</li>
+<li><code>--limit &lt;limit&gt;</code>: About this many MB a second at most.</li>
+</ul>
+<h3 id="standby-send"><code>standby send</code></h3>
+<pre><code>xema standby send &lt;part&gt;
+</code></pre>
+<p>Run by the host agent on the node holding the database, when a standby asks for a copy: MariaDB's files to standard output as mbstream, and "total" with their size in bytes as the first line of standard error.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database.</li>
+<li><code>--limit &lt;limit&gt;</code>: About this many MB a second at most.</li>
+</ul>
+<h3 id="standby-report"><code>standby report</code></h3>
+<pre><code>xema standby report
+</code></pre>
+<p>Run by the host agent: this node's standbys and how each is doing, as JSON. What <code>GET /host/standby</code> answers, and what Manager gathers for the console and <code>xema standby</code>.</p>
+<h3 id="standby-promote"><code>standby promote</code></h3>
+<pre><code>xema standby promote &lt;part&gt;
+</code></pre>
+<p>Run on a standby: take over one part — the database, the cache or the broker — from the node holding it, and leave the others where they are. <code>xema standby promote database</code>.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database, cache or broker.</li>
+<li><code>--down &lt;down&gt;</code>: The name of the node holding it, when nothing on it answers: your word that it is down.</li>
+<li><code>--yes</code>: Do not ask.</li>
+</ul>
+<h3 id="standby-fence"><code>standby fence</code></h3>
+<pre><code>xema standby fence &lt;part&gt;
+</code></pre>
+<p>Run by the host agent on the node a standby takes over from, when its part did not answer: stops and disables it here, so it does not come back as a second main.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database, cache or broker.</li>
+</ul>
+<h3 id="standby-follow"><code>standby follow</code></h3>
+<pre><code>xema standby follow &lt;part&gt;
+</code></pre>
+<p>Run by the host agent on the node a planned switch took the database from: its MariaDB becomes a standby of the new main, following from the transactions it already has.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database.</li>
+<li><code>--from &lt;from&gt;</code>: The address of the node holding the database now.</li>
+</ul>
+<h3 id="standby-writes"><code>standby writes</code></h3>
+<pre><code>xema standby writes &lt;part&gt;
+</code></pre>
+<p>Run by the host agent on the node holding the database, for a planned switch: lets its MariaDB take writes, or not. As root, because no account the cluster's services use may switch it.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database.</li>
+<li><code>--on</code>: Take writes again; left out, stop taking them.</li>
+</ul>
+<h3 id="standby-settle"><code>standby settle</code></h3>
+<pre><code>xema standby settle &lt;part&gt;
+</code></pre>
+<p>Run by the host agent when it finds more than one database taking writes: a main that was taken over from while it could not be reached, come back. Settles which is the main one, makes this node's own database read-only if it is the other, and points this node at the main one.</p>
+<ul>
+<li><code>&lt;part&gt;</code>: database.</li>
 </ul>
 <h3 id="bff-failover"><code>bff failover</code></h3>
 <pre><code>xema bff failover
