@@ -263,6 +263,7 @@
 <li><code>&lt;node&gt;</code>: The node's name or its id. Its own name is the ordinary case.</li>
 <li><code>[&lt;address&gt;]</code>: Where the other nodes should reach it: an IP address, optionally with a port. Left out only with --derive.</li>
 <li><code>--derive</code>: Derive the address instead of typing it: this machine's address on the subnet every other node of the cluster is on. Only for the node the command is run on, since only it can see its own interfaces. Refused when no such subnet exists — what remains is routed or tunnelled, and that is a decision, not a guess.</li>
+<li><code>--yes</code>: Write this node's wiring without asking. Required when there is nobody to answer.</li>
 </ul>
 <h3 id="node-claim"><code>node claim</code></h3>
 <pre><code>xema node claim
