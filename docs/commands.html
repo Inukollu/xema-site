@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 370 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 372 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 370 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 372 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -723,6 +723,10 @@
 <li><code>--setting &lt;setting&gt;</code>: The setting, as group/name.</li>
 <li><code>--value &lt;value&gt;</code>: What it is set to, in the form the setting takes.</li>
 </ul>
+<h3 id="config-check"><code>config check</code></h3>
+<pre><code>xema config check
+</code></pre>
+<p>Every stored setting that breaks a rule, as its table, its row id and the sentence its next save would be refused with: <code>xema config check</code>. Exits 1 when it finds any. Reads only.</p>
 <h2 id="switches">Switches</h2>
 <p>Cluster-wide behaviour that is off until turned on; docs/switches.html says what each does.</p>
 <h3 id="flags"><code>flags</code></h3>
@@ -921,6 +925,13 @@
 <li><code>--from-user &lt;from-user&gt;</code>: Its MariaDB user. Defaults to this node's cluster user; with another, the password is asked for.</li>
 <li><code>--from-database &lt;from-database&gt;</code>: The database the primary's history is in.</li>
 <li><code>--yes</code>: Do not ask before filling.</li>
+</ul>
+<h3 id="cdr-recover"><code>cdr recover</code></h3>
+<pre><code>xema cdr recover
+</code></pre>
+<p>Send the messages a call-record copy kept as unreadable back to its queue, once SimpleCdr can read them: <code>xema cdr recover --role primary</code>. Each is taken off the dead-letter queue only after the broker has it again.</p>
+<ul>
+<li><code>--role &lt;role&gt;</code>: Whose dead letters: primary, ha or dr.</li>
 </ul>
 <h3 id="cdr-script"><code>cdr script</code></h3>
 <pre><code>xema cdr script
