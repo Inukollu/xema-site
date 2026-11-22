@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sip-session — Xema docs</title>
+<meta name="description" content="A SIP session is the full list of SIP messages for one call, in order.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="sip-session">sip-session</h1>
+<p>A SIP session is the full list of SIP messages for one call, in order. Each block is one message, numbered,
+with its time and direction. The messages are shown exactly as captured.</p>
+<h2 id="colours">Colours</h2>
+<ul>
+<li><strong>Green on a number</strong> is the caller ID as it is presented. It is marked wherever the call carries it: in
+  <code>From</code>, and in the identity your carrier asserts for the caller, so any difference between them is visible.</li>
+<li><strong>Red</strong> is a rejection: any response from 400 upwards, with its reason.</li>
+<li><strong>Amber</strong> is a provisional response: trying, ringing or redirected.</li>
+<li><strong>Green on a response</strong> means the call was answered.</li>
+<li>Header names are dimmed so the values are easier to read; important headers keep their colour. The <code>m=</code> line
+  of the media offer is highlighted, because codec rejections relate to that line.</li>
+</ul>
+<h2 id="call-sequence">Call sequence</h2>
+<ul>
+<li>An <code>INVITE</code> starts the call, with the caller, the dialled number and the audio formats the caller supports.</li>
+<li>Responses below 200, such as <code>100 Trying</code> and <code>180 Ringing</code>, are provisional.</li>
+<li>One final response decides the outcome: <code>200 OK</code> means the call is answered; 400 or above means it is
+  rejected.</li>
+<li>An <code>ACK</code> confirms the final response. A <code>BYE</code> and its <code>200 OK</code> end an answered call.</li>
+</ul>
+<h2 id="common-rejections">Common rejections</h2>
+<ul>
+<li><code>401</code> / <code>407</code>: authentication is required. This is normal; the caller usually retries at once, and the
+  retry is listed separately.</li>
+<li><code>403 Forbidden</code>: recognised but not allowed. Usually the source address is not accepted, or the
+  credentials are wrong.</li>
+<li><code>404 Not Found</code>: no number is configured for the dialled number. Check the dialled number against your
+  configured numbers.</li>
+<li><code>408</code> / <code>480</code> / <code>503</code>: no answer in time, nobody available, or the remote end is not accepting calls.</li>
+<li><code>486 Busy</code>: the destination is busy.</li>
+<li><code>488 Not Acceptable Here</code>: the two ends could not agree on an audio format. Compare the <code>m=</code> line of the
+  offer with the answer. If the caller retries with a different offer, the difference shows the cause.</li>
+</ul>
+<h2 id="sharing">Sharing</h2>
+<ul>
+<li>Carriers usually ask for the whole exchange when you report a problem with their calls.</li>
+<li>The exchange contains callers' numbers and addresses, so handle it as you would any call record.</li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

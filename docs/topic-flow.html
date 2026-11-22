@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>flow — Xema docs</title>
+<meta name="description" content="A flow is a call flow: a named set of blocks, each a group of steps, that decides what happens to a call.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="flow">flow</h1>
+<p>A flow is a call flow: a named set of blocks, each a group of steps, that decides what happens to a call. A
+call enters at the <strong>First block</strong> and runs its steps from top to bottom. It stays in the flow until a step
+sends it elsewhere (another block, a queue or another flow) or the call is hung up.</p>
+<p>A new flow is empty. Its blocks and steps are added in one of the editors, and callers are not affected until
+the flow is published. A flow with no first block hangs up every call, so route a number to it only after it
+has been built.</p>
+<h2 id="name-and-description">Name and description</h2>
+<ul>
+<li>The name cannot be changed later. Steps in other flows, routed numbers and dialers refer to the flow by name,
+  so choose a name that is easy to recognise in a list.</li>
+<li><strong>Description</strong> says what the flow is for and who it serves. It is never played to callers and can be
+  changed at any time.</li>
+<li><strong>Published version</strong> is the version of the flow currently handling calls. It increases by one each time a
+  change is published.</li>
+</ul>
+<h2 id="blocks">Blocks</h2>
+<p>A block is a named group of steps. <strong>GoTo</strong>, <strong>Menu</strong>, <strong>If</strong> and <strong>Navigate</strong> steps refer to a block by its
+name, so choose a name that is easy to recognise.</p>
+<p>When a block's last step finishes, the call is hung up. A block does not continue into the next block, so
+every path must end deliberately, by sending the call on or hanging up. The order of blocks does not affect
+routing.</p>
+<ul>
+<li>With no <strong>First block</strong> selected, calls to the flow are hung up immediately.</li>
+<li>The <strong>Start</strong> tag marks the block where calls enter.</li>
+<li>A faded <strong>Unreachable</strong> tag means no step leads to that block. It never runs until a step points to it or it
+  becomes the first block.</li>
+<li>Deleting a block does not update the steps that pointed to it. Update those steps, or calls reaching them
+  are dropped.</li>
+</ul>
+<h2 id="steps">Steps</h2>
+<p>Each step has an <strong>Action</strong>. Most actions do nothing until configured: a <strong>Playback</strong> with no audio, or a
+<strong>GoTo</strong> with no destination, is skipped.</p>
+<p>A step's <strong>Description</strong> is a note for administrators and is not used during the call.</p>
+<h2 id="markers">Markers</h2>
+<p>A marker records that the call passed through the block, building the path the call took. The path is stored
+with the call for reporting.</p>
+<p>Add markers only to the blocks you want to report on, to keep the path readable, such as
+<code>Main Menu | Billing | Agent</code>.</p>
+<h2 id="tracing-a-call">Tracing a call</h2>
+<p>Tracing requires both of the following:</p>
+<ul>
+<li>Enable <strong>Enable flow debug</strong>. This adds diagnostics to the flow but does not start tracing.</li>
+<li>Add a <strong>Debug</strong> step where tracing should start. From that point the call logs each block it enters and the
+  path so far.</li>
+</ul>
+<p>The setting alone produces no trace. Remove the <strong>Debug</strong> step when you have finished.</p>
+<h2 id="editors">Editors</h2>
+<ul>
+<li><strong>View</strong> shows the flow as a read-only diagram, a safe way to review a flow that is handling calls.</li>
+<li><strong>Visual editor</strong> edits the flow on the diagram.</li>
+<li><strong>Classic editor</strong> edits the flow as a list of blocks.</li>
+<li><strong>JSON editor</strong> edits the stored document directly.</li>
+</ul>
+<p>All the editors work on the same flow. You can switch between them, and unpublished edits are kept.</p>
+<p>In the diagram, each card is a block, and the rows inside it are its steps, in the order they run. A line
+connects a step to the block it sends the call to. Where a step has several options, each line has its own
+colour and the option's name. An icon at the end of a step means the call leaves the flow there: to a queue,
+another flow, another XApp, or a hang-up.</p>
+<h2 id="the-json-form">The JSON form</h2>
+<p>The JSON form is the flow as it is stored. The other editors change this same document, and everything in it
+is shown in those editors. It is useful for:</p>
+<ul>
+<li>Moving several steps from one block to another, with cut and paste.</li>
+<li>Copying a block from one flow to another.</li>
+<li>Changing something the other editors do not offer.</li>
+</ul>
+<p>The flow updates as you type. While the text is not valid JSON, the flow is left unchanged and the error is
+shown, and <strong>Show diff</strong> is unavailable.</p>
+<p>Blocks are identified by their id, and steps refer to their destination block by that id. Changing an id, or
+pasting a block with an id already in use, breaks the steps that lead to it. Check the diagram to confirm the
+flow is still connected.</p>
+<h2 id="publishing">Publishing</h2>
+<p>Edits are not live. Until a flow is published, calls use the current version. <strong>Show diff</strong> compares your
+edits with the version currently handling calls, in the flow's stored form. Lines shaded green are added by
+your version; lines shaded red are removed. A deleted block, or a step that lost its destination, appears as
+a red line.</p>
+<ul>
+<li><strong>Comment</strong> is a short description of the change. It is stored with the version and helps to identify it in
+  the version list later. Optional, but recommended.</li>
+<li><strong>Save</strong> publishes the flow: its version number goes up by one and new calls use it immediately. Calls in
+  progress continue on the previous version.</li>
+<li><strong>Cancel</strong> keeps the published version and keeps your edits, which are still there the next time the flow
+  is opened.</li>
+</ul>
+<h2 id="versions">Versions</h2>
+<p>Each time a flow is published, a version is saved with its publish date and comment.</p>
+<p><strong>History</strong> lists every published version, newest first, and compares each with the one before it.
+<strong>Compare</strong> compares any two versions, for example the current version with one from months ago. It is
+available once the flow has been published twice. Neither changes the flow. Each lists the blocks that
+differ:</p>
+<ul>
+<li><strong>Added</strong>: a block that is new in the newer version.</li>
+<li><strong>Removed</strong>: a block that was deleted.</li>
+<li><strong>Changed</strong>: a block whose steps, or their order, changed.</li>
+<li><strong>Entry</strong>: calls now enter at a different block.</li>
+</ul>
+<p>The steps of each changed block are listed below it, showing which step was added, removed, edited or moved.
+<strong>Renamed</strong> means the block was renamed. <strong>Published without the steps being touched</strong> means the version
+made no change to the flow's steps.</p>
+<p>The line-by-line comparison shows the older version on the left and the newer on the right. Lines shaded green
+were added; lines shaded red were removed. Settings a step does not use are hidden on both sides, so only the
+differences stand out.</p>
+<p>An earlier version can be restored. The changes are shown first, and the version is published only when it is
+saved. Restoring publishes the earlier flow as a new version, so no history is lost.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#flow-fields"><code>xema flow fields</code></a></li>
+<li><a href="commands.html#flow-set"><code>xema flow set</code></a></li>
+<li><a href="commands.html#flow-show"><code>xema flow show</code></a></li>
+<li><a href="commands.html#flows"><code>xema flows</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

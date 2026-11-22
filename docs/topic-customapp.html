@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>customapp — Xema docs</title>
+<meta name="description" content="A Custom App XApp sends the call to a custom dial plan written for this cluster outside Xema Manager.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="customapp">customapp</h1>
+<p>A Custom App XApp sends the call to a custom dial plan written for this cluster outside Xema Manager. Registering
+it gives that dial plan a name in Xema, so a DNI, a flow or a dialer can send calls to it like any other XApp.</p>
+<h2 id="context-name">Context name</h2>
+<p>The name of the dial plan context the call is sent to. It must exactly match the context on the phone system.
+Xema does not create it and cannot check it; ask the person who maintains the dial plan.</p>
+<h2 id="behaviour">Behaviour</h2>
+<ul>
+<li>What happens to the call after it is sent, including whether it returns, depends entirely on that dial plan.</li>
+<li>A wrong context name is not reported. Calls sent to the XApp simply go no further, so make a test call after
+  registering.</li>
+<li>Unregistering removes the name from Xema. The dial plan itself is not changed, and any DNI or flow step that
+  still points to the XApp stops working, so check those first.</li>
+<li>The name cannot be changed later; flows and DNIs refer to this XApp by name.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#customapp-add"><code>xema customapp add</code></a></li>
+<li><a href="commands.html#customapp-fields"><code>xema customapp fields</code></a></li>
+<li><a href="commands.html#customapp-remove"><code>xema customapp remove</code></a></li>
+<li><a href="commands.html#customapp-set"><code>xema customapp set</code></a></li>
+<li><a href="commands.html#customapp-show"><code>xema customapp show</code></a></li>
+<li><a href="commands.html#customapps"><code>xema customapps</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

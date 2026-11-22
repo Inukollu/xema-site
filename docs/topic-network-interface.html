@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>network-interface — Xema docs</title>
+<meta name="description" content="A network interface is a server's connection to a network.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="network-interface">network-interface</h1>
+<p>A network interface is a server's connection to a network. Each interface is shown with its current
+addresses, and VLANs are listed under the interface they use.</p>
+<p>Editing an interface or adding a VLAN does not take effect at once. Changes are staged and take effect only
+when they are applied with <strong>Apply changes</strong>.</p>
+<h2 id="automatic-rollback">Automatic rollback</h2>
+<p>When changes are applied, the server switches to the new settings and starts a timer. If the change is not
+confirmed before the timer ends, the server restores the previous settings. This prevents a wrong address from
+making the server unreachable.</p>
+<p>If the change moves the server's address, the browser loses its connection. Open the new address and confirm
+from there.</p>
+<h2 id="status">Status</h2>
+<ul>
+<li><strong>Up</strong>: the link is working.</li>
+<li><strong>No cable</strong>: no cable is connected, or the other end is switched off.</li>
+<li><strong>Down</strong>: the interface is disabled in the settings.</li>
+<li><strong>Not present</strong>: the settings include this interface but the server cannot find it. For an interface added
+  in Xema, this means it has not been applied yet.</li>
+</ul>
+<h2 id="pending-changes">Pending changes</h2>
+<p>Until changes are applied, the interface keeps working as its status shows.</p>
+<ul>
+<li><strong>Pending addition</strong>: added in Xema; not yet on the server.</li>
+<li><strong>Pending change</strong>: edited since the last apply.</li>
+<li><strong>Pending removal</strong>: still active, but removed on the next apply.</li>
+</ul>
+<h2 id="wait-at-boot">Wait at boot</h2>
+<p>Whether the server waits for this interface during startup. Leave it enabled for the interface used to reach
+the server. Disable it for an interface that is not always connected, or startup is delayed every time.</p>
+<h2 id="ipv4-addressing">IPv4 addressing</h2>
+<ul>
+<li><strong>Automatic (DHCP)</strong>: a router on the network assigns the address.</li>
+<li><strong>Manual</strong>: you set the address. Use this for any device that others must reach at a fixed address.</li>
+<li><strong>No IPv4</strong>: the interface carries traffic but has no address of its own. This is normal for an interface
+  used only for VLANs.</li>
+</ul>
+<h2 id="address-source">Address source</h2>
+<p>An interface can have several addresses from different sources, so each address shows its source.</p>
+<ul>
+<li><strong>Static</strong>: a fixed address configured on the server, in Xema or elsewhere.</li>
+<li><strong>DHCP</strong>: assigned by a router on the network, with a lease that is renewed.</li>
+<li><strong>Automatic</strong>: an IPv6 address the interface configured itself, from the router or from a lease.</li>
+</ul>
+<p>Sources are read from the running system, so addresses configured outside Xema are also shown correctly. An
+interface with no address shows its state instead: waiting for a lease, no address, or not configured.</p>
+<h2 id="address-format">Address format</h2>
+<p>Enter addresses in CIDR notation, for example <code>192.168.1.10/24</code>. A /24 covers 192.168.1.1 to 192.168.1.254.</p>
+<h2 id="default-gateway">Default gateway</h2>
+<p>The router used for traffic to other networks. Only one interface on the server should have a default gateway;
+leave it blank on the others.</p>
+<h2 id="dns-servers">DNS servers</h2>
+<p>The servers used to resolve names. If unsure, use the same DNS servers as the rest of your network.</p>
+<h2 id="static-routes">Static routes</h2>
+<p>Needed only when a network is reached through a router other than the default gateway. Enter the destination
+network in CIDR notation and the gateway router for it.</p>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

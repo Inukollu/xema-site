@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lookup — Xema docs</title>
+<meta name="description" content="A Dataset Lookup XApp looks up a number in a dataset and copies values from the matching row into variables.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="lookup">lookup</h1>
+<p>A Dataset Lookup XApp looks up a number in a dataset and copies values from the matching row into variables.
+The call then continues from where it came in, with those variables set for the rest of the call.</p>
+<h2 id="lookup_1">Lookup</h2>
+<ul>
+<li><strong>Variable name</strong> is the value to search for. CLI or ANI means the caller's number; any other name is read
+  from a variable set earlier in the call.</li>
+<li><strong>No of digits to match</strong> compares only that many digits from the right, so numbers stored without a country
+  or area code still match. The usual value is 10.</li>
+<li><strong>Dataset</strong> is the dataset to search, with one row per number. The first matching row is used.</li>
+</ul>
+<h2 id="variables">Variables</h2>
+<p>Each of the five rows sets one variable: its name and the dataset column its value comes from, for example
+<code>CUST_NAME</code> from <code>text1</code> and <code>CUST_TYPE</code> from <code>text2</code>. Variable 1 is always enabled; enable the others as
+needed.</p>
+<h2 id="using-it-in-a-flow">Using it in a flow</h2>
+<ul>
+<li>Add an <strong>Exec XApp</strong> step for the lookup, then read the variables with <strong>If</strong> steps.</li>
+<li>When no row matches, the variables are empty. Add a route for that case, or those calls are not routed.</li>
+<li>The name cannot be changed later; flows refer to this XApp by name.</li>
+<li>Dataset contents are managed under <strong>Datasets</strong>.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#lookup-add"><code>xema lookup add</code></a></li>
+<li><a href="commands.html#lookup-fields"><code>xema lookup fields</code></a></li>
+<li><a href="commands.html#lookup-remove"><code>xema lookup remove</code></a></li>
+<li><a href="commands.html#lookup-set"><code>xema lookup set</code></a></li>
+<li><a href="commands.html#lookup-show"><code>xema lookup show</code></a></li>
+<li><a href="commands.html#lookups"><code>xema lookups</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

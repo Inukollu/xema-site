@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>callcounter — Xema docs</title>
+<meta name="description" content="The call counter XApp counts how often a number has called.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="callcounter">callcounter</h1>
+<p>The call counter XApp counts how often a number has called. Each time a call reaches it, the caller's count
+goes up by one, and the new count is returned in a variable for the flow to use. A first call since the last
+reset returns 1.</p>
+<p>The count is always for the caller's own number. Every call is counted, including repeat calls within the same
+minute.</p>
+<h2 id="settings">Settings</h2>
+<ul>
+<li><strong>No of digits to match</strong> compares only that many digits of the caller's number from the right, so the same
+  caller is recognised with or without a prefix.</li>
+<li><strong>Variable name</strong> is the variable the count is returned in.</li>
+<li><strong>Cache dataset</strong> is where the counts are stored. Use a dedicated dataset for each counter; it is cleared
+  every time the counter resets.</li>
+<li>The name cannot be changed later; flows refer to the XApp by name.</li>
+</ul>
+<h2 id="reset">Reset</h2>
+<p>When all counts go back to zero: <em>Never</em>, every day, on the weekdays you choose, or on a day of the month (the
+1st to the 28th, or the last day), each at a time. The time is in the site's time zone, shown beside it, and
+stays the same clock time when the clocks change.</p>
+<p>A reset set some other way, which these choices cannot show, appears as <em>Custom</em> with its description. It is
+kept as it is until a new one is chosen.</p>
+<h2 id="using-it-in-a-flow">Using it in a flow</h2>
+<p>Add an <em>Exec XApp</em> step for the counter, then branch on the variable with an <em>If</em> step. For example, when
+<code>CALL_COUNT</code> is greater than 3, send the caller directly to an agent instead of through the menu.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#callcounter-add"><code>xema callcounter add</code></a></li>
+<li><a href="commands.html#callcounter-fields"><code>xema callcounter fields</code></a></li>
+<li><a href="commands.html#callcounter-remove"><code>xema callcounter remove</code></a></li>
+<li><a href="commands.html#callcounter-set"><code>xema callcounter set</code></a></li>
+<li><a href="commands.html#callcounter-show"><code>xema callcounter show</code></a></li>
+<li><a href="commands.html#callcounters"><code>xema callcounters</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

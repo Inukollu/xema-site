@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ani — Xema docs</title>
+<meta name="description" content="A phone number pool is a range of numbers, from its first to its last.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="ani">ani</h1>
+<p>A phone number pool is a range of numbers, from its first to its last. A single number is a pool of its own.
+A pool is mapped to the trunks its numbers are dialled in on and presented from, and pools never overlap.</p>
+<p>Each of a dialer's trunk rows presents caller IDs from a pool mapped to that trunk, and picks a number from it
+as the dialer says. A pool a dialer names cannot be deleted.</p>
+<h2 id="numbers">Numbers</h2>
+<ul>
+<li>Enter the first and last numbers in digits only, without <code>+</code>, both the same length.</li>
+<li>For a single number, enter it as both the first and the last.</li>
+<li>A range that overlaps another pool is refused.</li>
+</ul>
+<h2 id="trunks">Trunks</h2>
+<p>Map the pool to each trunk its numbers are used on, in and out alike, here or on the trunk's page. A dialer's
+trunk row offers only the pools mapped to its trunk, and a mapping a dialer relies on cannot be removed.</p>
+<h2 id="older-forms">Older forms</h2>
+<p>A pool marked as the older form has a direction and a scope. It is shown as it is until the upgrade converts
+it.</p>
+<p>Outbound caller IDs are the older caller IDs. The upgrade turns each into a one-number phone number pool.
+Until then they can be read and deleted, but not changed. To present another number, make a phone number pool
+for it and map it to the trunks it goes out on.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#ani-add"><code>xema ani add</code></a></li>
+<li><a href="commands.html#ani-fields"><code>xema ani fields</code></a></li>
+<li><a href="commands.html#ani-remove"><code>xema ani remove</code></a></li>
+<li><a href="commands.html#ani-set"><code>xema ani set</code></a></li>
+<li><a href="commands.html#ani-show"><code>xema ani show</code></a></li>
+<li><a href="commands.html#ani-trunk"><code>xema ani trunk</code></a></li>
+<li><a href="commands.html#ani-untrunk"><code>xema ani untrunk</code></a></li>
+<li><a href="commands.html#anis"><code>xema anis</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

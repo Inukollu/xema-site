@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>language — Xema docs</title>
+<meta name="description" content="A language is one that calls can be handled in.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="language">language</h1>
+<p>A language is one that calls can be handled in. Audio prompts are recorded once per language, and a flow
+changes a call's language with a <em>Set Language</em> step.</p>
+<h2 id="code">Code</h2>
+<ul>
+<li>The code is used by the phone system to find a language's sound files, and every recording in that
+  language is stored under it.</li>
+<li>Codes come from ISO <strong>639-1</strong> (two letters) or <strong>639-2</strong> (three letters). Hindi is <code>hi</code> in 639-1 and <code>hin</code>
+  in 639-2.</li>
+<li>Two-letter codes such as <code>en</code> or <code>hi</code> are the usual choice and match the phone system's sound folder names.</li>
+<li>A code that is on neither list is accepted as entered. The phone system must have a sound folder with that
+  name.</li>
+<li>The code cannot be changed once prompts have been recorded in the language.</li>
+</ul>
+<h2 id="name">Name</h2>
+<ul>
+<li>The name is shown on the audio and flow pages, for example English or Hindi.</li>
+<li>Choosing a code from an ISO list fills in the name. The name can be changed at any time.</li>
+</ul>
+<h2 id="prompts-and-deleting">Prompts and deleting</h2>
+<ul>
+<li><strong>Prompts</strong> shows how many recordings exist in the language.</li>
+<li>A language with recordings cannot be deleted. Delete those recordings on the audio pages first.</li>
+<li>After a language is deleted, a flow step that switches to it leaves the call in its current language.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#language-add"><code>xema language add</code></a></li>
+<li><a href="commands.html#language-fields"><code>xema language fields</code></a></li>
+<li><a href="commands.html#language-remove"><code>xema language remove</code></a></li>
+<li><a href="commands.html#language-set"><code>xema language set</code></a></li>
+<li><a href="commands.html#language-show"><code>xema language show</code></a></li>
+<li><a href="commands.html#languages"><code>xema languages</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

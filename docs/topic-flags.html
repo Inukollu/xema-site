@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>flags — Xema docs</title>
+<meta name="description" content="Flags switch optional features of a cluster on or off: the panels Agent UI offers, and whether an agent must">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="flags">flags</h1>
+<p>Flags switch optional features of a cluster on or off: the panels Agent UI offers, and whether an agent must
+sign in with a phone at their own address. Each flag is off until it is turned on.</p>
+<h2 id="the-agents-screen">The agent's screen</h2>
+<p>Optional panels in Agent UI. Each panel is disabled until it is enabled.</p>
+<ul>
+<li><strong>CRM dashboard</strong> shows the customer view next to the call.</li>
+<li><strong>Call history</strong> lets agents view their own past calls.</li>
+<li><strong>Missed calls</strong> shows calls that rang for the agent and were not answered.</li>
+<li><strong>My day</strong> shows the agent's figures for the shift so far, such as calls handled and break time. When it is
+  disabled, these figures are not calculated.</li>
+<li><strong>Demonstration content</strong> shows content marked as demonstration material, across the cluster.</li>
+</ul>
+<h2 id="signing-in-to-a-phone">Signing in to a phone</h2>
+<p>When an agent signs in, Xema suggests a phone that registered from the same address as the agent's browser.
+<strong>Phone must be on the agent's address</strong> makes this a requirement: a phone registered from another address is
+refused, and the agent is shown the address it is on.</p>
+<p>Two exceptions apply. A phone that has never registered is still allowed, because a browser softphone receives
+its credentials before it registers. An agent can also enter a phone number manually; it is refused only if
+that phone is registered from another address.</p>
+<p>The rule assumes that an agent's browser and phone reach the cluster by the same route. Where they do not (a
+VPN on the computer, a proxy in front of the web application, or IPv4 for one and IPv6 for the other), every
+phone at that desk is refused and the agent cannot work. For this reason it is disabled by default. Check how
+agents connect to the cluster, and test with one agent first.</p>
+<p>The rule is useful for hardware phones at fixed desks. Browser softphones always match, so it has no effect on
+them.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#flags"><code>xema flags</code></a></li>
+<li><a href="commands.html#flags-fields"><code>xema flags fields</code></a></li>
+<li><a href="commands.html#flags-set"><code>xema flags set</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

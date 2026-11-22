@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aiinput — Xema docs</title>
+<meta name="description" content="An AI Input Agent plays the announcement, listens to the caller and sets the output variables.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="aiinput">aiinput</h1>
+<p>An AI Input Agent plays the announcement, listens to the caller and sets the output variables. It then
+returns the call to your flow, which reads the variables and routes the call.</p>
+<h2 id="output-variables">Output variables</h2>
+<p>The description is the model's instruction. Name the exact values your flow checks for, and always define a
+fallback value, for example:
+<code>Set exactly '1' for sales, '2' for support, '0' if the caller did not make a clear choice.</code></p>
+<h2 id="using-it-in-a-flow">Using it in a flow</h2>
+<p>Add an <strong>Exec XApp</strong> step for the agent, then branch on the variable with <strong>If</strong> steps, for example
+<code>SELECTED_SERVICE = '1'</code> goes to sales. Always give the fallback value a route as well.</p>
+<h2 id="behaviour">Behaviour</h2>
+<ul>
+<li>The agent starts in the channel's language and switches to the caller's language.</li>
+<li>The transcript variable holds up to 8,000 characters. The full transcript is stored in the CDR database
+  under the call's ID.</li>
+<li>The timeout disconnects the call. Use it as a safety limit, not to control the flow.</li>
+<li>Agent settings are cached, so changes can take up to 5 minutes to reach new calls.</li>
+<li>Turn on <strong>Allow early answering</strong> to let callers speak over the announcement. When it is off, the caller
+  can speak only between sentences.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#aiinput-add"><code>xema aiinput add</code></a></li>
+<li><a href="commands.html#aiinput-fields"><code>xema aiinput fields</code></a></li>
+<li><a href="commands.html#aiinput-remove"><code>xema aiinput remove</code></a></li>
+<li><a href="commands.html#aiinput-set"><code>xema aiinput set</code></a></li>
+<li><a href="commands.html#aiinput-show"><code>xema aiinput show</code></a></li>
+<li><a href="commands.html#aiinputs"><code>xema aiinputs</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

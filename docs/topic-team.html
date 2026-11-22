@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>team — Xema docs</title>
+<meta name="description" content="A team groups agents who work together.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="team">team</h1>
+<p>A team groups agents who work together. The team decides where its agents appear in reports and in Live View.
+An agent belongs to one team, so adding an agent to a team removes them from their old one. An agent removed
+from a team has no team.</p>
+<h2 id="team-lead">Team lead</h2>
+<ul>
+<li><strong>Team lead username</strong> is the username of the person who supervises the team. It is optional.</li>
+<li><strong>Enable barge</strong> lets the team lead listen to a team member's call and join it if needed.</li>
+</ul>
+<h2 id="outbound-dialing">Outbound dialing</h2>
+<ul>
+<li><strong>Enable dialing</strong> allows the team's agents to place outbound calls, and shows the settings below.</li>
+<li><strong>Trunk</strong> is the route outbound calls use.</li>
+<li><strong>CLI</strong> is the number shown to the person being called. The trunk's carrier must accept it.</li>
+<li><strong>Record calls</strong> records the team's outbound calls.</li>
+</ul>
+<h2 id="team-list">Team list</h2>
+<ul>
+<li>The number on each team is the number of agents in it.</li>
+<li>The <strong>Barge</strong>, <strong>Dial</strong> and <strong>Record</strong> chips are highlighted when the team can listen to calls, place
+  outbound calls, or record them.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#team-add"><code>xema team add</code></a></li>
+<li><a href="commands.html#team-fields"><code>xema team fields</code></a></li>
+<li><a href="commands.html#team-remove"><code>xema team remove</code></a></li>
+<li><a href="commands.html#team-set"><code>xema team set</code></a></li>
+<li><a href="commands.html#team-show"><code>xema team show</code></a></li>
+<li><a href="commands.html#teams"><code>xema teams</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

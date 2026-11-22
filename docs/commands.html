@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 372 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 374 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +35,7 @@
     <a href="dev-builds.html">Dev builds</a>
     <a href="switches.html">Switches</a>
     <a href="commands.html" aria-current="page">Commands</a>
+    <a href="topics.html">Topics</a>
     <h4>Roles</h4>
     <a href="role-manager.html">Manager</a>
     <a href="role-bff.html">BFF</a>
@@ -60,7 +61,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 372 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 374 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -175,6 +176,7 @@
 <ul>
 <li><code>--rotate</code>: Put a new secret first for every app, keeping the old ones, which Manager still accepts.</li>
 <li><code>--retire</code>: Keep only each app's first secret, once every node sends it.</li>
+<li><code>--add &lt;add&gt;</code>: Make a secret for this one client, such as tone, in the file this node has, and leave the rest.</li>
 </ul>
 <h3 id="keyring"><code>keyring</code></h3>
 <pre><code>xema keyring
@@ -205,6 +207,13 @@
 <p>The names of one kind of record, one a line, as tab completion asks for them: <code>xema completion names team</code>. A name two records share is printed once. Within a second or not at all: tab does not wait on Manager.</p>
 <ul>
 <li><code>&lt;kind&gt;</code>: The kind: agent, node, team, queue and the rest of the records the commands name.</li>
+</ul>
+<h3 id="help"><code>help</code></h3>
+<pre><code>xema help [&lt;topic&gt;]
+</code></pre>
+<p>Explains one topic, or lists every topic: <code>xema help trunk</code>.</p>
+<ul>
+<li><code>[&lt;topic&gt;]</code>: The topic, named as its command is: <code>trunk</code>, <code>phonegroup</code>. Leave it out for the list.</li>
 </ul>
 <h2 id="the-cluster-and-its-nodes">The cluster and its nodes</h2>
 <p>What each server runs, how the servers reach each other, what they hold, and the installation's settings.</p>
@@ -406,6 +415,7 @@
 <li><code>--restart</code>: Restart this node's Xema services afterwards. Drops any calls it is carrying.</li>
 <li><code>--database &lt;database&gt;</code>: Read the cluster from the database at this address rather than the one this node's settings name: the main one, found by this node's agent when its own stopped being it.</li>
 </ul>
+<p>What it is: <a href="topic-cluster.html">cluster</a></p>
 <h3 id="cluster"><code>cluster</code></h3>
 <pre><code>xema cluster
 </code></pre>
@@ -442,9 +452,9 @@
 <p>Record the password this cluster's nodes use for one of its shared parts.</p>
 <ul>
 <li><code>&lt;purpose&gt;</code>: What the password is for, such as cache or broker.</li>
-<li><code>--secret &lt;secret&gt;</code>: The password. Prompted for, hidden, if not given.</li>
 <li><code>--username &lt;username&gt;</code>: The user, where the part has users. The broker does; Redis does not.</li>
 <li><code>--generate</code>: Make one up instead of asking for it — 32 characters, safe to paste.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
 </ul>
 <h3 id="cluster-status"><code>cluster status</code></h3>
 <pre><code>xema cluster status
@@ -566,6 +576,7 @@
 <li><code>--dry-run</code>: Print what would be deleted, and delete nothing.</li>
 <li><code>--force</code>: Delete a queue even with messages still in it, losing them.</li>
 </ul>
+<p>What it is: <a href="topic-hosts.html">hosts</a></p>
 <h3 id="hosts"><code>hosts</code></h3>
 <pre><code>xema hosts
 </code></pre>
@@ -595,6 +606,7 @@
 <ul>
 <li><code>&lt;host&gt;</code>: A host named with <code>add</code> or <code>limit</code>.</li>
 </ul>
+<p>What it is: <a href="topic-cors.html">cors</a></p>
 <h3 id="cors"><code>cors</code></h3>
 <pre><code>xema cors
 </code></pre>
@@ -621,6 +633,7 @@
 <ul>
 <li><code>&lt;origin&gt;</code>: An origin added with <code>add</code>.</li>
 </ul>
+<p>What it is: <a href="topic-dns.html">dns</a></p>
 <h3 id="dns"><code>dns</code></h3>
 <pre><code>xema dns
 </code></pre>
@@ -674,6 +687,7 @@
 <li><code>&lt;zone&gt;</code>: The zone, as tzdata names it.</li>
 <li><code>--node &lt;node&gt;</code>: The node, by name; this one when not given.</li>
 </ul>
+<p>What it is: <a href="topic-binding.html">binding</a></p>
 <h3 id="binding-add"><code>binding add</code></h3>
 <pre><code>xema binding add &lt;address&gt; &lt;purpose&gt;
 </code></pre>
@@ -729,6 +743,7 @@
 <p>Every stored setting that breaks a rule, as its table, its row id and the sentence its next save would be refused with: <code>xema config check</code>. Exits 1 when it finds any. Reads only.</p>
 <h2 id="switches">Switches</h2>
 <p>Cluster-wide behaviour that is off until turned on; docs/switches.html says what each does.</p>
+<p>What it is: <a href="topic-flags.html">flags</a></p>
 <h3 id="flags"><code>flags</code></h3>
 <pre><code>xema flags
 </code></pre>
@@ -782,6 +797,7 @@
 <li><code>--reboot</code>: Restart instead of powering off.</li>
 <li><code>--dry-run</code>: Print what would be stopped, and stop nothing.</li>
 </ul>
+<p>What it is: <a href="topic-logs.html">logs</a></p>
 <h3 id="logs"><code>logs</code></h3>
 <pre><code>xema logs [&lt;service&gt;]
 </code></pre>
@@ -802,6 +818,7 @@
 <ul>
 <li><code>--lines &lt;lines&gt;</code>: -n, How many recent journal lines to scan per service.</li>
 </ul>
+<p>What it is: <a href="topic-loglevel.html">loglevel</a></p>
 <h3 id="loglevel-set"><code>loglevel set</code></h3>
 <pre><code>xema loglevel set [&lt;words&gt;…]
 </code></pre>
@@ -825,6 +842,7 @@
 </ul>
 <h2 id="backups-and-data">Backups and data</h2>
 <p>Backups, the databases, call records, and what comes across from V1.</p>
+<p>What it is: <a href="topic-backup.html">backup</a></p>
 <h3 id="backup"><code>backup</code></h3>
 <pre><code>xema backup
 </code></pre>
@@ -866,7 +884,7 @@
 <ul>
 <li><code>--server &lt;server&gt;</code>: The database host. <code>localhost</code> for the ordinary single server.</li>
 <li><code>--user &lt;user&gt;</code>: The MariaDB user Xema connects as.</li>
-<li><code>--pass &lt;pass&gt;</code>: Its password. Prompted for if left out, which keeps it out of shell history.</li>
+<li><code>--password-stdin</code>: Read the user's password from the first line of standard input rather than asking for it. It is never taken as an argument, which would land in shell history and <code>ps</code>.</li>
 <li><code>--provision</code>: Create the user first, with a password nobody has to choose or remember. Logs in to MariaDB as whoever is running the command, so it needs a login that may create users.</li>
 <li><code>--trusted-user</code>: Log in to MariaDB as root instead of as yourself. Needed when your own Linux login has no rights to create a user; run the whole command under <code>sudo</code> for it to work.</li>
 <li><code>--from-v1</code>: Take the server, user and password from the V1 installation on this machine rather than being told them. Every V1 service signs in as the one user V1's installer made, so on an upgraded server the right credentials already exist and making new ones is the only wrong move.</li>
@@ -896,6 +914,7 @@
 <li><code>--yes</code>: Do not ask before applying.</li>
 <li><code>--schemas &lt;schemas&gt;</code>: Apply only these, whatever their changes are, and leave every other schema as it is. What uses a schema whose change is destructive may fail until it is upgraded. <code>xema database upgrade --dry-run</code> lists them.</li>
 </ul>
+<p>What it is: <a href="topic-cdr.html">cdr</a></p>
 <h3 id="cdr"><code>cdr</code></h3>
 <pre><code>xema cdr
 </code></pre>
@@ -978,6 +997,7 @@
 </ul>
 <h2 id="people">People</h2>
 <p>Agents, teams, skills, roles and processes, as the console sets them.</p>
+<p>What it is: <a href="topic-agent.html">agent</a></p>
 <h3 id="agents"><code>agents</code></h3>
 <pre><code>xema agents
 </code></pre>
@@ -1053,6 +1073,7 @@
 <ul>
 <li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
 </ul>
+<p>What it is: <a href="topic-team.html">team</a></p>
 <h3 id="teams"><code>teams</code></h3>
 <pre><code>xema teams
 </code></pre>
@@ -1092,6 +1113,7 @@
 <ul>
 <li><code>&lt;team&gt;</code>: The team, by name.</li>
 </ul>
+<p>What it is: <a href="topic-skill.html">skill</a></p>
 <h3 id="skills"><code>skills</code></h3>
 <pre><code>xema skills
 </code></pre>
@@ -1131,6 +1153,7 @@
 <ul>
 <li><code>&lt;skill&gt;</code>: The skill, by name.</li>
 </ul>
+<p>What it is: <a href="topic-role.html">role</a></p>
 <h3 id="roles"><code>roles</code></h3>
 <pre><code>xema roles
 </code></pre>
@@ -1174,6 +1197,7 @@
 <ul>
 <li><code>&lt;role&gt;</code>: The role, by name.</li>
 </ul>
+<p>What it is: <a href="topic-process.html">process</a></p>
 <h3 id="processes"><code>processes</code></h3>
 <pre><code>xema processes
 </code></pre>
@@ -1289,6 +1313,7 @@
 <li><code>&lt;process&gt;</code>: The process, by name.</li>
 <li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
 </ul>
+<p>What it is: <a href="topic-break.html">break</a></p>
 <h3 id="breaks"><code>breaks</code></h3>
 <pre><code>xema breaks
 </code></pre>
@@ -1328,6 +1353,7 @@
 <ul>
 <li><code>&lt;name&gt;</code>: The break, by name.</li>
 </ul>
+<p>What it is: <a href="topic-schedule.html">schedule</a></p>
 <h3 id="schedules"><code>schedules</code></h3>
 <pre><code>xema schedules
 </code></pre>
@@ -1367,6 +1393,7 @@
 <ul>
 <li><code>&lt;schedule&gt;</code>: The schedule, by name.</li>
 </ul>
+<p>What it is: <a href="topic-busyhours.html">busyhours</a></p>
 <h3 id="busyhours"><code>busyhours</code></h3>
 <pre><code>xema busyhours
 </code></pre>
@@ -1382,6 +1409,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: field=value; <code>xema busyhours fields</code> lists them.</li>
 </ul>
+<p>What it is: <a href="topic-phone.html">phone</a></p>
 <h3 id="phones"><code>phones</code></h3>
 <pre><code>xema phones
 </code></pre>
@@ -1472,6 +1500,7 @@
 </ul>
 <h2 id="calls">Calls</h2>
 <p>Trunks, numbers, queues, dialers and the flows a call takes.</p>
+<p>What it is: <a href="topic-trunk.html">trunk</a></p>
 <h3 id="trunks"><code>trunks</code></h3>
 <pre><code>xema trunks
 </code></pre>
@@ -1495,6 +1524,14 @@
 <pre><code>xema trunk fields
 </code></pre>
 <p>What can be set on a trunk.</p>
+<h3 id="trunk-password"><code>trunk password</code></h3>
+<pre><code>xema trunk password &lt;trunk&gt;
+</code></pre>
+<p>Set a trunk's password, which it registers with its provider by: <code>xema trunk password 9001</code>.</p>
+<ul>
+<li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
+<li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
+</ul>
 <h3 id="trunk-remove"><code>trunk remove</code></h3>
 <pre><code>xema trunk remove [&lt;words&gt;…]
 </code></pre>
@@ -1523,6 +1560,7 @@
 <ul>
 <li><code>&lt;trunk&gt;</code>: The trunk, by name.</li>
 </ul>
+<p>What it is: <a href="topic-number.html">number</a></p>
 <h3 id="numbers"><code>numbers</code></h3>
 <pre><code>xema numbers &lt;trunk&gt;
 </code></pre>
@@ -1563,6 +1601,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The trunk, by name, then the number.</li>
 </ul>
+<p>What it is: <a href="topic-ani.html">ani</a></p>
 <h3 id="anis"><code>anis</code></h3>
 <pre><code>xema anis
 </code></pre>
@@ -1637,6 +1676,7 @@
 <ul>
 <li><code>&lt;pool&gt;</code>: The pool, by name.</li>
 </ul>
+<p>What it is: <a href="topic-phonegroup.html">phonegroup</a></p>
 <h3 id="phonegroups"><code>phonegroups</code></h3>
 <pre><code>xema phonegroups
 </code></pre>
@@ -1676,6 +1716,7 @@
 <ul>
 <li><code>&lt;group&gt;</code>: The group, by name.</li>
 </ul>
+<p>What it is: <a href="topic-queue.html">queue</a></p>
 <h3 id="queues"><code>queues</code></h3>
 <pre><code>xema queues
 </code></pre>
@@ -1715,6 +1756,7 @@
 <ul>
 <li><code>&lt;queue&gt;</code>: The queue, by name.</li>
 </ul>
+<p>What it is: <a href="topic-dialer.html">dialer</a></p>
 <h3 id="dialers"><code>dialers</code></h3>
 <pre><code>xema dialers
 </code></pre>
@@ -1791,6 +1833,7 @@
 <li><code>&lt;dialer&gt;</code>: The dialer, by name.</li>
 <li><code>&lt;number&gt;</code>: The number to call.</li>
 </ul>
+<p>What it is: <a href="topic-flow.html">flow</a></p>
 <h3 id="flows"><code>flows</code></h3>
 <pre><code>xema flows
 </code></pre>
@@ -1816,6 +1859,7 @@
 <ul>
 <li><code>&lt;flow&gt;</code>: The flow, by name.</li>
 </ul>
+<p>What it is: <a href="topic-dataset.html">dataset</a></p>
 <h3 id="datasets"><code>datasets</code></h3>
 <pre><code>xema datasets
 </code></pre>
@@ -1872,6 +1916,7 @@
 <li><code>&lt;file&gt;</code>: The CSV on this machine.</li>
 <li><code>--description &lt;description&gt;</code>: What this batch is, as the console lists it.</li>
 </ul>
+<p>What it is: <a href="topic-dialout.html">dialout</a></p>
 <h3 id="dialouts"><code>dialouts</code></h3>
 <pre><code>xema dialouts
 </code></pre>
@@ -1911,6 +1956,7 @@
 <ul>
 <li><code>&lt;dialout&gt;</code>: The dial-out, by name.</li>
 </ul>
+<p>What it is: <a href="topic-callerflow.html">callerflow</a></p>
 <h3 id="callerflows"><code>callerflows</code></h3>
 <pre><code>xema callerflows &lt;queue&gt;
 </code></pre>
@@ -1951,6 +1997,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The queue, then the key pattern.</li>
 </ul>
+<p>What it is: <a href="topic-agentflow.html">agentflow</a></p>
 <h3 id="agentflows"><code>agentflows</code></h3>
 <pre><code>xema agentflows &lt;queue&gt;
 </code></pre>
@@ -1991,6 +2038,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The queue, then the action's name.</li>
 </ul>
+<p>What it is: <a href="topic-agentphone.html">agentphone</a></p>
 <h3 id="agentphones"><code>agentphones</code></h3>
 <pre><code>xema agentphones &lt;queue&gt;
 </code></pre>
@@ -2031,6 +2079,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The queue, then the action's name.</li>
 </ul>
+<p>What it is: <a href="topic-audio.html">audio</a></p>
 <h3 id="audios"><code>audios</code></h3>
 <pre><code>xema audios
 </code></pre>
@@ -2079,6 +2128,7 @@
 <ul>
 <li><code>&lt;audio&gt;</code>: The prompt, by name.</li>
 </ul>
+<p>What it is: <a href="topic-music.html">music</a></p>
 <h3 id="music-add"><code>music add</code></h3>
 <pre><code>xema music add [&lt;words&gt;…]
 </code></pre>
@@ -2133,6 +2183,7 @@
 <li><code>&lt;music&gt;</code>: The class, by name.</li>
 <li><code>&lt;track&gt;</code>: The track, by name, as <code>xema music show</code> lists it.</li>
 </ul>
+<p>What it is: <a href="topic-language.html">language</a></p>
 <h3 id="languages"><code>languages</code></h3>
 <pre><code>xema languages
 </code></pre>
@@ -2174,6 +2225,7 @@
 </ul>
 <h2 id="integrations-and-ai">Integrations and AI</h2>
 <p>Webhooks, CRMs, lookups and the other apps a call can reach, and the AI behind them.</p>
+<p>What it is: <a href="topic-webhook.html">webhook</a></p>
 <h3 id="webhooks"><code>webhooks</code></h3>
 <pre><code>xema webhooks
 </code></pre>
@@ -2213,6 +2265,7 @@
 <ul>
 <li><code>&lt;webhook&gt;</code>: The webhook, by name.</li>
 </ul>
+<p>What it is: <a href="topic-crm.html">crm</a></p>
 <h3 id="crms"><code>crms</code></h3>
 <pre><code>xema crms &lt;queue&gt;
 </code></pre>
@@ -2253,6 +2306,7 @@
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The queue, then the page's name.</li>
 </ul>
+<p>What it is: <a href="topic-lookup.html">lookup</a></p>
 <h3 id="lookups"><code>lookups</code></h3>
 <pre><code>xema lookups
 </code></pre>
@@ -2292,6 +2346,7 @@
 <ul>
 <li><code>&lt;lookup&gt;</code>: The dataset lookup, by name.</li>
 </ul>
+<p>What it is: <a href="topic-jsonapi.html">jsonapi</a></p>
 <h3 id="jsonapis"><code>jsonapis</code></h3>
 <pre><code>xema jsonapis
 </code></pre>
@@ -2331,6 +2386,7 @@
 <ul>
 <li><code>&lt;jsonapi&gt;</code>: The JSON API call, by name.</li>
 </ul>
+<p>What it is: <a href="topic-customapp.html">customapp</a></p>
 <h3 id="customapps"><code>customapps</code></h3>
 <pre><code>xema customapps
 </code></pre>
@@ -2370,6 +2426,7 @@
 <ul>
 <li><code>&lt;customapp&gt;</code>: The custom app, by name.</li>
 </ul>
+<p>What it is: <a href="topic-callcounter.html">callcounter</a></p>
 <h3 id="callcounters"><code>callcounters</code></h3>
 <pre><code>xema callcounters
 </code></pre>
@@ -2409,6 +2466,7 @@
 <ul>
 <li><code>&lt;callcounter&gt;</code>: The call counter, by name.</li>
 </ul>
+<p>What it is: <a href="topic-xapp.html">xapp</a></p>
 <h3 id="xapps"><code>xapps</code></h3>
 <pre><code>xema xapps
 </code></pre>
@@ -2423,6 +2481,7 @@
 <ul>
 <li><code>&lt;xapp&gt;</code>: The XApp, by name.</li>
 </ul>
+<p>What it is: <a href="topic-aiprovider.html">aiprovider</a></p>
 <h3 id="aiproviders"><code>aiproviders</code></h3>
 <pre><code>xema aiproviders
 </code></pre>
@@ -2470,6 +2529,7 @@
 <ul>
 <li><code>&lt;kind&gt;</code>: The AI provider, by name.</li>
 </ul>
+<p>What it is: <a href="topic-aiinput.html">aiinput</a></p>
 <h3 id="aiinputs"><code>aiinputs</code></h3>
 <pre><code>xema aiinputs
 </code></pre>
@@ -2509,6 +2569,7 @@
 <ul>
 <li><code>&lt;aiinput&gt;</code>: The AI input agent, by name.</li>
 </ul>
+<p>What it is: <a href="topic-aiagent.html">aiagent</a></p>
 <h3 id="aiagents"><code>aiagents</code></h3>
 <pre><code>xema aiagents
 </code></pre>
@@ -2550,6 +2611,7 @@
 </ul>
 <h2 id="reports-and-live-view">Reports and Live View</h2>
 <p>Reports, who they are shared with, and Live View's presets.</p>
+<p>What it is: <a href="topic-report.html">report</a></p>
 <h3 id="reports"><code>reports</code></h3>
 <pre><code>xema reports
 </code></pre>

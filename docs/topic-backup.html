@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>backup — Xema docs</title>
+<meta name="description" content="A backup is a copy of the database, taken on the server that has the database role.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="backup">backup</h1>
+<p>A backup is a copy of the database, taken on the server that has the database role. If no server has the
+database role, backups are not available.</p>
+<h2 id="back-up-now">Back up now</h2>
+<ul>
+<li><strong>Back up now</strong> starts a backup at once, in addition to any scheduled backups. The backup is listed when it
+  finishes.</li>
+<li>If the last backup failed, Xema shows the reason.</li>
+</ul>
+<h2 id="schedule">Schedule</h2>
+<ul>
+<li><strong>No automatic backups are taken until a schedule is saved.</strong> Xema shows a warning until then.</li>
+<li><strong>Time</strong> is the time of day the backup runs, in 24-hour format (<code>02:00</code> is 2 a.m.), in the time zone shown
+  beside it. Choose a quiet hour.</li>
+<li><strong>Keep</strong> is the number of backups to keep, from 1 to 365. Older backups beyond that number are deleted only
+  after a successful backup, never after a failed one.</li>
+</ul>
+<h2 id="backups">Backups</h2>
+<ul>
+<li>Backups are listed newest first, with the time in your computer's time zone.</li>
+<li><strong>Incomplete</strong> marks a backup that did not finish. It can be downloaded, but it is not a complete copy of
+  the database.</li>
+<li><strong>Generation</strong> shows which version of Xema created it, V1 or V2.</li>
+<li><strong>Download</strong> saves the backup to your computer as a compressed archive. Keep a copy away from the server, so
+  that it is not lost with the server.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#backup"><code>xema backup</code></a></li>
+<li><a href="commands.html#backup-list"><code>xema backup list</code></a></li>
+<li><a href="commands.html#backup-prune"><code>xema backup prune</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

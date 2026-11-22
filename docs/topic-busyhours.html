@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>busyhours — Xema docs</title>
+<meta name="description" content="The busy hour is the hour of the day with the most traffic.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="busyhours">busyhours</h1>
+<p>The busy hour is the hour of the day with the most traffic. Staffing, trunk capacity and service targets are
+usually planned for it. These settings control how the Busy Hours dashboard in Data Portal reports it.</p>
+<h2 id="method">Method</h2>
+<ul>
+<li><strong>Both</strong> shows your declared window next to the busiest hour calculated from traffic, so you can compare
+  them.</li>
+<li><strong>Computed</strong> calculates the busy hour from recorded traffic only. It uses the time-consistent busy hour: the
+  clock hour with the most traffic on average across the days observed, not the peak hour of a single day.</li>
+<li><strong>Declared</strong> reports on the window you set and calculates nothing. Use it when the busy period is set by the
+  business.</li>
+</ul>
+<h2 id="declared-busy-window">Declared busy window</h2>
+<p>The hours the business treats as its busy period, for example 10:00 to 13:00. <em>Until</em> is the hour the window
+ends, so this example covers 10:00, 11:00 and 12:00.</p>
+<h2 id="computed-busy-hour">Computed busy hour</h2>
+<ul>
+<li><strong>Search from</strong> and <strong>Search until</strong> limit the hours searched. Keep the full day unless the contact center
+  is open for only part of it, so that an overnight hour is never selected.</li>
+<li><strong>Days observed</strong> is the period the dashboard opens with. 30 days is typical; a longer period gives a
+  steadier result, a shorter one reflects recent changes sooner.</li>
+<li><strong>Count weekends</strong> sets whether Saturdays and Sundays are included. Disable it when weekend traffic differs
+  from weekdays.</li>
+</ul>
+<h2 id="where-it-is-shown">Where it is shown</h2>
+<p>The Busy Hours dashboard in Data Portal shows calls and traffic by hour, the busy period, and each queue's
+busiest hour. Changes apply within a minute; users with the dashboard open see them after refreshing.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#busyhours"><code>xema busyhours</code></a></li>
+<li><a href="commands.html#busyhours-fields"><code>xema busyhours fields</code></a></li>
+<li><a href="commands.html#busyhours-set"><code>xema busyhours set</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

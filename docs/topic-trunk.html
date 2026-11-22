@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>trunk — Xema docs</title>
+<meta name="description" content="A trunk is the SIP connection between Xema and a carrier.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="trunk">trunk</h1>
+<p>A trunk is the SIP connection between Xema and a carrier. Calls come in and go out through it. Each trunk has
+one or more DNIs that route incoming calls.</p>
+<p>A trunk's details show its reachability, its latency, its DNIs and its missed calls. In the list of trunks, the
+large number is the trunk's count of DNIs. Its type (SIP client, carrier, or carrier behind a SIP realm) and
+its description are shown below the name.</p>
+<h2 id="type">Type</h2>
+<p>The kind of connection at the other end. The type decides which fields apply; fields a type does not use are
+hidden.</p>
+<ul>
+<li><strong>SIP client with auth</strong>: the remote end registers with Xema and is authenticated. Only a password is
+  needed. The trunk name is the username, and no address is needed because the remote end connects in. Useful
+  for simulating external calls.</li>
+<li><strong>Carrier trunk</strong>: a carrier used for outbound calls. Requires the carrier's remote IP and a codec list.</li>
+<li><strong>Carrier behind a SIP realm</strong>: the realm handles the connection to the carrier, so you select the realm
+  instead of entering an address. No registration or authentication is needed. SIP realms are set up under
+  Network.</li>
+</ul>
+<h2 id="registration">Registration</h2>
+<p>For a carrier trunk:</p>
+<ul>
+<li>Enable <strong>Register with the carrier</strong> if the carrier requires registration, and enter the user ID and
+  password the carrier provided.</li>
+<li>Leave it disabled if the carrier identifies this server by its IP address. No credentials are sent, and the
+  fields are hidden.</li>
+</ul>
+<h2 id="connection">Connection</h2>
+<ul>
+<li><strong>Codecs</strong> is written directly to the endpoint's <code>allow</code> list. The default suits most carriers; change it
+  only if the carrier requires it. Avoid <code>all</code>: it allows codecs that need transcoding on every call, which
+  causes audio problems under load.</li>
+<li><strong>Dial prefix</strong> is added before outbound numbers dialled through the trunk. Leave it empty if the carrier
+  expects plain numbers.</li>
+<li><strong>SIP domain</strong> and <strong>Pilot number</strong> are for reference only and do not change the trunk configuration.</li>
+<li><strong>Server</strong> appears only on a cluster with more than one server. It is the server the carrier's circuit is
+  connected to, and only that server configures the trunk.</li>
+</ul>
+<h2 id="carrier-limits">Carrier limits</h2>
+<ul>
+<li><strong>Max channels</strong>, <strong>Max inbound</strong> and <strong>Max outbound</strong> are the calls the carrier allows at once: in all,
+  and in each direction. <strong>Calls per second</strong> is how many calls may start in one second. Leave any of them
+  empty for no limit. Where max channels is set, inbound and outbound are each at most that.</li>
+<li>The numbers dialled in on and presented are kept in <strong>Phone number pools</strong>, not on the trunk. Map a pool to
+  the trunk in the trunk's Phone number pools section, or on the pool's own page. A pool mapped to a trunk
+  keeps the trunk from being deleted.</li>
+</ul>
+<h2 id="health">Health</h2>
+<ul>
+<li>The status dot shows whether the trunk's remote end answers pings: green when reachable, red when not.</li>
+<li><strong>RTT</strong>, <strong>Loss</strong> and <strong>Jitter</strong> are measured from those pings. Rising values usually mean call quality
+  problems.</li>
+<li><strong>Trace route</strong>, on the Overview tab, runs a network trace to the remote end, to find where traffic stops when the trunk is
+  unreachable.</li>
+<li>Health refreshes every 15 seconds.</li>
+</ul>
+<h2 id="dnis-and-missed-calls">DNIs and missed calls</h2>
+<ul>
+<li>The DNIs are the numbers that arrive on the trunk, each with the XApp it routes to.</li>
+<li>A pulsing green dot means the number accepts calls; red means it is disabled. Only a disabled number can be
+  enabled again or deleted.</li>
+<li><strong>Missed calls</strong> are calls that arrived on the trunk but were not routed. The count covers the last 5
+  minutes.</li>
+</ul>
+<h2 id="calls-a-process-takes">Calls a process takes</h2>
+<p>A process takes calls from outside in one of two ways:</p>
+<ul>
+<li><strong>A whole trunk.</strong> The process takes every call on that trunk, and no other process can take it.</li>
+<li><strong>Numbers on a shared trunk.</strong> Several processes share the trunk, and each takes the calls to the numbers it names.
+  A number belongs to one process only.</li>
+</ul>
+<p>An agent's call, a dialer's call and every record of them belong to the process the call came in by.</p>
+<p>Only a manager or an administrator changes which trunks and numbers a process takes.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#trunk-add"><code>xema trunk add</code></a></li>
+<li><a href="commands.html#trunk-assign"><code>xema trunk assign</code></a></li>
+<li><a href="commands.html#trunk-fields"><code>xema trunk fields</code></a></li>
+<li><a href="commands.html#trunk-password"><code>xema trunk password</code></a></li>
+<li><a href="commands.html#trunk-remove"><code>xema trunk remove</code></a></li>
+<li><a href="commands.html#trunk-set"><code>xema trunk set</code></a></li>
+<li><a href="commands.html#trunk-show"><code>xema trunk show</code></a></li>
+<li><a href="commands.html#trunk-unassign"><code>xema trunk unassign</code></a></li>
+<li><a href="commands.html#trunks"><code>xema trunks</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

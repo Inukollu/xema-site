@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crm — Xema docs</title>
+<meta name="description" content="A CRM link is a URL that opens the caller's record in your CRM when a call from a queue is offered to an agent,">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="crm">crm</h1>
+<p>A CRM link is a URL that opens the caller's record in your CRM when a call from a queue is offered to an agent,
+so the record is ready when they answer. Call details, such as the CLI, are inserted into the URL.</p>
+<h2 id="settings">Settings</h2>
+<ul>
+<li><strong>Reuse tab</strong> opens the CRM in the same browser tab each time instead of a new tab for each call.</li>
+<li><strong>Show link</strong> shows the URL as a link in Agent UI instead of opening it automatically.</li>
+</ul>
+<h2 id="url-template">URL template</h2>
+<p>Each name in double braces is replaced with the call's value, URL-encoded, before the link is sent to the
+agent. A percent-encoded placeholder such as <code>%7B%7B%20CLI%20%7D%7D</code> works too.</p>
+<p><code>https://crm.example.com/sr/?PHONENUMBER={{ CLI }}&amp;CUCID={{ CALL_UUID }}&amp;AGENTID={{ AGENT_USERNAME }}</code></p>
+<h2 id="named-placeholders">Named placeholders</h2>
+<p>These are always available:</p>
+<ul>
+<li><code>{{ CLI }}</code>: the caller's number.</li>
+<li><code>{{ CALL_UUID }}</code>: the call's ID, as stored in its call record (CDR).</li>
+<li><code>{{ AGENT_USERNAME }}</code>: the agent's username.</li>
+<li><code>{{ AGENTID }}</code>: also the agent's username, kept for compatibility with V1.</li>
+<li><code>{{ QUEUE }}</code>: the queue's name.</li>
+<li><code>{{ PHONEID }}</code>: the agent's phone.</li>
+<li><code>{{ UNIQUEID }}</code>: the caller's channel ID.</li>
+</ul>
+<h2 id="call-variables">Call variables</h2>
+<p>Any channel variable set on the call before it reaches the agent can be used the same way, for example
+<code>{{ CIRCLEID }}</code>, or a variable set by the call flow such as <code>{{ ACCOUNT_NO }}</code>.</p>
+<h2 id="rules">Rules</h2>
+<ul>
+<li>Names are not case-sensitive: <code>{{ cli }}</code> and <code>{{ CLI }}</code> are the same.</li>
+<li>A name with no value on the call is replaced with nothing.</li>
+<li>Single braces are plain text. Links saved in the old <code>{CLI}</code> form are converted during the upgrade.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#crm-add"><code>xema crm add</code></a></li>
+<li><a href="commands.html#crm-fields"><code>xema crm fields</code></a></li>
+<li><a href="commands.html#crm-remove"><code>xema crm remove</code></a></li>
+<li><a href="commands.html#crm-set"><code>xema crm set</code></a></li>
+<li><a href="commands.html#crm-show"><code>xema crm show</code></a></li>
+<li><a href="commands.html#crms"><code>xema crms</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

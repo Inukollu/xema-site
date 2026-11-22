@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cdr — Xema docs</title>
+<meta name="description" content="Xema writes a call detail record  for every call.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="cdr">cdr</h1>
+<p>Xema writes a call detail record (CDR) for every call. Two settings shape it: CDR variables, which fill spare
+columns from channel variables, and a post-processing script, which runs after each record is written.</p>
+<h2 id="cdr-variables">CDR variables</h2>
+<p>In addition to the standard fields (caller, time, duration, agent), the call record has spare columns that you
+can map to channel variables.</p>
+<ul>
+<li>Enter a channel variable name against a column. When a call ends, the variable's value is written to that
+  column.</li>
+<li>The variable is set during the call, by an XApp, the dial plan or another step. The name must match exactly.</li>
+<li>Unmapped columns stay empty. Each column type shows the columns in use and one spare; when you fill the
+  spare, another one appears.</li>
+<li>Choose a column type that suits the value. A number in a whole-number column is stored as a number; text in
+  a date column is stored as empty.</li>
+<li>These columns are part of the call record, so reports can use them and name them on the report's own page.</li>
+</ul>
+<h2 id="post-processing-script">Post-processing script</h2>
+<p>SQL that runs against the call records after each call is written. Use it for updates that need the complete
+call, such as filling a column from other fields or from another table.</p>
+<ul>
+<li>Write <code>{CallId}</code> where the call's ID belongs. It is replaced with the ID of the call just written, so the
+  script should change only that call.</li>
+<li>A script without <code>{CallId}</code> does not run. This prevents a script from changing the whole table.</li>
+<li>Leave it empty to run nothing.</li>
+<li>Keep it fast. It runs once per call while records are being written, so a slow script delays the calls after
+  it.</li>
+</ul>
+<h2 id="when-changes-apply">When changes apply</h2>
+<ul>
+<li>Both settings apply to calls that end after the change, within a minute or two. No restart is needed.</li>
+<li>Existing call records are not changed. If you map a column to a new variable, its old values remain under
+  the new meaning.</li>
+<li>The log records when a script changes no rows or an unexpected number of rows. Check it after changing the
+  script.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#cdr"><code>xema cdr</code></a></li>
+<li><a href="commands.html#cdr-backup"><code>xema cdr backup</code></a></li>
+<li><a href="commands.html#cdr-column"><code>xema cdr column</code></a></li>
+<li><a href="commands.html#cdr-columns"><code>xema cdr columns</code></a></li>
+<li><a href="commands.html#cdr-fill"><code>xema cdr fill</code></a></li>
+<li><a href="commands.html#cdr-recover"><code>xema cdr recover</code></a></li>
+<li><a href="commands.html#cdr-script"><code>xema cdr script</code></a></li>
+<li><a href="commands.html#cdr-setup"><code>xema cdr setup</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

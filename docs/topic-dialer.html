@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dialer — Xema docs</title>
+<meta name="description" content="A dialer places outbound calls automatically.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="dialer">dialer</h1>
+<p>A dialer places outbound calls automatically. It works through a dataset of numbers at a set pace and connects
+answered calls to a queue's agents.</p>
+<p>A running dialer cannot be edited. Stop it first.</p>
+<h2 id="status">Status</h2>
+<ul>
+<li>Live shows which dialers are dialing now.</li>
+<li>Outside hours means the dialer is started but its hours do not allow dialing at this time. A dialer with no
+  hours never dials.</li>
+<li>Not dialing means the dialer is started and within its hours but is waiting, and Live says why, such as
+  no idle agents or nothing left to dial.</li>
+<li>Idle dialers are stopped.</li>
+<li>In a dialer's own status, green means it is dialing. Amber means it is started but not dialing: either it is
+  outside its hours, or it is waiting for something, such as an idle agent, and Xema says what. Grey means
+  idle.</li>
+<li>Test call places one call to a number you enter, without using the dataset.</li>
+<li>The status refreshes every 15 seconds.</li>
+</ul>
+<h2 id="dialing">Dialing</h2>
+<ul>
+<li>Pace depends on the type. For an agentless dialer it is the calls placed each minute. For a power dialer it
+  is the calls kept ringing for each free agent, a whole number from 1 to 20. A predictive dialer starts at
+  one call for each free agent and predicts from there. Preview and progressive dialers place one call for
+  each free agent.</li>
+<li>An occupancy dialer has nothing to set. It forecasts like a predictive dialer but has no abandonment cap, so
+  more answered callers can reach nobody. Check that the law where you are calling allows that.</li>
+<li>Trunks are tried in the order listed. Each row presents caller IDs, the numbers shown to the people being
+  called, from a phone number pool mapped to its trunk. A trunk can also limit how many of the dialer's calls
+  ring on it at once.</li>
+<li>A row offers only the pools mapped to its trunk; a pool is mapped on its own page. Choose how a number is
+  picked from the pools for each call.</li>
+<li>The dataset holds the numbers to call. The test dataset is a separate list for trial runs.</li>
+<li>A manual dialer places the calls agents make themselves: their own calls, call backs and conference parties.
+  It has no pace, dataset or hours, and is never started. Name it on a queue, a team, a process or the
+  cluster settings.</li>
+</ul>
+<h2 id="dialing-hours">Dialing hours</h2>
+<ul>
+<li>A dialer's hours are its own: for each day of the week, the windows in which it may dial. A day can have
+  several windows, for example a morning and an afternoon. A window ending at <code>00:00</code> runs to the end of the
+  day. A day with no window is closed.</li>
+<li>The hours are read in the dialer's time zone. Leave the zone blank to use the process's time zone, or else
+  the cluster's.</li>
+<li>A dialer whose hours were never set still dials within the schedules it was on, until its hours are set.
+  Press Set hours to give it its own.</li>
+<li><strong>Copy hours from</strong> puts another dialer's week and time zone in place of these, so dialers that keep the same
+  hours are set alike. It offers only dialers you can see that have hours of their own. Nothing is saved until you
+  press Save.</li>
+</ul>
+<h2 id="datasets">Datasets</h2>
+<ul>
+<li>Each batch shows how many records remain. Test batches belong to the test dataset, Target batches to the
+  dataset.</li>
+<li>Refresh datasets reloads them from the source. Allow a minute before refreshing.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#dialer-add"><code>xema dialer add</code></a></li>
+<li><a href="commands.html#dialer-fields"><code>xema dialer fields</code></a></li>
+<li><a href="commands.html#dialer-manual"><code>xema dialer manual</code></a></li>
+<li><a href="commands.html#dialer-refresh"><code>xema dialer refresh</code></a></li>
+<li><a href="commands.html#dialer-remove"><code>xema dialer remove</code></a></li>
+<li><a href="commands.html#dialer-set"><code>xema dialer set</code></a></li>
+<li><a href="commands.html#dialer-show"><code>xema dialer show</code></a></li>
+<li><a href="commands.html#dialer-start"><code>xema dialer start</code></a></li>
+<li><a href="commands.html#dialer-stop"><code>xema dialer stop</code></a></li>
+<li><a href="commands.html#dialer-test-call"><code>xema dialer test-call</code></a></li>
+<li><a href="commands.html#dialers"><code>xema dialers</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

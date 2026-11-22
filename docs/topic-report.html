@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>report — Xema docs</title>
+<meta name="description" content="Reports are what users run in Data Portal.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="report">report</h1>
+<p>Reports are what users run in Data Portal. Each report defines where it appears in the Data Portal menu, the
+filters it asks for, its SQL query and its column names. A built report counts calls without SQL.</p>
+<p>The name and description are shown in the Data Portal menu. A clear description tells users what the report
+answers without opening it.</p>
+<h2 id="owner-and-sharing">Owner and sharing</h2>
+<ul>
+<li><strong>Owner</strong> is the user the report belongs to, who decides who else can run it.</li>
+<li>A report can be run by its owner and by the users and roles it is shared with. A report that is not shared
+  appears only in its owner's menu.</li>
+<li>A report appears only for users who can run it, so a new report is not visible to anyone until it has an
+  owner. Set an owner before the report is shared.</li>
+<li>Changes to a report apply to everyone who runs it, the next time they open it.</li>
+<li>Deleting a report removes it from Data Portal for everyone.</li>
+</ul>
+<h2 id="menu-placement">Menu placement</h2>
+<ul>
+<li><strong>Group</strong> is the Data Portal menu section the report appears under. Reports are listed under their group, in
+  the order of the Data Portal menu. The number beside a group heading is the number of reports in it.</li>
+<li>Within a group, reports are sorted by <strong>Order in the group</strong> and then by name.</li>
+</ul>
+<h2 id="output-and-filters">Output and filters</h2>
+<ul>
+<li><strong>Table on screen</strong> shows the results in a table that can be sorted, filtered and exported as a spreadsheet.</li>
+<li><strong>Recordings on screen</strong> is the same table with playback and download for each call.</li>
+<li><strong>Call detail download</strong> is the standard call record download. It has its own date range and no other
+  filters.</li>
+<li>The selected filters are the fields Data Portal shows to the user running the report. Each filter fills a
+  placeholder in the query. With no filters, the query runs as written.</li>
+</ul>
+<h2 id="query">Query</h2>
+<ul>
+<li>Write standard SQL. Use a filter's placeholder where its value belongs: <code>{FromDate}</code>, <code>{ToDate}</code>,
+  <code>{FromEpoch}</code>, <code>{ToEpoch}</code>, <code>{AgentUserName}</code>, <code>{PhoneId}</code>, <code>{ANI}</code>, <code>{DNI}</code>.</li>
+<li><code>{FromEpoch}</code> and <code>{ToEpoch}</code> are the same dates in call ID form, which allows fast searches of the call
+  tables.</li>
+<li><code>{FromDate}</code> and <code>{ToDate}</code> are both included in the report, so compare a date column with <code>&gt;= {FromDate}</code>
+  and <code>&lt;= {ToDate}</code>. The epoch values mark the start and end of those days, so compare a call ID with
+  <code>&gt;= {FromEpoch}</code> and <code>&lt; {ToEpoch}</code>.</li>
+<li><strong>Optional conditions</strong> are for filters that may be left blank. A condition is used only when its filter has
+  a value. The conditions used are joined with AND and inserted where you write <code>{WHERE}</code>. If the query
+  already has a WHERE clause, write <code>{AND}</code> before it; it becomes AND when there are conditions and is removed
+  when there are none.</li>
+<li>Add a limit to any query that could return a whole table.</li>
+</ul>
+<h2 id="column-names">Column names</h2>
+<ul>
+<li>Enter a display name for a column. Columns not listed keep the names the query returns.</li>
+<li>For a call detail download, only the listed columns are included, in the listed order.</li>
+</ul>
+<h2 id="testing">Testing</h2>
+<ul>
+<li>A report can be tested before it is saved. Xema shows the exact SQL that would run, with placeholders
+  filled in and conditions applied, and a test run returns the first rows.</li>
+<li>If the database rejects the query, its error message is shown.</li>
+</ul>
+<h2 id="built-reports">Built reports</h2>
+<p>A built report counts calls without SQL. Choose what it counts (interactions, calls or agent calls) and the
+columns to group by, such as a queue, a disposition or a value set by a flow. Each group becomes a row with
+the figures available for that source, such as calls answered or average handling time. With no columns
+selected, the report lists every row with every column.</p>
+<p>A filter keeps only the rows where the column has the given value, as shown in the report.</p>
+<p>You own a built report, and only you can edit it. It counts calls in the processes you own, or all calls if
+your role covers every process. Share it from the reports list, and view it in Data Portal.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#report-add"><code>xema report add</code></a></li>
+<li><a href="commands.html#report-fields"><code>xema report fields</code></a></li>
+<li><a href="commands.html#report-grant"><code>xema report grant</code></a></li>
+<li><a href="commands.html#report-remove"><code>xema report remove</code></a></li>
+<li><a href="commands.html#report-revoke"><code>xema report revoke</code></a></li>
+<li><a href="commands.html#report-run"><code>xema report run</code></a></li>
+<li><a href="commands.html#report-set"><code>xema report set</code></a></li>
+<li><a href="commands.html#report-show"><code>xema report show</code></a></li>
+<li><a href="commands.html#reports"><code>xema reports</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>logs — Xema docs</title>
+<meta name="description" content="Each service on a Xema server writes its own log.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="logs">logs</h1>
+<p>Each service on a Xema server writes its own log. The log can be read live, for a set period, or filtered by
+level and text. How much a service logs is set by its log level.</p>
+<h2 id="time-range">Time range</h2>
+<ul>
+<li><strong>Follow</strong> shows new lines as they are written. If the connection drops, it resumes where it stopped.</li>
+<li><strong>Latest</strong> shows the last few hundred lines without updating.</li>
+<li><strong>15m / 1h / 6h / 24h</strong> show that period. The exact range is shown beside them.</li>
+<li><strong>Custom</strong> takes a start and end time. Leave <strong>To</strong> empty to show everything up to now.</li>
+</ul>
+<h2 id="filtering">Filtering</h2>
+<ul>
+<li>The <strong>level</strong> filter hides entries below the selected severity.</li>
+<li><strong>Search</strong> shows only lines whose message contains the text you enter. Both filters work on the lines
+  already loaded.</li>
+<li>The count at the bottom shows how many of the loaded entries are shown.</li>
+</ul>
+<h2 id="reading-the-log">Reading the log</h2>
+<ul>
+<li>Errors are shown in red, warnings in amber and debug lines dimmed.</li>
+<li>The level is taken from the journal's priority, not from the message text.</li>
+<li><strong>Time</strong> switches between oldest first and newest first.</li>
+<li>A followed log opens at the newest line and stays there as lines arrive. If you scroll up, it stops moving;
+  scroll to the end to follow again.</li>
+<li>A followed log keeps the most recent 1,000 lines.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#logs"><code>xema logs</code></a></li>
+<li><a href="commands.html#logs-backup"><code>xema logs backup</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

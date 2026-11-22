@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sip-logger — Xema docs</title>
+<meta name="description" content="SIP Logger captures SIP signalling arriving at a server.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="sip-logger">sip-logger</h1>
+<p>SIP Logger captures SIP signalling arriving at a server. It stores the complete message exchange of each call,
+from the first <code>INVITE</code> to the last message, so you can see what happened.</p>
+<p>It is most useful when setting up a system or a trunk. Calls that are rejected before they reach a queue are
+not recorded anywhere else.</p>
+<h2 id="recording">Recording</h2>
+<ul>
+<li>A recording runs from <strong>Start recording</strong> until <strong>Stop</strong>. A reboot or a service restart also stops it.</li>
+<li><strong>Interface</strong> is the network interface to capture on. Keep <em>Every interface</em> unless you know which interface
+  the calls use.</li>
+<li><strong>Ports</strong> are the SIP ports to capture, usually 5060. Separate several ports with commas.</li>
+<li><strong>Keep</strong> selects which calls are stored. <em>Calls that never connected</em> is the usual choice: it keeps the
+  rejected calls and leaves out successful ones on a busy system.</li>
+<li><strong>Involving</strong> limits the capture to one or more numbers, separated by commas. A call is kept when the number
+  appears as either the caller or the dialled number. A partial number is enough, so eight digits also match
+  the number with a country code or extension. Leave it empty to include all calls.</li>
+<li>While recording, Xema shows the counts so far. Calls are listed when they finish.</li>
+<li><strong>Only one recording can run at a time</strong> on the whole system. While another user is recording, nobody can
+  start another. Stopping it stops their recording.</li>
+<li>A dot beside a call marks it as captured by the current recording. The count beside the search box shows how
+  many such calls are listed.</li>
+<li>The counter shows <strong>attempts</strong>, not calls, because one call can involve several attempts. For example, a
+  phone whose first offer is rejected and that retries at once makes two attempts.</li>
+<li><strong>Kept</strong> is the number of attempts stored. It is lower than the number of attempts whenever <strong>Keep</strong> is set
+  to anything other than <em>Every call</em>.</li>
+</ul>
+<h2 id="call-list">Call list</h2>
+<ul>
+<li>Calls are listed newest first. <strong>Result</strong> shows whether the call was answered. <em>Never connected</em> includes
+  rejected, cancelled and unanswered calls.</li>
+<li><strong>Came from</strong> is the source address of the call. For a rejected call, check this address first to confirm
+  the caller is who you expect.</li>
+<li><strong>Search</strong> matches a caller or dialled number, an address or a SIP Call-ID. <strong>Showing</strong> filters the calls by
+  result.</li>
+</ul>
+<h2 id="message-exchange">Message exchange</h2>
+<ul>
+<li>Each call holds the complete exchange in order. The rejection reason is included, for example
+  <code>403 Forbidden</code>, <code>404 Not Found</code>, or <code>488</code> when the two ends could not agree on an audio format.</li>
+<li>Rejections are shown in red and the presented caller ID in green. A key and an explanation of common
+  rejections are shown beside the call.</li>
+<li><strong>Copy</strong> copies the exchange to the clipboard. Carriers usually ask for this when you report a problem with
+  their calls.</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Record only while investigating a problem. Every recorded call is stored until you delete it.</li>
+<li>The stored data includes callers' numbers, so handle it as you would any call record.</li>
+<li>Calls over encrypted connections (TLS) cannot be captured.</li>
+<li>If SIP Logger is not responding, its service is not running. Start it under <strong>Services</strong>.</li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

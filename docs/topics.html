@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topics — Xema docs</title>
+<meta name="description" content="What each thing in Xema is and how it behaves.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="topics">Topics</h1>
+<p>What each thing in Xema is and how it behaves: the same pages the console's help panels, <code>xema help &lt;topic&gt;</code> and <code>man xema-&lt;topic&gt;</code> show.</p>
+<ul>
+<li><a href="topic-agent.html">agent</a>: Agents are the people who take and place calls.</li>
+<li><a href="topic-agentflow.html">agentflow</a>: Agent actions are buttons the agent can use during a call from a queue, to transfer the caller to a phone or</li>
+<li><a href="topic-agentphone.html">agentphone</a>: The transfer action is a button the agent can use during a call from a queue to transfer the caller to another</li>
+<li><a href="topic-aiagent.html">aiagent</a>: An AI Conversation Agent greets the caller and holds an open conversation, using its tools to answer</li>
+<li><a href="topic-aiinput.html">aiinput</a>: An AI Input Agent plays the announcement, listens to the caller and sets the output variables.</li>
+<li><a href="topic-aiprovider.html">aiprovider</a>: An AI provider is an AI service used by the AI agent XApps: the vendor, the endpoint, the model and the</li>
+<li><a href="topic-ani.html">ani</a>: A phone number pool is a range of numbers, from its first to its last.</li>
+<li><a href="topic-audio.html">audio</a>: An audio is a recording played to callers: a prompt, a menu, a thank-you message or a promotion.</li>
+<li><a href="topic-backup.html">backup</a>: A backup is a copy of the database, taken on the server that has the database role.</li>
+<li><a href="topic-binding.html">binding</a>: A network binding sets what one of a server's addresses is used for.</li>
+<li><a href="topic-break.html">break</a>: Breaks are what agents can select when they step away, such as lunch, training or a meeting.</li>
+<li><a href="topic-busyhours.html">busyhours</a>: The busy hour is the hour of the day with the most traffic.</li>
+<li><a href="topic-callcounter.html">callcounter</a>: The call counter XApp counts how often a number has called.</li>
+<li><a href="topic-callerflow.html">callerflow</a>: A caller action is a key a caller can press while waiting in a queue.</li>
+<li><a href="topic-cdr.html">cdr</a>: Xema writes a call detail record  for every call.</li>
+<li><a href="topic-cluster-settings.html">cluster-settings</a>: Settings control how a cluster behaves.</li>
+<li><a href="topic-cluster.html">cluster</a>: A cluster is a group of servers at one location that work as one contact center.</li>
+<li><a href="topic-cors.html">cors</a>: A cluster lets pages from other sites call it only when it names those sites.</li>
+<li><a href="topic-crm.html">crm</a>: A CRM link is a URL that opens the caller's record in your CRM when a call from a queue is offered to an agent,</li>
+<li><a href="topic-customapp.html">customapp</a>: A Custom App XApp sends the call to a custom dial plan written for this cluster outside Xema Manager.</li>
+<li><a href="topic-dashboard.html">dashboard</a>: The dashboard is a read-only overview of the platform's current activity.</li>
+<li><a href="topic-dataset.html">dataset</a>: A dataset is a list of numbers for dialers to call.</li>
+<li><a href="topic-dialer.html">dialer</a>: A dialer places outbound calls automatically.</li>
+<li><a href="topic-dialout.html">dialout</a>: A Dial Out XApp sends the call out over a trunk and connects the caller to whoever answers.</li>
+<li><a href="topic-dns.html">dns</a>: DNS settings decide how a server resolves names to addresses.</li>
+<li><a href="topic-flags.html">flags</a>: Flags switch optional features of a cluster on or off: the panels Agent UI offers, and whether an agent must</li>
+<li><a href="topic-flow.html">flow</a>: A flow is a call flow: a named set of blocks, each a group of steps, that decides what happens to a call.</li>
+<li><a href="topic-forecast.html">forecast</a>: The forecast estimates the calls each queue will receive in every 15-minute interval.</li>
+<li><a href="topic-hosts.html">hosts</a>: The hosts are the names and addresses a cluster's services answer at.</li>
+<li><a href="topic-jsonapi.html">jsonapi</a>: A Json Api XApp calls a web service while the caller waits, reads values from the JSON response, and stores</li>
+<li><a href="topic-language.html">language</a>: A language is one that calls can be handled in.</li>
+<li><a href="topic-loglevel.html">loglevel</a>: A log level sets how much a Xema service writes to its log.</li>
+<li><a href="topic-logs.html">logs</a>: Each service on a Xema server writes its own log.</li>
+<li><a href="topic-lookup.html">lookup</a>: A Dataset Lookup XApp looks up a number in a dataset and copies values from the matching row into variables.</li>
+<li><a href="topic-missed-call.html">missed-call</a>: A missed call is a call that arrived on a trunk for a number the trunk does not route: the number has no DNI</li>
+<li><a href="topic-music.html">music</a>: Hold music is played to callers waiting in a queue.</li>
+<li><a href="topic-network-configuration.html">network-configuration</a>: The network configuration is the set of files that will be written to the server, one per managed interface.</li>
+<li><a href="topic-network-device.html">network-device</a>: Network devices are the other devices the server can see on the network attached to an interface, such as</li>
+<li><a href="topic-network-interface.html">network-interface</a>: A network interface is a server's connection to a network.</li>
+<li><a href="topic-network-realm.html">network-realm</a>: A SIP realm isolates one carrier's connection from everything else on the server.</li>
+<li><a href="topic-network-routing.html">network-routing</a>: A route tells the server where to send traffic for a particular network.</li>
+<li><a href="topic-network-vlan.html">network-vlan</a>: A VLAN carries several separate networks over one physical cable.</li>
+<li><a href="topic-number.html">number</a>: A number  is a dialled number that arrives on a trunk, and the XApp it is routed to.</li>
+<li><a href="topic-phone.html">phone</a>: A phone is a SIP extension: the number a phone device registers with and the line an agent takes calls on.</li>
+<li><a href="topic-phonegroup.html">phonegroup</a>: A phone group holds phones that share the same settings.</li>
+<li><a href="topic-process-dashboard.html">process-dashboard</a>: Every process you look after, in one place.</li>
+<li><a href="topic-process-overview.html">process-overview</a>: One process at a glance: who works in it, the queues and dialers it uses, and the datasets it dials.</li>
+<li><a href="topic-process.html">process</a>: A process is a line of business: its agents, teams, queues, dialers and datasets, with owners who manage</li>
+<li><a href="topic-queue.html">queue</a>: A queue holds callers until an agent with the required skills is available.</li>
+<li><a href="topic-report.html">report</a>: Reports are what users run in Data Portal.</li>
+<li><a href="topic-role.html">role</a>: A role is a set of permissions that can be assigned to users.</li>
+<li><a href="topic-schedule.html">schedule</a>: A schedule held the hours in which the dialers on it could dial.</li>
+<li><a href="topic-server.html">server</a>: The server settings are the operating system's settings for a server: its name, its time and its SSH access.</li>
+<li><a href="topic-service.html">service</a>: Services are the systemd units on a server: Xema's own services and the infrastructure they depend on.</li>
+<li><a href="topic-shell.html">shell</a>: The shell is a terminal on a server of the cluster, equivalent to an ssh session.</li>
+<li><a href="topic-sip-logger.html">sip-logger</a>: SIP Logger captures SIP signalling arriving at a server.</li>
+<li><a href="topic-sip-session.html">sip-session</a>: A SIP session is the full list of SIP messages for one call, in order.</li>
+<li><a href="topic-skill.html">skill</a>: A skill marks what an agent can handle, such as a language, a product line or a type of request.</li>
+<li><a href="topic-standard-report.html">standard-report</a>: Standard reports are provided with Xema and their content cannot be changed.</li>
+<li><a href="topic-team.html">team</a>: A team groups agents who work together.</li>
+<li><a href="topic-trunk.html">trunk</a>: A trunk is the SIP connection between Xema and a carrier.</li>
+<li><a href="topic-webhook.html">webhook</a>: A webhook is a request Xema sends to another system's URL.</li>
+<li><a href="topic-xapp.html">xapp</a>: XApps are the applications a call can be sent to.</li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

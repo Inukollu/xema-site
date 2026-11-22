@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aiagent — Xema docs</title>
+<meta name="description" content="An AI Conversation Agent greets the caller and holds an open conversation, using its tools to answer">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="aiagent">aiagent</h1>
+<p>An AI Conversation Agent greets the caller and holds an open conversation, using its tools to answer
+questions. The conversation ends when the caller hangs up, or, if exit keys are set, when the caller presses
+one. The call then continues in your flow.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>JSON API tools use your Json Api XApps. Each <code>{placeholder}</code> in the URL, headers or body becomes a tool
+  parameter that the model fills in. <code>{CLI}</code>, <code>{ANI}</code> and <code>{CALL_UUID}</code> are filled in from the call
+  automatically.</li>
+<li>The Json Api XApp's description tells the model when to use the tool. Write it as an instruction, for
+  example "Gets the prepaid balance for a phone number".</li>
+<li>MCP servers are connected when the call starts, over streamable HTTP. All of their tools are available to
+  the agent.</li>
+</ul>
+<h2 id="settings">Settings</h2>
+<ul>
+<li>Guardrails define the persona and its limits. State what the agent must not discuss.</li>
+<li>Exit keys are DTMF characters, for example <code>0*#</code>. Pressing any of them ends the agent at once, and the
+  call continues in your flow.</li>
+<li>The transcript variable holds up to 8,000 characters. The full transcript is stored in the CDR database
+  under the call's ID.</li>
+<li>The timeout disconnects the call. Use it as a safety limit, not to control the flow.</li>
+</ul>
+<h2 id="behaviour">Behaviour</h2>
+<ul>
+<li>The agent starts in the channel's language and switches to the caller's language.</li>
+<li>Callers can always interrupt the agent while it is speaking.</li>
+<li>Agent settings are cached, so changes can take up to 5 minutes to reach new calls.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#aiagent-add"><code>xema aiagent add</code></a></li>
+<li><a href="commands.html#aiagent-fields"><code>xema aiagent fields</code></a></li>
+<li><a href="commands.html#aiagent-remove"><code>xema aiagent remove</code></a></li>
+<li><a href="commands.html#aiagent-set"><code>xema aiagent set</code></a></li>
+<li><a href="commands.html#aiagent-show"><code>xema aiagent show</code></a></li>
+<li><a href="commands.html#aiagents"><code>xema aiagents</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

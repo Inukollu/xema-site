@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>server — Xema docs</title>
+<meta name="description" content="The server settings are the operating system's settings for a server: its name, its time and its SSH access.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="server">server</h1>
+<p>The server settings are the operating system's settings for a server: its name, its time and its SSH access.
+The server can also be restarted from here, with <strong>Restart host</strong>.</p>
+<p>Values are read from the running system each time they are shown. A change takes effect at once, as if the
+command had been run on the server. Nothing is staged and there is no separate save.</p>
+<h2 id="name">Name</h2>
+<ul>
+<li><strong>Host name</strong> is the server's name. It is shown as the title and on the sign-in page, and identifies the
+  server when you have several open.</li>
+<li>A new name takes effect for the operating system at once. <strong>Xema's services read the name only at
+  startup</strong>, so they show the old name until the server is restarted with <strong>Restart host</strong>.</li>
+<li>A name can contain letters, digits and hyphens, optionally followed by a domain. Certificates, DNS records
+  and anything else that refers to the server by its old name are not updated. Check them before renaming a
+  server in use.</li>
+</ul>
+<h2 id="time">Time</h2>
+<ul>
+<li>The clock shows the <strong>server's time</strong>, not your computer's. Call times are always taken from the server.</li>
+<li><strong>Time zone</strong> is the server's local time zone. Call records, reports and schedules use it, so changing it
+  changes the meaning of every stored time from then on.</li>
+<li>A time zone change applies to the operating system at once, but <strong>not to Xema's services</strong>, which read it
+  at startup. A warning shows until the server is restarted. Change the time zone at a quiet time: a change
+  during the day splits that day's records across two zones.</li>
+<li><strong>Time sync</strong> keeps the clock correct by querying a time server. Leave it enabled. Without it the clock
+  drifts, so call records, recordings and reports no longer match the phone system.</li>
+<li>The clock's status shows the offset from the time server, which server is used, and its stratum (the number
+  of steps from a reference clock). An offset under 0.1 seconds is normal. At one second or more, call times
+  are wrong. The reading updates every 30 seconds. If the offset does not decrease, the time server is too far
+  away or unreachable.</li>
+<li><strong>Time servers</strong> are shown only while sync is enabled. Leave the list empty to use the defaults. Xema shows
+  which servers are in use: either those assigned by the network, or the operating system's defaults. Set your
+  own when neither works, for example on a network with no internet access but with its own time server. List
+  the nearest first, separated by spaces.</li>
+<li>If the server uses a time client other than systemd's, the time servers are shown but cannot be edited.</li>
+</ul>
+<h2 id="ssh">SSH</h2>
+<ul>
+<li><strong>SSH server</strong> shows whether the server accepts SSH connections. Where SSH is socket-activated, this setting
+  controls the socket.</li>
+<li>When SSH is disabled, <strong>the setting is kept</strong>. Manager checks every few seconds and stops SSH again if
+  anything starts it, such as an upgrade, the socket or a user at the console. Xema shows how long the setting
+  has been in effect and how often SSH was stopped.</li>
+<li>The server's own startup configuration is <strong>not changed</strong>. After a restart, the server starts as
+  configured, and the setting is enforced again as soon as Manager is running.</li>
+<li>SSH is disabled on a new installation until it is enabled.</li>
+<li>Without SSH you cannot connect from a terminal or deploy over SSH. The browser shell still works and can
+  enable SSH again, as long as Manager is running.</li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

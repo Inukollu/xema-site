@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>queue — Xema docs</title>
+<meta name="description" content="A queue holds callers until an agent with the required skills is available.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="queue">queue</h1>
+<p>A queue holds callers until an agent with the required skills is available. A queue can require several
+skills, for example a language and a product. Only agents who have every required skill take its calls.</p>
+<p>When several queues need the same agent, the queue with the higher weight is served first.</p>
+<h2 id="steps">Steps</h2>
+<ul>
+<li><strong>Waiting</strong>: hold music, announcements, promotions, and caller actions.</li>
+<li><strong>Agents</strong>: the required skills and the weight. Sticky agent routes a returning caller to the agent they
+  last spoke to.</li>
+<li><strong>In call</strong>: the alert the agent hears and the actions the agent is allowed.</li>
+<li><strong>Recording</strong>: whether calls are recorded.</li>
+<li><strong>After the call</strong>: the maximum dispose time, the SLA and AHT targets, and abandoned calls. Without a
+  dispose time, the call is disposed when it ends.</li>
+<li><strong>Agent screen</strong>: the queue's colour and pattern, and the call details shown to the agent. These settings do
+  not affect call handling.</li>
+</ul>
+<h2 id="process-policy">Process policy</h2>
+<p>A queue in a process follows the process's policy while calls run. If the process makes recording mandatory,
+or does not allow automatic dispose, the queue's own setting has no effect, and the editor says so beside it.
+The queue is still saved as you set it.</p>
+<h2 id="targets">Targets</h2>
+<ul>
+<li>SLA target: the time, in seconds, within which a call should be answered. The SLA target percent is the
+  share of calls to answer within that time.</li>
+<li>AHT target: the expected average handling time per call, in seconds.</li>
+</ul>
+<h2 id="queue-cards">Queue cards</h2>
+<ul>
+<li>A red <strong>Record</strong> badge means the queue's calls are recorded. The bar beside the name shows the queue's
+  colour and pattern.</li>
+<li>Each card lists the required skills and the targets that are enabled: SLA, AHT and maximum dispose time
+  (shown as Wrap).</li>
+<li>The chips show which in-call actions agents are allowed; a highlighted chip is allowed. The number in the
+  corner is the queue's weight, shown when it is not zero.</li>
+</ul>
+<h2 id="live-status">Live status</h2>
+<ul>
+<li>Green means the queue is running and accepting calls. The numbers show the callers waiting now and the
+  abandoned calls per minute. Red means the queue is stopped.</li>
+<li>The status refreshes every 15 seconds.</li>
+</ul>
+<h2 id="features">Features</h2>
+<p>Only enabled features are listed: prompts, promotions, agent call tools, targets and abandoned-call capture.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><strong>Caller actions</strong> are keys a waiting caller can press, for example to request a callback or switch to
+  another flow.</li>
+<li><strong>Agent actions</strong> are the equivalent for the agent on the call, such as transfers and flow switches.</li>
+<li><strong>CRM URLs</strong> open the caller's record in your CRM when the call is connected to an agent.</li>
+<li>The counts show how many of each are configured.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#queue-add"><code>xema queue add</code></a></li>
+<li><a href="commands.html#queue-fields"><code>xema queue fields</code></a></li>
+<li><a href="commands.html#queue-remove"><code>xema queue remove</code></a></li>
+<li><a href="commands.html#queue-set"><code>xema queue set</code></a></li>
+<li><a href="commands.html#queue-show"><code>xema queue show</code></a></li>
+<li><a href="commands.html#queues"><code>xema queues</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

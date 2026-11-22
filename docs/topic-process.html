@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>process — Xema docs</title>
+<meta name="description" content="A process is a line of business: its agents, teams, queues, dialers and datasets, with owners who manage">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="process">process</h1>
+<p>A process is a line of business: its agents, teams, queues, dialers and datasets, with <strong>owners</strong> who manage
+it and <strong>QAs</strong> who listen to its calls. Each process on a cluster has a name that is unique among processes,
+and optionally a description.</p>
+<h2 id="settings">Settings</h2>
+<ul>
+<li><strong>Allow listening</strong>: whether calls of the process's agents can be listened to. Listening also requires the
+  team's own setting to be enabled.</li>
+<li><strong>Owners may add agents</strong>: owners can create new agents in the process.</li>
+<li><strong>Owners may add team leads</strong>: owners can set the lead of a team in the process.</li>
+<li><strong>Owners may add queues</strong> and <strong>Owners may add dialers</strong>: owners can create queues and dialers in the
+  process.</li>
+</ul>
+<p>These settings cover only creating new ones. An existing agent, queue or dialer is put in a process by a manager
+or an admin, never by an owner, whatever the settings say.</p>
+<h2 id="in-this-process">In this process</h2>
+<p>Available after the process is created. It lists the process's agents, queues and dialers. <strong>Add existing</strong> picks
+ones that are not in the process yet and puts them in. <strong>Remove</strong> takes one out of this process only, and deletes
+nothing.</p>
+<p>A new process starts with the four owner settings enabled and listening disabled. In the list of processes,
+<strong>Owners may add</strong> shows what the owners can add themselves, and <strong>Listening</strong> shows whether calls can be
+listened to.</p>
+<h2 id="scheduled-calls">Scheduled calls</h2>
+<p>Available after the process is created. These are calls an agent books for later, such as at the end of a
+call.</p>
+<ul>
+<li><strong>Place scheduled calls</strong>: whether booked calls are placed.</li>
+<li><strong>Agent</strong>: who takes a call when it is due. Choose only the agent who booked it, that agent if they are free
+  and otherwise any free agent, or any free agent.</li>
+<li><strong>Dialer</strong>: the dialer that places the calls. It must be one of the process's own dialers, and not an
+  agentless one. Its kind sets the pacing. While it is named here, it cannot be taken out of the process or
+  made agentless.</li>
+</ul>
+<p>While scheduled calls are on, both the agent and the dialer are required. When they are off, the choices are
+kept for next time.</p>
+<h2 id="owners-and-qas">Owners and QAs</h2>
+<p>Available after the process is created. A user is added by username. Owners manage the process; QAs listen to
+its calls.</p>
+<h2 id="processes-you-look-after">Processes you look after</h2>
+<p>A manager sees every process. A process owner sees only the processes they own. Open a process to work in it.</p>
+<h2 id="deleting-a-process">Deleting a process</h2>
+<p>Its agents, teams, queues, dialers and datasets are not deleted, but are removed from the process. Its owners
+and QAs lose access to it. A process with workload plans cannot be deleted; delete the plans first.</p>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#process-add"><code>xema process add</code></a></li>
+<li><a href="commands.html#process-fields"><code>xema process fields</code></a></li>
+<li><a href="commands.html#process-lead"><code>xema process lead</code></a></li>
+<li><a href="commands.html#process-link"><code>xema process link</code></a></li>
+<li><a href="commands.html#process-members"><code>xema process members</code></a></li>
+<li><a href="commands.html#process-owner-add"><code>xema process owner-add</code></a></li>
+<li><a href="commands.html#process-owner-remove"><code>xema process owner-remove</code></a></li>
+<li><a href="commands.html#process-owners"><code>xema process owners</code></a></li>
+<li><a href="commands.html#process-remove"><code>xema process remove</code></a></li>
+<li><a href="commands.html#process-set"><code>xema process set</code></a></li>
+<li><a href="commands.html#process-show"><code>xema process show</code></a></li>
+<li><a href="commands.html#process-trunk"><code>xema process trunk</code></a></li>
+<li><a href="commands.html#process-trunks"><code>xema process trunks</code></a></li>
+<li><a href="commands.html#process-unlink"><code>xema process unlink</code></a></li>
+<li><a href="commands.html#process-untrunk"><code>xema process untrunk</code></a></li>
+<li><a href="commands.html#processes"><code>xema processes</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

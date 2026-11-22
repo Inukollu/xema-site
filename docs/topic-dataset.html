@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dataset — Xema docs</title>
+<meta name="description" content="A dataset is a list of numbers for dialers to call.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="dataset">dataset</h1>
+<p>A dataset is a list of numbers for dialers to call. Numbers are added by uploading .csv files as batches, and
+the dialer works through the batches in order.</p>
+<h2 id="details">Details</h2>
+<ul>
+<li>A dataset has a name and a description.</li>
+<li>With <strong>Duplicate check</strong> on, a number repeated in a file or already in the dataset is stored but marked not
+  valid.</li>
+</ul>
+<h2 id="file-format">File format</h2>
+<p>The first .csv file sets the dataset's file format: which column holds the phone number, and which field each
+other column maps to. Every later batch must use the same format. The format cannot be changed, because
+lookups depend on it.</p>
+<ul>
+<li>One column must map to <strong>Number</strong>.</li>
+<li>A column can be left out.</li>
+<li>Each field can be mapped to only one column.</li>
+<li>A date field needs a date format and a time format.</li>
+</ul>
+<h2 id="uploading-a-batch">Uploading a batch</h2>
+<p>Each upload adds a .csv file of numbers to the dataset as a new batch. The file is checked first. When the
+check passes, the batch is given a name and uploaded.</p>
+<ul>
+<li>The file must have the <code>.csv</code> extension.</li>
+<li>It must have the same format as the dataset's first file: at least as many columns, and the same header text
+  in every column the dataset reads by header.</li>
+<li>The dataset must have a column mapped to the phone number. Nothing can be uploaded until it does.</li>
+<li>A file with the same name as an earlier batch shows a warning but is not refused, as it may contain the same
+  numbers. Give each file a unique name.</li>
+</ul>
+<h2 id="batches">Batches</h2>
+<p>A batch is one uploaded file and the results of reading it. Each batch shows how many records its file
+contained and how many were valid, invalid or duplicates.</p>
+<ul>
+<li>Invalid records had no number, or a number too long to dial, and were not stored.</li>
+<li>Duplicates repeat a number already in the file or the dataset. They are stored and marked not valid, so
+  dialers skip them.</li>
+<li>The counts are kept up to date: correcting a row can move it between valid and duplicate, and deleting rows
+  reduces the counts. Invalid records stay counted, since they were never stored.</li>
+<li><strong>Delete rows</strong> deletes every row in the batch and keeps the batch. Only managers and administrators can do
+  this. Dialers that already loaded the batch keep their own copy.</li>
+</ul>
+<h2 id="rows">Rows</h2>
+<ul>
+<li>A row is one number in the dataset, with its values under the dataset's column names. Rows can be shown as
+  all rows, valid rows, rows that are not valid, or duplicates.</li>
+<li>The number or any of its values can be edited. Whether the number is valid or a duplicate is checked again
+  when the row is saved.</li>
+<li>Dialers that already loaded a row's batch keep their own copy, so edits and deletions do not change that
+  copy.</li>
+<li>Only managers and administrators can delete a row. The batch counts are updated when a row is deleted, or
+  when an edit changes whether it is valid or a duplicate.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#dataset-add"><code>xema dataset add</code></a></li>
+<li><a href="commands.html#dataset-archive"><code>xema dataset archive</code></a></li>
+<li><a href="commands.html#dataset-fields"><code>xema dataset fields</code></a></li>
+<li><a href="commands.html#dataset-restore"><code>xema dataset restore</code></a></li>
+<li><a href="commands.html#dataset-set"><code>xema dataset set</code></a></li>
+<li><a href="commands.html#dataset-show"><code>xema dataset show</code></a></li>
+<li><a href="commands.html#dataset-upload"><code>xema dataset upload</code></a></li>
+<li><a href="commands.html#datasets"><code>xema datasets</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>

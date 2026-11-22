@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dns — Xema docs</title>
+<meta name="description" content="DNS settings decide how a server resolves names to addresses.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="26" height="26"></picture>Xema</a>
+    <nav>
+      <a href="../#what">Product</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a href="../api/">API</a>
+      <a class="btn btn-primary" href="../#install">Install</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap doc">
+  <aside>
+    <h4>Documentation</h4>
+    <a href="./">Overview</a>
+    <a href="first-server.html">Your first server</a>
+    <a href="multi-site.html">Clusters</a>
+    <a href="roles.html">Roles</a>
+    <a href="from-v1.html">Moving a V1 server to V2</a>
+    <a href="backups.html">Backups</a>
+    <a href="dev-builds.html">Dev builds</a>
+    <a href="switches.html">Switches</a>
+    <a href="commands.html">Commands</a>
+    <a href="topics.html" aria-current="page">Topics</a>
+    <h4>Roles</h4>
+    <a href="role-manager.html">Manager</a>
+    <a href="role-bff.html">BFF</a>
+    <a href="role-queue.html">Queue</a>
+    <a href="role-bridge.html">Bridge</a>
+    <a href="role-park.html">Park</a>
+    <a href="role-recorder.html">Recorder</a>
+    <a href="role-tone.html">Tone</a>
+    <a href="role-astermq.html">AsterMQ</a>
+    <a href="role-fastlane.html">Fastlane</a>
+    <a href="role-fastagi.html">FastAGI</a>
+    <a href="role-sipper.html">Sipper</a>
+    <a href="role-dialer.html">Dialer</a>
+    <a href="role-simplecdr.html">Call record</a>
+    <a href="role-metrics.html">Metrics</a>
+    <a href="role-integrations.html">Integrations</a>
+    <a href="role-ava.html">Ava</a>
+    <a href="role-database.html">Database</a>
+    <a href="role-broker.html">Broker</a>
+    <a href="role-redis.html">Cache</a>
+    <a href="role-asterisk.html">Phone system</a>
+    <a href="role-host.html">Host</a>
+  </aside>
+  <article class="prose">
+<h1 id="dns">dns</h1>
+<p>DNS settings decide how a server resolves names to addresses. Static entries are checked first, search domains
+complete names without dots, and DNS servers are queried last. These settings affect only this server, not
+other devices on the network.</p>
+<p>DNS changes take effect when saved. They do not wait for <strong>Apply changes</strong> like the rest of the network
+settings.</p>
+<h2 id="servers">Servers</h2>
+<ul>
+<li>The DNS servers this server queries, entered by <strong>address</strong>, not by name.</li>
+<li>Leave it empty on most servers. A network that assigns addresses usually assigns DNS servers as well, and
+  those are already in use.</li>
+<li>These are the server's <strong>default</strong> DNS servers. An interface that received its own DNS servers with its
+  address uses those for its own traffic.</li>
+<li>List the nearest server first. Servers are tried in order, and a slow server delays every lookup that the
+  earlier servers cannot answer.</li>
+</ul>
+<h2 id="search-domains">Search domains</h2>
+<ul>
+<li>Domains added to a name without dots. With <code>example.com</code> set, a lookup for <code>crm</code> becomes
+  <code>crm.example.com</code>.</li>
+<li>Domains are tried in order for every name that is not found, so keep the list short.</li>
+</ul>
+<h2 id="static-entries">Static entries</h2>
+<ul>
+<li>Names this server resolves itself, without querying DNS. Use them for a host your DNS does not know, or to
+  point a name to a different address on this server only.</li>
+<li>A static entry <strong>takes precedence</strong> over DNS. Check here first when a name resolves to an unexpected
+  address.</li>
+<li>One address can have several names; enter them on one line, separated by spaces.</li>
+<li>Entries added in Xema are listed apart from entries that were already on the server. Those are shown for
+  reference but cannot be changed in Xema.</li>
+</ul>
+<h2 id="commands">Commands</h2>
+<ul>
+<li><a href="commands.html#dns"><code>xema dns</code></a></li>
+<li><a href="commands.html#dns-domains"><code>xema dns domains</code></a></li>
+<li><a href="commands.html#dns-servers"><code>xema dns servers</code></a></li>
+</ul>
+  </article>
+</main>
+<footer>
+  <div class="wrap">
+    <a class="brand" href="../"><picture><source srcset="../assets/logo-light.svg" media="(prefers-color-scheme: dark)"><img src="../assets/logo.svg" alt="" width="22" height="22"></picture>Xema</a>
+    <span>by TechSudoku</span>
+    <span class="spacer"></span>
+    <a href="../api/">API</a>
+    <a href="mailto:support@xema.in">support@xema.in</a>
+  </div>
+</footer>
+</body>
+</html>
