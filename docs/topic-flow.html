@@ -77,7 +77,7 @@ has been built.</p>
   change is published.</li>
 </ul>
 <h2 id="blocks">Blocks</h2>
-<p>A block is a named group of steps. <strong>GoTo</strong>, <strong>Menu</strong>, <strong>If</strong> and <strong>Navigate</strong> steps refer to a block by its
+<p>A block is a named group of steps. <strong>GoTo</strong>, <strong>Menu</strong>, <strong>If</strong>, <strong>IfTime</strong> and <strong>Navigate</strong> steps refer to a block by its
 name, so choose a name that is easy to recognise.</p>
 <p>When a block's last step finishes, the call is hung up. A block does not continue into the next block, so
 every path must end deliberately, by sending the call on or hanging up. The order of blocks does not affect
@@ -94,6 +94,14 @@ routing.</p>
 <p>Each step has an <strong>Action</strong>. Most actions do nothing until configured: a <strong>Playback</strong> with no audio, or a
 <strong>GoTo</strong> with no destination, is skipped.</p>
 <p>A step's <strong>Description</strong> is a note for administrators and is not used during the call.</p>
+<p>An <strong>IfTime</strong> step sends the call to its <strong>Match</strong> block when the server's clock is inside every range it sets,
+and to its <strong>No match</strong> block otherwise. Leave a range empty for any:</p>
+<ul>
+<li><strong>Time of day</strong>, such as <code>09:00-17:30</code>.</li>
+<li><strong>Days of the week</strong>, such as <code>mon-fri</code>, or several joined by <code>&amp;</code>, such as <code>mon&amp;wed&amp;fri</code>.</li>
+<li><strong>Days of the month</strong>, such as <code>1-15</code>.</li>
+<li><strong>Months</strong>, such as <code>jan-mar</code>.</li>
+</ul>
 <h2 id="markers">Markers</h2>
 <p>A marker records that the call passed through the block, building the path the call took. The path is stored
 with the call for reporting.</p>

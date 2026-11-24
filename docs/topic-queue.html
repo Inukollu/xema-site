@@ -71,8 +71,16 @@ skills, for example a language and a product. Only agents who have every require
   last spoke to.</li>
 <li><strong>In call</strong>: the alert the agent hears and the actions the agent is allowed.</li>
 <li><strong>Recording</strong>: whether calls are recorded.</li>
-<li><strong>After the call</strong>: the maximum dispose time, the SLA and AHT targets, and abandoned calls. Without a
-  dispose time, the call is disposed when it ends.</li>
+<li><strong>After the call</strong>: the maximum dispose time, when the agent may dispose by hand, the SLA and AHT targets,
+  and abandoned calls. Without a dispose time, the call is disposed when it ends.</li>
+</ul>
+<h2 id="dispose-by-hand">Dispose by hand</h2>
+<p><strong>Agent may dispose by hand</strong> sets when an agent can close a call's wrap themselves:</p>
+<ul>
+<li><strong>As soon as the call ends</strong>, the default.</li>
+<li><strong>After a delay</strong>: the given seconds after the call ends. With a maximum dispose time on, the delay must be
+  shorter than it.</li>
+<li><strong>Never</strong>: the agent cannot dispose the call. Their team lead, an integration or automatic dispose closes it.</li>
 <li><strong>Agent screen</strong>: the queue's colour and pattern, and the call details shown to the agent. These settings do
   not affect call handling.</li>
 </ul>
