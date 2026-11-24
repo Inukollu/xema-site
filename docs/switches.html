@@ -73,33 +73,15 @@ xema flags set &lt;switch&gt;=on       # turn one on (off, true, false, yes and 
 <p><strong>Upgrading from a release before <code>xema flags</code>:</strong> a switch that was turned on before is off after the upgrade, and is
 turned on again with <code>xema flags set</code>. Run <code>xema flags</code> before upgrading and note what is on.</p>
 <h2 id="queue-recovery">Queue recovery</h2>
-<p>What happens to callers who are waiting in a queue when the queue service restarts: during an upgrade, after a crash,
-or when its connection to the phone system drops and comes back.</p>
-<table>
-<thead>
-<tr>
-<th>Switch</th>
-<th>Off (the default)</th>
-<th>On</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>requeueOrphans</code></td>
-<td>Each waiting caller is sent back to the call flow that put them in the queue, which carries on from the step after the queue. In most flows that ends the call.</td>
-<td>Each waiting caller goes back into the queue they were in, in the place they had, and their waiting time carries on from when they first joined.</td>
-</tr>
-</tbody>
-</table>
-<p>With <code>requeueOrphans</code> on, a caller still goes back to their flow when Xema cannot tell which queue they were in, or
-when their queue is no longer run on that server. A caller whose call an agent had already answered is left to be
-connected to that agent.</p>
+<p>There is no switch for this. When the queue service restarts while callers are waiting (during an upgrade, after a
+crash, or when its connection to the phone system drops and comes back), each waiting caller goes back into the queue
+they were in, in the place they had, and their waiting time carries on from when they first joined.</p>
+<p>A caller goes back to the call flow that put them in the queue only when Xema cannot tell which queue they were in, or
+when they joined it. A caller whose call an agent had already answered is left to be connected to that agent. A caller
+who rings in while the queue service is down goes on to the step after the queue in their flow.</p>
 <p>A caller put back into their queue is not counted as a second arrival: queue reports and call records show one wait.</p>
-<pre><code>xema flags set requeueOrphans=on
-</code></pre>
-<p><strong>When to turn it on:</strong> on any cluster where a queue may restart while callers are waiting, which includes every
-upgrade of the queue service. Try it on a test server first: put a caller in a queue, restart the queue service with
-<code>xema restart queue</code>, and check that the caller is still waiting in the same place.</p>
+<p><strong>Upgrading from a release with the <code>requeueOrphans</code> switch:</strong> the switch is gone, and callers go back into their
+queue whether it was on or off.</p>
 <h2 id="agent-features">Agent features</h2>
 <p>Which optional parts of the agent's screen the cluster offers, and one rule for agents' phones.</p>
 <table>
