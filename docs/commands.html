@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 374 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 375 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 374 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 375 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -107,9 +107,8 @@
 <h3 id="update"><code>update</code></h3>
 <pre><code>xema update
 </code></pre>
-<p>Replace the xema command itself with the channel's newest, within its own version; another version is <code>xema migrate</code>, and Xema's components are <code>xema upgrade</code>.</p>
+<p>Replace the xema command itself with the channel's, newer or older, within its own version; another version is <code>xema migrate</code>, and Xema's components are <code>xema upgrade</code>. <code>xema channel set</code> changes the channel.</p>
 <ul>
-<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
 <li><code>--dry-run</code>: Say which version it would replace the command with, and change nothing.</li>
 </ul>
 <h3 id="upgrade"><code>upgrade</code></h3>
@@ -118,7 +117,6 @@
 <p>Upgrade Xema's components and the release's schema changes, within the installed version; another version is <code>xema migrate</code>, and the xema command itself is <code>xema update</code>.</p>
 <ul>
 <li><code>[&lt;components&gt;…]</code>: Upgrade only these, leaving every other component on the version it runs. The schema must already be at the release: <code>xema database upgrade</code> applies it.</li>
-<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
 <li><code>--yes</code>: Don't ask. Restarting a component drops the calls it is carrying.</li>
 <li><code>--dry-run</code>: List what would change, by version, and change nothing.</li>
 <li><code>--prepare</code>: Ahead of the window, touching nothing that runs: take the backup the upgrade would take, and download, verify and unpack each release beside its component. The upgrade then uses the backup while it is under 12 hours old, and moves each release into place between its stop and its start rather than unpacking it there.</li>
@@ -141,7 +139,6 @@
 <p>Fetch a component's release and put it in place.</p>
 <ul>
 <li><code>&lt;name&gt;</code>: Which component. <code>xema component list</code> shows them.</li>
-<li><code>--channel &lt;channel&gt;</code>: <code>dev</code> or <code>stable</code>. Taken from this server's record when omitted.</li>
 <li><code>--force</code>: Install again even if it is already here.</li>
 <li><code>--version &lt;version&gt;</code>: Place this version, <code>2.0.4558</code>, instead of the channel's newest, replacing what is here. The channel keeps each component's ten newest.</li>
 </ul>
@@ -889,6 +886,10 @@
 <li><code>--trusted-user</code>: Log in to MariaDB as root instead of as yourself. Needed when your own Linux login has no rights to create a user; run the whole command under <code>sudo</code> for it to work.</li>
 <li><code>--from-v1</code>: Take the server, user and password from the V1 installation on this machine rather than being told them. Every V1 service signs in as the one user V1's installer made, so on an upgraded server the right credentials already exist and making new ones is the only wrong move.</li>
 </ul>
+<h3 id="database-migrations"><code>database migrations</code></h3>
+<pre><code>xema database migrations
+</code></pre>
+<p>Print, as JSON, the last migration of every schema this xema carries, per engine. Reads only this binary; the release records it so <code>xema upgrade</code> stops each schema at its channel's release.</p>
 <h3 id="database-replication-setup"><code>database replication setup</code></h3>
 <pre><code>xema database replication setup
 </code></pre>
@@ -907,10 +908,10 @@
 <h3 id="database-upgrade"><code>database upgrade</code></h3>
 <pre><code>xema database upgrade
 </code></pre>
-<p>Apply this release's schema changes: every schema when all of them are additive, or only the schemas named, whatever they change. Components keep the versions they run.</p>
+<p>Apply this release's schema changes: every schema when all of them are additive, or only the schemas named, whatever they change. Components keep the versions they run. Each schema stops at the migration the channel's release records; <code>xema channel set</code> names the channel.</p>
 <ul>
 <li><code>--allow-narrowing</code>: Also apply migrations that shorten columns. A value that does not fit fails the migration.</li>
-<li><code>--dry-run</code>: List the pending migrations and whether they can be applied, and change nothing.</li>
+<li><code>--dry-run</code>: List the pending migrations up to the channel's release and whether they can be applied, and change nothing.</li>
 <li><code>--yes</code>: Do not ask before applying.</li>
 <li><code>--schemas &lt;schemas&gt;</code>: Apply only these, whatever their changes are, and leave every other schema as it is. What uses a schema whose change is destructive may fail until it is upgraded. <code>xema database upgrade --dry-run</code> lists them.</li>
 </ul>
