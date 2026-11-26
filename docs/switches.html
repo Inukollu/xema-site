@@ -62,7 +62,7 @@
   <article class="prose">
 <h1 id="switches">Switches</h1>
 <p>Some of Xema's behaviour is switched on or off for the whole cluster. Each switch is off until someone turns it on,
-except <code>crmDashboard</code>, which is on until someone turns it off. Each is set from any server in the cluster with the <code>xema</code> command. A change takes effect within seconds, on every
+except <code>crmDashboard</code> and <code>acceptedPromptSkipsBreakLimits</code>, which are on until someone turns them off. Each is set from any server in the cluster with the <code>xema</code> command. A change takes effect within seconds, on every
 server, without restarting anything.</p>
 <p>They are all under one command:</p>
 <pre><code>xema flags                       # every switch, and whether it is on
@@ -119,6 +119,33 @@ queue whether it was on or off.</p>
 </tbody>
 </table>
 <pre><code>xema flags set myDay=on
+</code></pre>
+<h2 id="agent-pauses">Agent pauses</h2>
+<p>How time on a ban or a break counts. Each is set for the cluster with <code>xema flags</code>. A process can also state its own
+value, and then that value counts for the agents in that process instead of the cluster's.</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>When on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>banCountsAsBreak</code></td>
+<td>Time on a ban counts as break time. Off, a ban is its own time.</td>
+</tr>
+<tr>
+<td><code>acceptedPromptSkipsBreakLimits</code></td>
+<td>A break an agent takes by accepting a prompt does not count against the team's break limits. <strong>On by default.</strong></td>
+</tr>
+<tr>
+<td><code>signedOutBanCountsAsLogin</code></td>
+<td>Time on a ban while the agent is signed out counts as login time.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>xema flags set banCountsAsBreak=on
 </code></pre>
   </article>
 </main>
