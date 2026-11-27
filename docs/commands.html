@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Commands — Xema docs</title>
-<meta name="description" content="Every xema command, 374 of them, as xema <command> --help describes it.">
+<meta name="description" content="Every xema command, 376 of them, as xema <command> --help describes it.">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@
   </aside>
   <article class="prose">
 <h1 id="commands">Commands</h1>
-<p>Every <code>xema</code> command, 374 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
+<p>Every <code>xema</code> command, 376 of them, as <code>xema &lt;command&gt; --help</code> describes it. Most need <code>sudo</code>. A command that changes the console's records goes through Manager, as the console does, so the same rules about who may change what apply.</p>
 <p><a href="#install-and-upgrade">Install and upgrade</a> · <a href="#the-cluster-and-its-nodes">The cluster and its nodes</a> · <a href="#switches">Switches</a> · <a href="#running-services">Running services</a> · <a href="#backups-and-data">Backups and data</a> · <a href="#people">People</a> · <a href="#calls">Calls</a> · <a href="#integrations-and-ai">Integrations and AI</a> · <a href="#reports-and-live-view">Reports and Live View</a></p>
 <h2 id="install-and-upgrade">Install and upgrade</h2>
 <p>Put Xema on a server, join it to a cluster, and keep it current.</p>
@@ -1034,12 +1034,27 @@
 <li><code>--password-stdin</code>: Read the password from the first line of standard input rather than asking for it.</li>
 <li><code>--yes</code>: With --all: answer the confirmation up front.</li>
 </ul>
+<h3 id="agent-pin"><code>agent pin</code></h3>
+<pre><code>xema agent pin &lt;user-name&gt;
+</code></pre>
+<p>Set the PIN an agent keys at a desk phone, after their sign-in number: <code>xema agent pin vasu</code>. Asked twice and unseen, or read from the first line of standard input with <code>--pin-stdin</code>; never an argument, as a password is not. Manager says what it refuses: a PIN of the wrong length, one too easy to guess, or an agent not below you.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
+<li><code>--pin-stdin</code>: Read the PIN from the first line of standard input rather than asking for it.</li>
+</ul>
 <h3 id="agent-remove"><code>agent remove</code></h3>
 <pre><code>xema agent remove [&lt;words&gt;…]
 </code></pre>
 <p>Remove an agent and their sign-in: <code>xema agent remove vasu</code>. Several can be named, <code>xema agent remove vasu ravi</code>, and each is removed in turn; every one is found before anything is asked or removed.</p>
 <ul>
 <li><code>[&lt;words&gt;…]</code>: The agent, by username, or several; <code>--yes</code> answers the confirmation up front.</li>
+</ul>
+<h3 id="agent-renumber"><code>agent renumber</code></h3>
+<pre><code>xema agent renumber &lt;user-name&gt;
+</code></pre>
+<p>Give an agent a new sign-in number, at random from those still free, for one that has become known: <code>xema agent renumber vasu</code>. The old number is free again at once.</p>
+<ul>
+<li><code>&lt;user-name&gt;</code>: The agent, by username.</li>
 </ul>
 <h3 id="agent-set"><code>agent set</code></h3>
 <pre><code>xema agent set [&lt;user-name&gt;]

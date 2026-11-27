@@ -69,9 +69,14 @@ to them.</p>
 <li>The <strong>username</strong> is what the agent signs in with. It cannot be changed after the account is created.</li>
 <li>The <strong>password</strong> is set when the account is created. <strong>Change password</strong> sets a new one at once; the agent
   uses it the next time they sign in.</li>
-<li>The <strong>handset PIN</strong> lets the agent sign in at a desk handset with their agent number and this PIN. <strong>Set handset
-  PIN</strong> replaces it at once with 4 to 12 digits. It is never shown, even to you, so it can only be replaced. Whoever
-  sets it can sign in as the agent, so only someone above the agent's level can set it.</li>
+<li>The <strong>sign-in number</strong> is four digits the agent keys at a desk phone to say who they are, before their PIN. Xema
+  Manager picks it at random, and nobody types it. <strong>Give a new number</strong> replaces it when it has become known, and
+  the old one stops working at once. It works only while the agent's phone is set to <strong>Desk phone</strong>; new agents
+  start on <strong>Softphone</strong>.</li>
+<li>The <strong>handset PIN</strong> follows the sign-in number at a desk phone. <strong>Set handset PIN</strong> replaces it at once with 4 to 8
+  digits. A PIN that is easy to guess, such as 0000 or 1234, is refused. It is never shown, even to you, so it can
+  only be replaced. Whoever sets it can sign in as the agent, so only someone above the agent's level can set it or
+  give a new number.</li>
 <li>Five wrong passwords lock the account for five minutes. <strong>Unlock</strong> removes the lock at once.</li>
 </ul>
 <h2 id="routing">Routing</h2>
@@ -108,7 +113,9 @@ to them.</p>
 <li><a href="commands.html#agent-add"><code>xema agent add</code></a></li>
 <li><a href="commands.html#agent-fields"><code>xema agent fields</code></a></li>
 <li><a href="commands.html#agent-password"><code>xema agent password</code></a></li>
+<li><a href="commands.html#agent-pin"><code>xema agent pin</code></a></li>
 <li><a href="commands.html#agent-remove"><code>xema agent remove</code></a></li>
+<li><a href="commands.html#agent-renumber"><code>xema agent renumber</code></a></li>
 <li><a href="commands.html#agent-set"><code>xema agent set</code></a></li>
 <li><a href="commands.html#agent-show"><code>xema agent show</code></a></li>
 <li><a href="commands.html#agent-unlock"><code>xema agent unlock</code></a></li>
