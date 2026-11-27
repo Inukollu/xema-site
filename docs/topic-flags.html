@@ -62,7 +62,8 @@
   <article class="prose">
 <h1 id="flags">flags</h1>
 <p>Flags switch optional features of a cluster on or off: the panels Agent UI offers, and whether an agent must
-sign in with a phone at their own address. Each flag is off until it is turned on.</p>
+sign in with a phone at their own address, and how time on a ban or a break counts. Each flag is off until it
+is turned on, except <strong>An accepted break prompt skips the break limits</strong>, which is on until it is turned off.</p>
 <h2 id="the-agents-screen">The agent's screen</h2>
 <p>Optional panels in Agent UI. Each panel is disabled until it is enabled.</p>
 <ul>
@@ -86,6 +87,20 @@ phone at that desk is refused and the agent cannot work. For this reason it is d
 agents connect to the cluster, and test with one agent first.</p>
 <p>The rule is useful for hardware phones at fixed desks. Browser softphones always match, so it has no effect on
 them.</p>
+<h2 id="softphone-audio">Softphone audio</h2>
+<p><strong>Softphone audio over TCP (443)</strong> sends a browser softphone's call audio through the cluster's TURN relay on port
+443, for networks that block UDP. Off for the cluster turns it off for everyone. An agent's own off takes out only
+that agent.</p>
+<h2 id="agent-pauses">Agent pauses</h2>
+<p>How time on a ban or a break counts for agents. A process can set its own value for each, and then its value counts
+for the agents in that process instead of the cluster's.</p>
+<ul>
+<li><strong>Ban time counts as break time.</strong> When it is off, a ban is counted as its own time.</li>
+<li><strong>An accepted break prompt skips the break limits.</strong> A break an agent takes by accepting a prompt does not count
+  against the team's break limits. It is on by default.</li>
+<li><strong>Ban time while signed out counts as login time.</strong> Time on a ban after the agent signs out is added to their
+  login time.</li>
+</ul>
 <h2 id="commands">Commands</h2>
 <ul>
 <li><a href="commands.html#flags"><code>xema flags</code></a></li>
