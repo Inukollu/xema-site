@@ -91,7 +91,9 @@ answered calls to a queue's agents.</p>
   ring on it at once.</li>
 <li>A row offers only the pools mapped to its trunk; a pool is mapped on its own page. Choose how a number is
   picked from the pools for each call.</li>
-<li>The dataset holds the numbers to call. The test dataset is a separate list for trial runs.</li>
+<li>The dataset holds the numbers to call. The test dataset is a separate list for trial runs. It is offered only where
+  the cluster's settings, or the dialer's process, allow dialers to use test datasets. Where they do not, the field is
+  hidden, and a test dataset already chosen is kept but not dialed.</li>
 <li>A manual dialer places the calls agents make themselves: their own calls, call backs and conference parties.
   It has no pace, dataset or hours, and is never started. Name it on a queue, a team, a process or the
   cluster settings.</li>
@@ -112,7 +114,7 @@ answered calls to a queue's agents.</p>
 <h2 id="datasets">Datasets</h2>
 <ul>
 <li>Each batch shows how many records remain. Test batches belong to the test dataset, Target batches to the
-  dataset.</li>
+  dataset. Test batches are not listed where the test dataset is not offered.</li>
 <li>Refresh datasets reloads them from the source. Allow a minute before refreshing.</li>
 </ul>
 <h2 id="commands">Commands</h2>

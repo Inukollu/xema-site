@@ -85,7 +85,7 @@ come and go. Queues need the permission to see queues live, and dialers the perm
 <p>Available after the process is created. It lists the process's agents, queues and dialers. <strong>Add existing</strong> picks
 ones that are not in the process yet and puts them in. <strong>Remove</strong> takes one out of this process only, and deletes
 nothing.</p>
-<p>A new process starts with the four owner settings enabled and listening disabled. In the list of processes,
+<p>A new process starts with the three owner settings enabled and listening disabled. In the list of processes,
 <strong>Owners may add</strong> shows what the owners can add themselves, and <strong>Listening</strong> shows whether calls can be
 listened to.</p>
 <h2 id="scheduled-calls">Scheduled calls</h2>
@@ -108,6 +108,12 @@ its calls.</p>
 <p>The prompt an agent hears as a call from one of the process's queues connects, dialed calls included. As a
 preference it plays where a queue names no alert of its own. As a policy it plays for every queue in the process.
 With none, the cluster's alert plays, or else a beep. Only managers change it.</p>
+<h2 id="agent-pauses-agent-ui-panels-and-dialers">Agent pauses, Agent UI panels and Dialers</h2>
+<p>Available after the process is created. <strong>Agent pauses</strong> says how time on a ban or a break counts for the process's
+agents. <strong>Agent UI panels</strong> says which panels, such as Chat or My day, its agents see in Agent UI. <strong>Dialers</strong> says
+whether its dialers may use a test dataset. Each setting is
+<strong>As the cluster</strong>, <strong>On</strong> or <strong>Off</strong>. As the cluster takes the value set in the cluster's settings, which is shown
+next to it. Only managers and admins change these.</p>
 <h2 id="processes-you-look-after">Processes you look after</h2>
 <p>A manager sees every process. A process owner sees only the processes they own. Open a process to work in it.</p>
 <h2 id="deleting-a-process">Deleting a process</h2>

@@ -61,18 +61,21 @@
   </aside>
   <article class="prose">
 <h1 id="phonegroup">phonegroup</h1>
-<p>A phone group holds phones that share the same settings. Every phone belongs to a group, and the group sets
-what its phones can do. Barging, outbound dialling (with its trunk and caller ID) and recording are set on the
+<p>A phone group holds phones that share the same settings. Every phone belongs to a group, and the group sets what its
+phones can do. The listen and coach codes, outbound dialling (with its trunk and caller ID) and recording are set on the
 group, not on the individual phone. A change to a group applies to every phone in it.</p>
 <h2 id="settings">Settings</h2>
 <ul>
-<li><strong>Enable barge</strong> lets supervisors listen in on or join calls on these phones.</li>
+<li><strong>Allow listen and coach codes</strong> lets phones in this group dial 61 to listen to a call, or 60 to coach the
+  agent, followed by the agent's extension. The person dialling then keys their sign-in number and PIN. They need an
+  agent record and the coach permission, and the agent's team must allow it. There is no code to join a call.</li>
 <li><strong>Enable dial</strong> allows outbound calls and shows the related settings: the <strong>Trunk</strong> used for the calls, the
   <strong>CLI</strong> presented to the called party, and whether calls are recorded.</li>
 </ul>
 <h2 id="in-the-list">In the list</h2>
 <ul>
 <li><strong>Phones</strong> shows how many phones are in each group.</li>
+<li><strong>Listen codes</strong> shows Yes when the group's phones may dial the listen and coach codes.</li>
 <li>When dialling is enabled, <strong>Outbound</strong> shows "Dial · Recording" with the trunk and caller ID below.</li>
 </ul>
 <h2 id="commands">Commands</h2>

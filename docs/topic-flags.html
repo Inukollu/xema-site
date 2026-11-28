@@ -62,10 +62,12 @@
   <article class="prose">
 <h1 id="flags">flags</h1>
 <p>Flags switch optional features of a cluster on or off: the panels Agent UI offers, and whether an agent must
-sign in with a phone at their own address, and how time on a ban or a break counts. Each flag is off until it
-is turned on, except <strong>An accepted break prompt skips the break limits</strong>, which is on until it is turned off.</p>
+sign in with a phone at their own address, how time on a ban or a break counts, and what dialers may do. Each flag is off until it
+is turned on, except <strong>CRM dashboard</strong>, <strong>Chat</strong> and <strong>An accepted break prompt skips the break limits</strong>, which are
+on until they are turned off.</p>
 <h2 id="the-agents-screen">The agent's screen</h2>
-<p>Optional panels in Agent UI. Each panel is disabled until it is enabled.</p>
+<p>Optional panels in Agent UI. A process can set its own value for each, and then its value counts for the agents in
+that process instead of the cluster's.</p>
 <ul>
 <li><strong>CRM dashboard</strong> shows the customer view next to the call.</li>
 <li><strong>Call history</strong> lets agents view their own past calls.</li>
@@ -73,6 +75,7 @@ is turned on, except <strong>An accepted break prompt skips the break limits</st
 <li><strong>My day</strong> shows the agent's figures for the shift so far, such as calls handled and break time. When it is
   disabled, these figures are not calculated.</li>
 <li><strong>Demonstration content</strong> shows content marked as demonstration material, across the cluster.</li>
+<li><strong>Chat</strong> lets agents write to colleagues and be written to. It is on by default.</li>
 </ul>
 <h2 id="signing-in-to-a-phone">Signing in to a phone</h2>
 <p>When an agent signs in, Xema suggests a phone that registered from the same address as the agent's browser.
@@ -100,6 +103,16 @@ for the agents in that process instead of the cluster's.</p>
   against the team's break limits. It is on by default.</li>
 <li><strong>Ban time while signed out counts as login time.</strong> Time on a ban after the agent signs out is added to their
   login time.</li>
+<li><strong>Team leads may ban agents.</strong> A team lead may put an agent on a ban. The ban must have an end time. It is off by
+  default.</li>
+</ul>
+<h2 id="dialers">Dialers</h2>
+<p>What dialers may do. A process can set its own value, and then its value counts for its dialers instead of the
+cluster's.</p>
+<ul>
+<li><strong>Dialers may use test datasets.</strong> A dialer is offered a test dataset for trial runs. When it is off, the field
+  is hidden, and a test dataset already chosen is kept but not dialed. It is off by default, and a change takes
+  effect when the dialer next starts.</li>
 </ul>
 <h2 id="commands">Commands</h2>
 <ul>
